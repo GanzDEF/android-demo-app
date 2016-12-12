@@ -48,7 +48,7 @@ public class WeatherFragment extends BaseFragment implements WeatherView, View.O
                              Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_main, container, false);
+        View view = inflater.inflate(R.layout.fragment_weather, container, false);
 
         ButterKnife.inject(this, view);
 
