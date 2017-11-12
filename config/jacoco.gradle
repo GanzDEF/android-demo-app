@@ -34,7 +34,7 @@ task jacocoTestReport(type:JacocoReport, dependsOn: buildVariant) {
                        '**/com/test/xyz/daggersample/ui/repodetails/*.*',
                        '**/com/test/xyz/daggersample/ui/mainlobby*',
 
-                       '**/com/test/xyz/daggersample/repository*'
+                       '**/com/test/xyz/daggersample/domain/repository*'
             ]
     )
 
