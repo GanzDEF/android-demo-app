@@ -2,15 +2,15 @@
 
 package com.test.xyz.daggersample.ui.weather.mvp
 
+import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import com.test.xyz.daggersample.R
 import com.test.xyz.daggersample.domain.interactor.MainInteractor
 import com.test.xyz.daggersample.ui.BasePresenterTest
 import org.junit.Before
 import org.junit.Test
-import org.mockito.ArgumentMatchers
-import org.mockito.Mockito.verify
 
 class WeatherPresenterTest : BasePresenterTest() {
 
@@ -85,7 +85,7 @@ class WeatherPresenterTest : BasePresenterTest() {
     fun `requestInformation whenCityIsInvalid shouldReturnError`() {
         //GIVEN
         whenever(mainView.userNameText).thenReturn(USER_NAME)
-        whenever(mainView.cityText).thenReturn(BasePresenterTest.INVALID_CITY)
+        whenever(mainView.cityText).thenReturn(INVALID_CITY)
 
         //WHEN
         weatherPresenter.requestWeatherInformation()
@@ -94,7 +94,7 @@ class WeatherPresenterTest : BasePresenterTest() {
         //TODO comment the next method to show how it work.
         //verify(mainView).showBusyIndicator();
         //verify(mainView).hideBusyIndicator();
-        verify(mainView).showError(ArgumentMatchers.anyString())
+        verify(mainView).showError(any< String>())
     }
 
     companion object {

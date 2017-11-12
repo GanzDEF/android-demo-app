@@ -2,14 +2,16 @@ project.ext {
     appcompat = "23.1.1"
     dagger = "2.0.1"
     butterknife = "6.1.0"
-    junit = "4.12"
-    robolectric = "3.0"
-    mockitoKotlin = "1.5.0"
     retrofit = "2.0.2"
     rxjava = "1.1.5"
     rxandroid = "1.2.0"
     rxbinding = "0.3.0"
     annotation = "1.0"
+
+    junit = "4.12"
+    robolectric = "3.0"
+    mockitoKotlin = "1.5.0"
+    kluent = "1.4"
 }
 
 apply plugin: 'com.android.application'
@@ -91,6 +93,7 @@ dependencies {
     testCompile "org.robolectric:robolectric:$project.robolectric"
 
     testCompile "com.nhaarman:mockito-kotlin-kt1.1:$project.mockitoKotlin"
+    testCompile "org.amshove.kluent:kluent:$project.kluent"
 }
 
 repositories {

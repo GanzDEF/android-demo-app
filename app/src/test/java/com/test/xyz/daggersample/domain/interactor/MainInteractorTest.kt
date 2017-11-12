@@ -2,9 +2,7 @@
 
 package com.test.xyz.daggersample.domain.interactor
 
-import com.nhaarman.mockito_kotlin.eq
-import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.whenever
+import com.nhaarman.mockito_kotlin.*
 import com.test.xyz.daggersample.R
 import com.test.xyz.daggersample.domain.repository.api.ErrorMessages
 import com.test.xyz.daggersample.domain.repository.api.HelloRepository
@@ -21,10 +19,6 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.AdditionalMatchers.and
 import org.mockito.AdditionalMatchers.not
-import org.mockito.ArgumentMatchers
-import org.mockito.Matchers.any
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.verify
 import rx.Observable
 import rx.Scheduler
 import rx.android.plugins.RxAndroidPlugins
@@ -67,7 +61,7 @@ class MainInteractorTest {
             testSubject.getWeatherInformation(USER_NAME, CITY, onInfoCompletedListener)
 
             //THEN
-            verify(onInfoCompletedListener).onSuccess(ArgumentMatchers.any(String::class.java))
+            verify(onInfoCompletedListener).onSuccess(any<String>())
         } catch (exception: Exception) {
             exception.printStackTrace()
             fail("Unable to getWeatherInfo !!!")
@@ -85,7 +79,7 @@ class MainInteractorTest {
             testSubject.getWeatherInformation(USER_NAME, INVALID_CITY, onInfoCompletedListener)
 
             //THEN
-            verify(onInfoCompletedListener).onFailure(ArgumentMatchers.any(String::class.java))
+            verify(onInfoCompletedListener).onFailure(any<String>())
         } catch (exception: Exception) {
             fail("Unable to getWeatherInfo !!!")
         }
@@ -136,7 +130,7 @@ class MainInteractorTest {
         testSubject.getRepoList(USER_NAME, onRepoListCompletedListener)
 
         //THEN
-        verify(onRepoListCompletedListener).onRepoListRetrievalSuccess(ArgumentMatchers.anyList())
+        verify(onRepoListCompletedListener).onRepoListRetrievalSuccess(any<List<Repo>>())
     }
 
     @Test
@@ -149,7 +143,7 @@ class MainInteractorTest {
         testSubject.getRepoList("", onRepoListCompletedListener)
 
         //THEN
-        verify(onRepoListCompletedListener).onRepoListRetrievalFailure(ArgumentMatchers.anyString())
+        verify(onRepoListCompletedListener).onRepoListRetrievalFailure(any<String>())
     }
 
     @Test
@@ -162,7 +156,7 @@ class MainInteractorTest {
         testSubject.getRepoList(UNLUCKY_ACCOUNT, onRepoListCompletedListener)
 
         //THEN
-        verify(onRepoListCompletedListener).onRepoListRetrievalFailure(ArgumentMatchers.anyString())
+        verify(onRepoListCompletedListener).onRepoListRetrievalFailure(any<String>())
     }
 
     @Test
@@ -175,7 +169,7 @@ class MainInteractorTest {
         testSubject.getRepoItemDetails(USER_NAME, PROJECT_ID, onRepoDetailsCompletedListener)
 
         //THEN
-        verify(onRepoDetailsCompletedListener).onRepoDetailsRetrievalSuccess(any())
+        verify(onRepoDetailsCompletedListener).onRepoDetailsRetrievalSuccess(any<Repo>())
     }
 
     @Test
@@ -188,7 +182,7 @@ class MainInteractorTest {
         testSubject.getRepoItemDetails("", PROJECT_ID, onRepoDetailsCompletedListener)
 
         //THEN
-        verify(onRepoDetailsCompletedListener).onRepoDetailsRetrievalFailure(ArgumentMatchers.anyString())
+        verify(onRepoDetailsCompletedListener).onRepoDetailsRetrievalFailure(any<String>())
     }
 
     @Test
@@ -201,7 +195,7 @@ class MainInteractorTest {
         testSubject.getRepoItemDetails("", PROJECT_ID, onRepoDetailsCompletedListener)
 
         //THEN
-        verify(onRepoDetailsCompletedListener).onRepoDetailsRetrievalFailure(ArgumentMatchers.anyString())
+        verify(onRepoDetailsCompletedListener).onRepoDetailsRetrievalFailure(any<String>())
     }
 
     @Test
@@ -214,23 +208,25 @@ class MainInteractorTest {
         testSubject.getRepoItemDetails(UNLUCKY_ACCOUNT, PROJECT_ID, onRepoDetailsCompletedListener)
 
         //THEN
-        verify(onRepoDetailsCompletedListener).onRepoDetailsRetrievalFailure(ArgumentMatchers.anyString())
+        verify(onRepoDetailsCompletedListener).onRepoDetailsRetrievalFailure(any<String>())
     }
 
     private fun mockWeatherServiceAPIs() {
         // Happy Path Scenario ...
         val observable = Observable.just(10)
 
-        `when`(weatherRepository.getWeatherInfo(and(not<String>(ArgumentMatchers.eq(EMPTY_VALUE)), not<String>(ArgumentMatchers.eq(INVALID_CITY))))).thenReturn(observable)
+        whenever(weatherRepository.getWeatherInfo(and(not<String>(eq(EMPTY_VALUE)),
+                not<String>(eq(INVALID_CITY)))))
+                .thenReturn(observable)
 
         // Empty City ...
-        `when`(weatherRepository.getWeatherInfo(ArgumentMatchers.eq(EMPTY_VALUE)))
+        whenever(weatherRepository.getWeatherInfo(eq(EMPTY_VALUE)))
                 .thenReturn(Observable.error<Any>(
                         RuntimeException(ErrorMessages.CITY_REQUIRED))
                         .cast(Int::class.java))
 
         // Invalid City ...
-        `when`(weatherRepository.getWeatherInfo(ArgumentMatchers.eq(INVALID_CITY)))
+        whenever(weatherRepository.getWeatherInfo(eq(INVALID_CITY)))
                 .thenReturn(Observable.error<Any>(
                         InvalidCityException(ErrorMessages.INVALID_CITY_PROVIDED))
                         .cast(Int::class.java))
@@ -241,10 +237,10 @@ class MainInteractorTest {
         val repoList = ArrayList<Repo>()
         val observable = Observable.just<List<Repo>>(repoList)
 
-        whenever(repoListRepository.getRepoList(not<String>(ArgumentMatchers.eq(UNLUCKY_ACCOUNT)))).thenReturn(observable)
+        whenever(repoListRepository.getRepoList(not<String>(eq(UNLUCKY_ACCOUNT)))).thenReturn(observable)
 
         // Error Scenario ...
-        whenever(repoListRepository.getRepoList(ArgumentMatchers.eq(UNLUCKY_ACCOUNT)))
+        whenever(repoListRepository.getRepoList(eq(UNLUCKY_ACCOUNT)))
                 .thenReturn(Observable.error(Exception()))
     }
 

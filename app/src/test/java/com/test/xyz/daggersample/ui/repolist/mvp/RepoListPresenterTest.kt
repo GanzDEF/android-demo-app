@@ -3,11 +3,12 @@ package com.test.xyz.daggersample.ui.repolist.mvp
 
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.never
+import com.nhaarman.mockito_kotlin.verify
 import com.test.xyz.daggersample.domain.interactor.MainInteractor
 import com.test.xyz.daggersample.ui.BasePresenterTest
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mockito.*
 
 class RepoListPresenterTest : BasePresenterTest() {
 
@@ -32,7 +33,7 @@ class RepoListPresenterTest : BasePresenterTest() {
 
         //THEN
         verify(repoListView).showRepoList(any())
-        verify(repoListView, never()).showError(any(String::class.java))
+        verify(repoListView, never()).showError(any<String>())
     }
 
     @Test
@@ -45,7 +46,7 @@ class RepoListPresenterTest : BasePresenterTest() {
 
         //THEN
         verify(repoListView, never()).showRepoList(any())
-        verify(repoListView, times(1)).showError(any(String::class.java))
+        verify(repoListView).showError(any<String>())
     }
 
     companion object {

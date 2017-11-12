@@ -2,15 +2,15 @@
 
 package com.test.xyz.daggersample.ui.repodetails.mvp
 
+import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.never
+import com.nhaarman.mockito_kotlin.verify
 import com.test.xyz.daggersample.domain.interactor.MainInteractor
 import com.test.xyz.daggersample.domain.repository.api.model.Repo
 import com.test.xyz.daggersample.ui.BasePresenterTest
 import org.junit.Before
 import org.junit.Test
-import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.never
-import org.mockito.Mockito.verify
 
 class RepoDetailsPresenterTest : BasePresenterTest() {
 
@@ -34,8 +34,8 @@ class RepoDetailsPresenterTest : BasePresenterTest() {
         repoDetailsPresenter.requestRepoDetails(USER_NAME, PROJECT_ID)
 
         //THEN
-        verify<RepoDetailsView>(repoDetailsView).showRepoDetails(any(Repo::class.java))
-        verify<RepoDetailsView>(repoDetailsView, never()).showError(any(String::class.java))
+        verify(repoDetailsView).showRepoDetails(any<Repo>())
+        verify(repoDetailsView, never()).showError(any<String>())
     }
 
     @Test
@@ -47,8 +47,8 @@ class RepoDetailsPresenterTest : BasePresenterTest() {
         repoDetailsPresenter.requestRepoDetails("", PROJECT_ID)
 
         //THEN
-        verify(repoDetailsView, never()).showRepoDetails(any(Repo::class.java))
-        verify(repoDetailsView).showError(any(String::class.java))
+        verify(repoDetailsView, never()).showRepoDetails(any<Repo>())
+        verify(repoDetailsView).showError(any<String>())
     }
 
     companion object {
