@@ -10,6 +10,7 @@ import com.test.xyz.daggersample.domain.repository.api.model.Repo;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.AdditionalMatchers.and;
@@ -35,7 +36,7 @@ public abstract class BasePresenterTest {
         doAnswer(new Answer() {
             public Object answer(InvocationOnMock invocation) {
                 Object[] args = invocation.getArguments();
-                ((OnRepoDetailsCompletedListener) args[2]).onRepoDetailsRetrievalFailure(any(String.class));
+                ((OnRepoDetailsCompletedListener) args[2]).onRepoDetailsRetrievalFailure("Error happens!!!");
                 return null;
             }
         }).when(mainInteractor).getRepoItemDetails(eq(EMPTY_VALUE), any(String.class), any(OnRepoDetailsCompletedListener.class));
@@ -43,7 +44,7 @@ public abstract class BasePresenterTest {
         doAnswer(new Answer() {
             public Object answer(InvocationOnMock invocation) {
                 Object[] args = invocation.getArguments();
-                ((OnRepoDetailsCompletedListener) args[2]).onRepoDetailsRetrievalSuccess(any(Repo.class));
+                ((OnRepoDetailsCompletedListener) args[2]).onRepoDetailsRetrievalSuccess(new Repo());
                 return null;
             }
         }).when(mainInteractor).getRepoItemDetails(not(eq(EMPTY_VALUE)), any(String.class), any(OnRepoDetailsCompletedListener.class));
@@ -61,7 +62,11 @@ public abstract class BasePresenterTest {
         doAnswer(new Answer() {
             public Object answer(InvocationOnMock invocation) {
                 Object[] args = invocation.getArguments();
-                ((OnRepoListCompletedListener) args[1]).onRepoListRetrievalSuccess(any(List.class));
+                List<Repo> repoList = new ArrayList<Repo>();
+
+                repoList.add(new Repo());
+
+                ((OnRepoListCompletedListener) args[1]).onRepoListRetrievalSuccess(repoList);
                 return null;
             }
         }).when(mainInteractor).getRepoList(not(eq(EMPTY_VALUE)), any(OnRepoListCompletedListener.class));

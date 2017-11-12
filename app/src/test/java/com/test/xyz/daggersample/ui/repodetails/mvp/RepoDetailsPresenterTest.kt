@@ -1,27 +1,23 @@
+@file:Suppress("IllegalIdentifier")
+
 package com.test.xyz.daggersample.ui.repodetails.mvp
 
+import com.nhaarman.mockito_kotlin.mock
 import com.test.xyz.daggersample.domain.interactor.MainInteractor
 import com.test.xyz.daggersample.domain.repository.api.model.Repo
 import com.test.xyz.daggersample.ui.BasePresenterTest
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.Matchers
-import org.mockito.Mock
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.never
 import org.mockito.Mockito.verify
-import org.mockito.runners.MockitoJUnitRunner
 
-@RunWith(MockitoJUnitRunner::class)
 class RepoDetailsPresenterTest : BasePresenterTest() {
 
-    private var repoDetailsPresenter: RepoDetailsPresenter? = null
+    lateinit var repoDetailsPresenter: RepoDetailsPresenter
 
-    @Mock
-    internal var mainInteractor: MainInteractor? = null
-
-    @Mock
-    internal var repoDetailsView: RepoDetailsView? = null
+    var mainInteractor: MainInteractor = mock()
+    var repoDetailsView: RepoDetailsView = mock()
 
     @Before
     fun setup() {
@@ -30,29 +26,29 @@ class RepoDetailsPresenterTest : BasePresenterTest() {
     }
 
     @Test
-    fun requestRepoDetails_shouldReturnRepoDetails() {
+    fun `requestRepoDetails shouldReturnRepoDetails`() {
         //GIVEN
         //NOTHING
 
         //WHEN
-        repoDetailsPresenter!!.requestRepoDetails(USER_NAME, PROJECT_ID)
+        repoDetailsPresenter.requestRepoDetails(USER_NAME, PROJECT_ID)
 
         //THEN
-        verify<RepoDetailsView>(repoDetailsView).showRepoDetails(Matchers.any(Repo::class.java))
-        verify<RepoDetailsView>(repoDetailsView, never()).showError(Matchers.any(String::class.java))
+        verify<RepoDetailsView>(repoDetailsView).showRepoDetails(any(Repo::class.java))
+        verify<RepoDetailsView>(repoDetailsView, never()).showError(any(String::class.java))
     }
 
     @Test
-    fun requestRepoDetails_whenUserNameIsEmpty_shouldReturnError() {
+    fun `requestRepoDetails whenUserNameIsEmpty shouldReturnError`() {
         //GIVEN
         //NOTHING
 
         //WHEN
-        repoDetailsPresenter!!.requestRepoDetails("", PROJECT_ID)
+        repoDetailsPresenter.requestRepoDetails("", PROJECT_ID)
 
         //THEN
-        verify<RepoDetailsView>(repoDetailsView, never()).showRepoDetails(Matchers.any(Repo::class.java))
-        verify<RepoDetailsView>(repoDetailsView).showError(Matchers.any(String::class.java))
+        verify(repoDetailsView, never()).showRepoDetails(any(Repo::class.java))
+        verify(repoDetailsView).showError(any(String::class.java))
     }
 
     companion object {
