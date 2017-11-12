@@ -10,10 +10,10 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:name="com.test.xyz.daggersample.di.DaggerApplication"
+        android:name=".ui.common.di.DaggerApplication"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.test.xyz.daggersample.view.activity.main.MainActivity"
+            android:name="com.test.xyz.daggersample.ui.mainlobby.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme">
             <intent-filter>
@@ -23,7 +23,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.test.xyz.daggersample.view.activity.repodetails.RepoDetailsActivity"
+        <activity android:name="com.test.xyz.daggersample.ui.repodetails.RepoDetailsActivity"
             android:label="@string/repo_details"
             android:theme="@style/AppTheme">
 

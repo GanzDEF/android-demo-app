@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.test.xyz.daggersample.view.activity.repodetails.RepoDetailsActivity"
+    tools:context="com.test.xyz.daggersample.ui.repodetails.RepoDetailsActivity"
     android:id="@+id/activity_repo_details_container">
 
     <include layout="@layout/header" />

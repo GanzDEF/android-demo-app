@@ -26,11 +26,15 @@ task jacocoTestReport(type:JacocoReport, dependsOn: buildVariant) {
                        '**/Manifest*.*',
                        '**/**Factory*',
                        '**/*_MembersInjector*.*',
-                       '**/com/test/xyz/daggersample/service/api/model*',
-                       '**/com/test/xyz/daggersample/service/exception*',
-                       '**/com/test/xyz/daggersample/di*',
-                       '**/com/test/xyz/daggersample/view*',
-                       '**/com/test/xyz/daggersample/service*' /* Excluding I/O HTTP service classes from report */
+                       '**/di*',
+                       '**/com/test/xyz/daggersample/ui/common*',
+
+                       '**/com/test/xyz/daggersample/ui/weather/*.*',
+                       '**/com/test/xyz/daggersample/ui/repolist/*.*',
+                       '**/com/test/xyz/daggersample/ui/repodetails/*.*',
+                       '**/com/test/xyz/daggersample/ui/mainlobby*',
+
+                       '**/com/test/xyz/daggersample/repository*'
             ]
     )
 
@@ -39,7 +43,7 @@ task jacocoTestReport(type:JacocoReport, dependsOn: buildVariant) {
     executionData = files("../${appRootName}/build/jacoco/${buildVariant}.exec")
 
     reports {
-        xml.enabled = true
+        xml.enabled = false
         html.enabled = true
     }
 }

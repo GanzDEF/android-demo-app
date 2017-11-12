@@ -3,7 +3,9 @@ apply plugin: 'pl.droidsonroids.pitest'
 android {
     //Pi Test Configuration ...
     pitest {
-        targetClasses = ['com.test.xyz.daggersample.presenter.*']  //by default "${project.group}.*"
+        targetClasses = ['com.test.xyz.daggersample.ui.weather.mvp.*',
+                         'com.test.xyz.daggersample.ui.repodetails.mvp.*',
+                         'com.test.xyz.daggersample.ui.repolist.mvp.*']  //by default "${project.group}.*"
         excludedClasses = ['**Factory*', '**_MembersInjector*']
         pitestVersion = "1.1.0" //not needed when a default PIT version should be used
         threads = 5
