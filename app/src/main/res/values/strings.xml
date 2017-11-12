@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">DaggerSample</string>
+    <string name="app_name">Demo App</string>
     <string name="action_settings">Settings</string>
     <string name="username_empty_message">Empty user name</string>
     <string name="city_empty_message">Empty City</string>
