@@ -1,3 +1,5 @@
+@file:Suppress("IllegalIdentifier")
+
 package com.test.xyz.daggersample.ui.weather.mvp
 
 import com.nhaarman.mockito_kotlin.mock
@@ -27,7 +29,7 @@ class WeatherPresenterTest : BasePresenterTest() {
 
     @Test
     @Throws(Exception::class)
-    fun requestInformation_shouldReturnInfo() {
+    fun `requestInformation shouldReturnInfo`() {
         //GIVEN
         whenever(mainView.userNameText).thenReturn(USER_NAME)
         whenever(mainView.cityText).thenReturn(VALID_CITY)
@@ -44,13 +46,13 @@ class WeatherPresenterTest : BasePresenterTest() {
 
     @Test
     @Throws(Exception::class)
-    fun requestInformation_whenUserNameIsEmpty_shouldReturnError() {
+    fun `requestInformation whenUserNameIsEmpty shouldReturnError`() {
         //GIVEN
         whenever(mainView.userNameText).thenReturn("")
         whenever(mainView.cityText).thenReturn(VALID_CITY)
 
         //WHEN
-        weatherPresenter!!.requestWeatherInformation()
+        weatherPresenter.requestWeatherInformation()
 
         //THEN
         //TODO comment the next method to show how it work.
@@ -62,7 +64,7 @@ class WeatherPresenterTest : BasePresenterTest() {
 
     @Test
     @Throws(Exception::class)
-    fun requestInformation_whenCityIsEmpty_shouldReturnError() {
+    fun `requestInformation whenCityIsEmpty shouldReturnError`() {
         //GIVEN
         whenever(mainView.userNameText).thenReturn(USER_NAME)
         whenever(mainView.cityText).thenReturn("")
@@ -80,7 +82,7 @@ class WeatherPresenterTest : BasePresenterTest() {
 
     @Test
     @Throws(Exception::class)
-    fun requestInformation_whenCityIsInvalid_shouldReturnError() {
+    fun `requestInformation whenCityIsInvalid shouldReturnError`() {
         //GIVEN
         whenever(mainView.userNameText).thenReturn(USER_NAME)
         whenever(mainView.cityText).thenReturn(BasePresenterTest.INVALID_CITY)

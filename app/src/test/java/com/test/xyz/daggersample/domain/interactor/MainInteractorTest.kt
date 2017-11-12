@@ -1,3 +1,5 @@
+@file:Suppress("IllegalIdentifier")
+
 package com.test.xyz.daggersample.domain.interactor
 
 import com.nhaarman.mockito_kotlin.eq
@@ -16,16 +18,13 @@ import com.test.xyz.daggersample.ui.weather.mvp.OnWeatherInfoCompletedListener
 import junit.framework.Assert.fail
 import org.junit.After
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 import org.mockito.AdditionalMatchers.and
 import org.mockito.AdditionalMatchers.not
 import org.mockito.ArgumentMatchers
-import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Matchers.any
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.verify
-import org.mockito.MockitoAnnotations
 import rx.Observable
 import rx.Scheduler
 import rx.android.plugins.RxAndroidPlugins
@@ -35,7 +34,6 @@ import rx.plugins.RxJavaSchedulersHook
 import rx.schedulers.Schedulers
 import java.util.*
 
-@Ignore
 class MainInteractorTest {
 
     lateinit var testSubject: MainInteractorImpl
@@ -49,26 +47,8 @@ class MainInteractorTest {
 
     @Before
     fun setup() {
-        MockitoAnnotations.initMocks(this)
-
         setupRxSchedulers()
-
         testSubject = MainInteractorImpl(helloRepository, weatherRepository, repoListRepository)
-    }
-
-    private fun setupRxSchedulers() {
-        RxJavaPlugins.getInstance().reset()
-        RxJavaPlugins.getInstance().registerSchedulersHook(object : RxJavaSchedulersHook() {
-            override fun getIOScheduler(): Scheduler {
-                return Schedulers.immediate()
-            }
-        })
-        RxAndroidPlugins.getInstance().reset()
-        RxAndroidPlugins.getInstance().registerSchedulersHook(object : RxAndroidSchedulersHook() {
-            override fun getMainThreadScheduler(): Scheduler {
-                return Schedulers.immediate()
-            }
-        })
     }
 
     @After
@@ -78,16 +58,16 @@ class MainInteractorTest {
     }
 
     @Test
-    fun getInformation_whenUserNameAndCityAreCorrect_shouldReturnWeatherInfo() {
+    fun `getInformation shouldReturnWeatherInfo`() {
         try {
             //GIVEN
             mockWeatherServiceAPIs()
 
             //WHEN
-            testSubject!!.getWeatherInformation(USER_NAME, CITY, onInfoCompletedListener)
+            testSubject.getWeatherInformation(USER_NAME, CITY, onInfoCompletedListener)
 
             //THEN
-            verify<OnWeatherInfoCompletedListener>(onInfoCompletedListener).onSuccess(ArgumentMatchers.any(String::class.java))
+            verify(onInfoCompletedListener).onSuccess(ArgumentMatchers.any(String::class.java))
         } catch (exception: Exception) {
             exception.printStackTrace()
             fail("Unable to getWeatherInfo !!!")
@@ -96,7 +76,7 @@ class MainInteractorTest {
     }
 
     @Test
-    fun getInformation_whenCityIsInvalid_shouldReturnFailure() {
+    fun `getInformation whenCityIsInvalid shouldReturnFailure`() {
         try {
             //GIVEN
             mockWeatherServiceAPIs()
@@ -105,7 +85,7 @@ class MainInteractorTest {
             testSubject.getWeatherInformation(USER_NAME, INVALID_CITY, onInfoCompletedListener)
 
             //THEN
-            verify<OnWeatherInfoCompletedListener>(onInfoCompletedListener).onFailure(ArgumentMatchers.any(String::class.java))
+            verify(onInfoCompletedListener).onFailure(ArgumentMatchers.any(String::class.java))
         } catch (exception: Exception) {
             fail("Unable to getWeatherInfo !!!")
         }
@@ -113,7 +93,7 @@ class MainInteractorTest {
     }
 
     @Test
-    fun getInformation_whenUserNameIsEmpty_shouldReturnValidationError() {
+    fun `getInformation whenUserNameIsEmpty shouldReturnValidationError`() {
         try {
             //GIVEN
             mockWeatherServiceAPIs()
@@ -122,7 +102,7 @@ class MainInteractorTest {
             testSubject.getWeatherInformation("", CITY, onInfoCompletedListener)
 
             //THEN
-            verify<OnWeatherInfoCompletedListener>(onInfoCompletedListener).onUserNameValidationError(R.string.username_empty_message)
+            verify(onInfoCompletedListener).onUserNameValidationError(R.string.username_empty_message)
         } catch (exception: Exception) {
             fail("Unable to getWeatherInfo !!!")
         }
@@ -130,7 +110,7 @@ class MainInteractorTest {
     }
 
     @Test
-    fun getInformation_whenCityIsEmpty_shouldReturnValidationError() {
+    fun `getInformation whenCityIsEmpty shouldReturnValidationError`() {
         try {
             //GIVEN
             mockWeatherServiceAPIs()
@@ -139,7 +119,7 @@ class MainInteractorTest {
             testSubject.getWeatherInformation(USER_NAME, "", onInfoCompletedListener)
 
             //THEN
-            verify<OnWeatherInfoCompletedListener>(onInfoCompletedListener).onCityValidationError(R.string.city_empty_message)
+            verify(onInfoCompletedListener).onCityValidationError(R.string.city_empty_message)
         } catch (exception: Exception) {
             fail("Unable to getWeatherInfo !!!")
         }
@@ -148,7 +128,7 @@ class MainInteractorTest {
 
     @Test
     @Throws(Exception::class)
-    fun getRepoList_whenUserNameIsCorrect_shouldReturnRepoListInfo() {
+    fun `getRepoList whenUserNameIsCorrect shouldReturnRepoListInfo`() {
         //GIVEN
         mockGetRepoListAPI()
 
@@ -156,12 +136,12 @@ class MainInteractorTest {
         testSubject.getRepoList(USER_NAME, onRepoListCompletedListener)
 
         //THEN
-        verify<OnRepoListCompletedListener>(onRepoListCompletedListener).onRepoListRetrievalSuccess(ArgumentMatchers.anyList())
+        verify(onRepoListCompletedListener).onRepoListRetrievalSuccess(ArgumentMatchers.anyList())
     }
 
     @Test
     @Throws(Exception::class)
-    fun getRepoList_whenUserNameIsEmpty_shouldReturnValidationError() {
+    fun `getRepoList whenUserNameIsEmpty shouldReturnValidationError`() {
         //GIVEN
         mockGetRepoListAPI()
 
@@ -169,12 +149,12 @@ class MainInteractorTest {
         testSubject.getRepoList("", onRepoListCompletedListener)
 
         //THEN
-        verify<OnRepoListCompletedListener>(onRepoListCompletedListener).onRepoListRetrievalFailure(ArgumentMatchers.anyString())
+        verify(onRepoListCompletedListener).onRepoListRetrievalFailure(ArgumentMatchers.anyString())
     }
 
     @Test
     @Throws(Exception::class)
-    fun getRepoList_whenNetworkErrorHappen_shouldReturnFailureError() {
+    fun `getRepoList whenNetworkErrorHappen shouldReturnFailureError`() {
         //GIVEN
         mockGetRepoListAPI()
 
@@ -187,7 +167,7 @@ class MainInteractorTest {
 
     @Test
     @Throws(Exception::class)
-    fun getRepoItemDetails_whenUserNameAndProjectIDAreCorrect_shouldReturnRepoItemInfo() {
+    fun `getRepoItemDetails whenUserNameAndProjectIDAreCorrect shouldReturnRepoItemInfo`() {
         //GIVEN
         mockGetRepoItemDetailsAPI()
 
@@ -200,20 +180,7 @@ class MainInteractorTest {
 
     @Test
     @Throws(Exception::class)
-    fun getRepoItemDetails_whenUserNameIsEmpty_shouldReturnValidationError() {
-        //GIVEN
-        mockGetRepoItemDetailsAPI()
-
-        // WHEN
-        testSubject!!.getRepoItemDetails("", PROJECT_ID, onRepoDetailsCompletedListener)
-
-        //THEN
-        verify<OnRepoDetailsCompletedListener>(onRepoDetailsCompletedListener).onRepoDetailsRetrievalFailure(ArgumentMatchers.anyString())
-    }
-
-    @Test
-    @Throws(Exception::class)
-    fun getRepoItemDetails_whenProjectIDIsEmpty_shouldReturnValidationError() {
+    fun `getRepoItemDetails whenUserNameIsEmpty shouldReturnValidationError`() {
         //GIVEN
         mockGetRepoItemDetailsAPI()
 
@@ -221,12 +188,25 @@ class MainInteractorTest {
         testSubject.getRepoItemDetails("", PROJECT_ID, onRepoDetailsCompletedListener)
 
         //THEN
-        verify<OnRepoDetailsCompletedListener>(onRepoDetailsCompletedListener).onRepoDetailsRetrievalFailure(ArgumentMatchers.anyString())
+        verify(onRepoDetailsCompletedListener).onRepoDetailsRetrievalFailure(ArgumentMatchers.anyString())
     }
 
     @Test
     @Throws(Exception::class)
-    fun getRepoItemDetails_whenNetworkErrorHappen_shouldReturnFailureError() {
+    fun `getRepoItemDetails whenProjectIDIsEmpty shouldReturnValidationError`() {
+        //GIVEN
+        mockGetRepoItemDetailsAPI()
+
+        // WHEN
+        testSubject.getRepoItemDetails("", PROJECT_ID, onRepoDetailsCompletedListener)
+
+        //THEN
+        verify(onRepoDetailsCompletedListener).onRepoDetailsRetrievalFailure(ArgumentMatchers.anyString())
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun `getRepoItemDetails whenNetworkErrorHappen shouldReturnFailureError`() {
         //GIVEN
         mockGetRepoItemDetailsAPI()
 
@@ -234,7 +214,7 @@ class MainInteractorTest {
         testSubject.getRepoItemDetails(UNLUCKY_ACCOUNT, PROJECT_ID, onRepoDetailsCompletedListener)
 
         //THEN
-        verify<OnRepoDetailsCompletedListener>(onRepoDetailsCompletedListener).onRepoDetailsRetrievalFailure(ArgumentMatchers.anyString())
+        verify(onRepoDetailsCompletedListener).onRepoDetailsRetrievalFailure(ArgumentMatchers.anyString())
     }
 
     private fun mockWeatherServiceAPIs() {
@@ -265,20 +245,34 @@ class MainInteractorTest {
 
         // Error Scenario ...
         whenever(repoListRepository.getRepoList(ArgumentMatchers.eq(UNLUCKY_ACCOUNT)))
-                .thenReturn(any())
+                .thenReturn(Observable.error(Exception()))
     }
 
     private fun mockGetRepoItemDetailsAPI() {
         // Happy Path Scenario ...
-        val repo = Repo("SampleRepoItem")
-        val observable = Observable.just(repo)
+        val observable = Observable.just(Repo("SampleRepoItem"))
 
         whenever(repoListRepository.getRepoItemDetails(not(eq(UNLUCKY_ACCOUNT)),
-                eq(anyString()))).thenReturn(observable)
+                any())).thenReturn(observable)
 
         // Error Scenario ...
-        whenever(repoListRepository.getRepoItemDetails(eq(UNLUCKY_ACCOUNT), eq(anyString())))
-                .thenReturn(any())
+        whenever(repoListRepository.getRepoItemDetails(eq(UNLUCKY_ACCOUNT), any()))
+                .thenReturn(Observable.error(Exception()))
+    }
+
+    private fun setupRxSchedulers() {
+        RxJavaPlugins.getInstance().reset()
+        RxJavaPlugins.getInstance().registerSchedulersHook(object : RxJavaSchedulersHook() {
+            override fun getIOScheduler(): Scheduler {
+                return Schedulers.immediate()
+            }
+        })
+        RxAndroidPlugins.getInstance().reset()
+        RxAndroidPlugins.getInstance().registerSchedulersHook(object : RxAndroidSchedulersHook() {
+            override fun getMainThreadScheduler(): Scheduler {
+                return Schedulers.immediate()
+            }
+        })
     }
 
     companion object {
@@ -289,5 +283,4 @@ class MainInteractorTest {
         private val UNLUCKY_ACCOUNT = "UNLUCKY_ACCOUNT"
         private val EMPTY_VALUE = ""
     }
-
 }
