@@ -24,7 +24,7 @@ android {
     compileSdkVersion 23
     buildToolsVersion "22.0.1"
     defaultConfig {
-        applicationId "com.test.xyz.daggersample"
+        applicationId "com.test.xyz.demo"
         minSdkVersion 15
         targetSdkVersion 23
         versionCode 1
