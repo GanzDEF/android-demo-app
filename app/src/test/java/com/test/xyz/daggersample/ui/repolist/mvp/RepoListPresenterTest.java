@@ -13,7 +13,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.List;
 
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -57,6 +56,6 @@ public class RepoListPresenterTest extends BasePresenterTest {
 
         //THEN
         verify(repoListView, never()).showRepoList(Matchers.any(List.class));
-        verify(repoListView, times(1)).showError(Matchers.any(String.class));
+        verify(repoListView).showError(Matchers.any(String.class));
     }
 }
