@@ -27,14 +27,14 @@ task jacocoTestReport(type:JacocoReport, dependsOn: buildVariant) {
                        '**/**Factory*',
                        '**/*_MembersInjector*.*',
                        '**/di*',
-                       '**/com/test/xyz/daggersample/ui/common*',
+                       '**/com/test/xyz/demo/ui/common*',
 
-                       '**/com/test/xyz/daggersample/ui/weather/*.*',
-                       '**/com/test/xyz/daggersample/ui/repolist/*.*',
-                       '**/com/test/xyz/daggersample/ui/repodetails/*.*',
-                       '**/com/test/xyz/daggersample/ui/mainlobby*',
+                       '**/com/test/xyz/demo/ui/weather/*.*',
+                       '**/com/test/xyz/demo/ui/repolist/*.*',
+                       '**/com/test/xyz/demo/ui/repodetails/*.*',
+                       '**/com/test/xyz/demo/ui/mainlobby*',
 
-                       '**/com/test/xyz/daggersample/domain/repository*'
+                       '**/com/test/xyz/demo/domain/repository*'
             ]
     )
 
