@@ -58,7 +58,6 @@ class WeatherPresenterTest : BasePresenterTest() {
         //TODO comment the next method to show how it work.
         //verify(mainView).showBusyIndicator();
         //verify(mainView).hideBusyIndicator();
-        //verify(mainView, never()).showResult(any(String.class));
         verify(mainView).showUserNameError(R.string.username_empty_message)
     }
 
@@ -76,7 +75,6 @@ class WeatherPresenterTest : BasePresenterTest() {
         //TODO comment the next method to show how it work.
         //verify(mainView).showBusyIndicator();
         //verify(mainView).hideBusyIndicator();
-        //verify(mainView, never()).showResult(any(String.class));
         verify(mainView).showCityNameError(R.string.city_empty_message)
     }
 
