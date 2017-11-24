@@ -7,9 +7,9 @@ import com.test.xyz.demo.domain.repository.api.RepoListRepository;
 import com.test.xyz.demo.domain.repository.api.WeatherRepository;
 import com.test.xyz.demo.domain.repository.api.model.Repo;
 import com.test.xyz.demo.domain.repository.exception.InvalidCityException;
-import com.test.xyz.demo.ui.repodetails.mvp.OnRepoDetailsCompletedListener;
-import com.test.xyz.demo.ui.repolist.mvp.OnRepoListCompletedListener;
-import com.test.xyz.demo.ui.weather.mvp.OnWeatherInfoCompletedListener;
+import com.test.xyz.demo.ui.repodetails.vp.OnRepoDetailsCompletedListener;
+import com.test.xyz.demo.ui.repolist.vp.OnRepoListCompletedListener;
+import com.test.xyz.demo.ui.weather.vp.OnWeatherInfoCompletedListener;
 
 import org.junit.After;
 import org.junit.Before;

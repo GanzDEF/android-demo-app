@@ -1,11 +1,11 @@
 package com.test.xyz.demo.ui.repodetails.di;
 
-import com.test.xyz.demo.ui.repodetails.mvp.RepoDetailsPresenter;
+import com.test.xyz.demo.ui.repodetails.vp.RepoDetailsPresenter;
 import com.test.xyz.demo.ui.common.di.scope.ActivityScope;
 import com.test.xyz.demo.domain.interactor.MainInteractor;
 import com.test.xyz.demo.domain.interactor.MainInteractorImpl;
-import com.test.xyz.demo.ui.repodetails.mvp.RepoDetailsPresenterImpl;
-import com.test.xyz.demo.ui.repodetails.mvp.RepoDetailsView;
+import com.test.xyz.demo.ui.repodetails.vp.RepoDetailsPresenterImpl;
+import com.test.xyz.demo.ui.repodetails.vp.RepoDetailsView;
 
 import dagger.Module;
 import dagger.Provides;

@@ -3,9 +3,9 @@ package com.test.xyz.demo.ui.weather.di;
 import com.test.xyz.demo.ui.common.di.scope.ActivityScope;
 import com.test.xyz.demo.domain.interactor.MainInteractor;
 import com.test.xyz.demo.domain.interactor.MainInteractorImpl;
-import com.test.xyz.demo.ui.weather.mvp.WeatherPresenter;
-import com.test.xyz.demo.ui.weather.mvp.WeatherPresenterImpl;
-import com.test.xyz.demo.ui.weather.mvp.WeatherView;
+import com.test.xyz.demo.ui.weather.vp.WeatherPresenter;
+import com.test.xyz.demo.ui.weather.vp.WeatherPresenterImpl;
+import com.test.xyz.demo.ui.weather.vp.WeatherView;
 
 import dagger.Module;
 import dagger.Provides;

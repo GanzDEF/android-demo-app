@@ -18,8 +18,8 @@ import com.test.xyz.demo.ui.common.util.CommonConstants;
 import com.test.xyz.demo.ui.common.util.CommonUtils;
 import com.test.xyz.demo.ui.repodetails.RepoDetailsActivity;
 import com.test.xyz.demo.ui.repolist.di.RepoListFragmentModule;
-import com.test.xyz.demo.ui.repolist.mvp.RepoListPresenter;
-import com.test.xyz.demo.ui.repolist.mvp.RepoListView;
+import com.test.xyz.demo.ui.repolist.vp.RepoListPresenter;
+import com.test.xyz.demo.ui.repolist.vp.RepoListView;
 
 import java.util.ArrayList;
 import java.util.List;

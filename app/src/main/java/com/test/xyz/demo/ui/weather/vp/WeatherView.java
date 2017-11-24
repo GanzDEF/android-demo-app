@@ -1,4 +1,4 @@
-package com.test.xyz.demo.ui.weather.mvp;
+package com.test.xyz.demo.ui.weather.vp;
 
 public interface WeatherView {
     String getUserNameText();

@@ -1,8 +1,8 @@
 package com.test.xyz.demo.domain.interactor;
 
-import com.test.xyz.demo.ui.repodetails.mvp.OnRepoDetailsCompletedListener;
-import com.test.xyz.demo.ui.repolist.mvp.OnRepoListCompletedListener;
-import com.test.xyz.demo.ui.weather.mvp.OnWeatherInfoCompletedListener;
+import com.test.xyz.demo.ui.repodetails.vp.OnRepoDetailsCompletedListener;
+import com.test.xyz.demo.ui.repolist.vp.OnRepoListCompletedListener;
+import com.test.xyz.demo.ui.weather.vp.OnWeatherInfoCompletedListener;
 
 public interface MainInteractor {
     void getWeatherInformation(String userName, String cityName, final OnWeatherInfoCompletedListener listener);

@@ -14,8 +14,8 @@ import com.test.xyz.demo.ui.common.BaseFragment;
 import com.test.xyz.demo.ui.common.di.DaggerApplication;
 import com.test.xyz.demo.ui.common.util.CommonUtils;
 import com.test.xyz.demo.ui.weather.di.WeatherFragmentModule;
-import com.test.xyz.demo.ui.weather.mvp.WeatherPresenter;
-import com.test.xyz.demo.ui.weather.mvp.WeatherView;
+import com.test.xyz.demo.ui.weather.vp.WeatherPresenter;
+import com.test.xyz.demo.ui.weather.vp.WeatherView;
 
 import javax.inject.Inject;
 
