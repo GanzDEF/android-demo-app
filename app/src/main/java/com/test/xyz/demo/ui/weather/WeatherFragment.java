@@ -47,7 +47,10 @@ public class WeatherFragment extends BaseFragment implements WeatherView {
                 .plus(new WeatherFragmentModule(this))
                 .inject(this);
 
-        showInfoButton.setOnClickListener((view) -> presenter.requestWeatherInformation());
+        showInfoButton.setOnClickListener((view) -> {
+            CommonUtils.hideKeyboard(this.getActivity());
+            presenter.requestWeatherInformation();
+        });
     }
 
     @Override
