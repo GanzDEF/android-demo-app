@@ -42,7 +42,7 @@ public class RepoDetailsPresenterTest  extends BasePresenterTest {
         repoDetailsPresenter.requestRepoDetails(USER_NAME, PROJECT_ID);
 
         //THEN
-        verify(repoDetailsView).showRepoDetails(nullable(Repo.class));
+        verify(repoDetailsView).showRepoDetails(any(Repo.class));
         verify(repoDetailsView, never()).showError(any(String.class));
     }
 

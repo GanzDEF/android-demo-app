@@ -11,7 +11,6 @@ import org.mockito.MockitoAnnotations;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
@@ -42,7 +41,7 @@ public class RepoListPresenterTest extends BasePresenterTest {
         repoListPresenter.requestRepoList(USER_NAME);
 
         //THEN
-        verify(repoListView).showRepoList(nullable(List.class));
+        verify(repoListView).showRepoList(any(List.class));
         verify(repoListView, never()).showError(any(String.class));
     }
 

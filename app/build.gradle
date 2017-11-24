@@ -1,5 +1,5 @@
 project.ext {
-    appcompat = "25.3.0"
+    appcompat = "26.0.1"
     dagger = "2.0.1"
     butterknife = "8.8.1"
     retrofit = "2.0.2"
@@ -18,12 +18,12 @@ apply from: "../config/jacoco.gradle"
 apply from: "../config/pit.gradle"
 
 android {
-    compileSdkVersion 25
+    compileSdkVersion 26
     buildToolsVersion "26.0.2"
     defaultConfig {
         applicationId "com.test.xyz.demo"
         minSdkVersion 15
-        targetSdkVersion 23
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
     }
@@ -48,14 +48,18 @@ android {
             java.srcDirs = ['src/main/java']
         }
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "com.android.support:appcompat-v7:$project.appcompat"
     implementation "com.android.support:recyclerview-v7:$project.appcompat"
     implementation "com.android.support:design:$project.appcompat"
-
     implementation "com.squareup.retrofit2:retrofit:$project.retrofit"
     implementation "com.squareup.retrofit2:converter-gson:$project.retrofit"
     implementation "com.squareup.retrofit2:adapter-rxjava:$project.retrofit"
@@ -64,7 +68,6 @@ dependencies {
     implementation "io.reactivex:rxandroid:$project.rxandroid"
     implementation "io.reactivex:rxjava:$project.rxjava"
     implementation "com.jakewharton.rxbinding:rxbinding:$project.rxbinding"
-
     compileOnly "javax.annotation:jsr250-api:$project.annotation"
 
     // Dagger-2

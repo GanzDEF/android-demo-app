@@ -5,14 +5,14 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.test.xyz.demo.R;
 import com.test.xyz.demo.ui.mainlobby.navdrawer.FragmentDrawer;
 
-public class MainActivity extends ActionBarActivity implements FragmentDrawer.FragmentDrawerListener {
+public class MainActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener {
     private final static String TAG = MainActivity.class.getSimpleName();
     private final static int REPO_LIST_FRAG = 0;
     private final static int WEATHER_FRAG = 1;
