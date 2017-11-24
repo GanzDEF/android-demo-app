@@ -2,7 +2,6 @@ package com.test.xyz.demo.domain.repository.impl;
 
 import android.util.Log;
 
-import com.test.xyz.demo.domain.repository.api.ErrorCode;
 import com.test.xyz.demo.domain.repository.api.WeatherRepository;
 import com.test.xyz.demo.domain.repository.exception.InvalidCityException;
 
@@ -65,7 +64,7 @@ public class WeatherRepositoryManager implements WeatherRepository {
             int responseCode = httpURLConnection.getResponseCode();
 
             if (responseCode >= 400) {
-                throw new Exception(ErrorCode.HTTP_ERROR);
+                throw new Exception("HTTP error");
             }
 
             InputStream is = httpURLConnection.getInputStream();
@@ -85,7 +84,7 @@ public class WeatherRepositoryManager implements WeatherRepository {
             int startIndex = result.indexOf("\"temp\":");
 
             if (startIndex == -1) {
-                throw new InvalidCityException(ErrorCode.INVALID_CITY_PROVIDED);
+                throw new InvalidCityException("Invalid city provided");
             }
 
             int endIndex = result.indexOf(",", startIndex);
@@ -103,13 +102,13 @@ public class WeatherRepositoryManager implements WeatherRepository {
 
     private String encodeCity(String city) {
         if (city == null || city.trim().equals("")) {
-            throw new RuntimeException(ErrorCode.CITY_REQUIRED);
+            throw new RuntimeException("City is required");
         }
 
         try {
             city = URLEncoder.encode(city, "UTF-8");
         } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(ErrorCode.INVALID_CITY_PROVIDED);
+            throw new RuntimeException("Invalid city is provided");
         }
 
         return city;

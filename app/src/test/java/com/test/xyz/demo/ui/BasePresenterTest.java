@@ -55,7 +55,7 @@ public abstract class BasePresenterTest {
 
     private void mockGetInformationAPI(MainInteractor mainInteractor) {
         doAnswer((invocation) -> {
-            ((OnWeatherInfoCompletedListener) invocation.getArguments()[2]).onFailure("Invalid city provided!!!");
+            ((OnWeatherInfoCompletedListener) invocation.getArguments()[2]).onFailure(R.string.weather_error);
             return null;
         }).when(mainInteractor).getWeatherInformation(anyString(), eq(INVALID_CITY), any(OnWeatherInfoCompletedListener.class));
 

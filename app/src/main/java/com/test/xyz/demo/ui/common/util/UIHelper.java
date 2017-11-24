@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
-public class CommonUtils {
+public class UIHelper {
     public static void showToastMessage(Activity activity, String message) {
         Toast.makeText(activity, message, Toast.LENGTH_SHORT).show();
     }
@@ -15,14 +15,18 @@ public class CommonUtils {
         InputMethodManager inputManager = (InputMethodManager)
                 activity.getSystemService(Context.INPUT_METHOD_SERVICE);
 
-        // check if no view has focus:
-        View v = ((Activity) activity).getCurrentFocus();
+        View view = activity.getCurrentFocus();
 
-        if (v == null) {
+        if (view == null) {
             return;
         }
 
         inputManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(),
                 InputMethodManager.HIDE_NOT_ALWAYS);
+    }
+
+    public interface Constants {
+        String REPO_OWNER = "google";
+        String REPO_TITLE = "Repo_Title";
     }
 }

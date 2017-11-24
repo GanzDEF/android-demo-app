@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.test.xyz.demo.R;
 import com.test.xyz.demo.ui.common.BaseFragment;
 import com.test.xyz.demo.ui.common.di.DaggerApplication;
-import com.test.xyz.demo.ui.common.util.CommonUtils;
+import com.test.xyz.demo.ui.common.util.UIHelper;
 import com.test.xyz.demo.ui.weather.di.WeatherFragmentModule;
 import com.test.xyz.demo.ui.weather.vp.WeatherPresenter;
 import com.test.xyz.demo.ui.weather.vp.WeatherView;
@@ -50,12 +50,12 @@ public class WeatherFragment extends BaseFragment implements WeatherView {
                 .inject(this);
 
         weatherContainer.setOnTouchListener((view, motionEvent) -> {
-            CommonUtils.hideKeyboard(getActivity());
+            UIHelper.hideKeyboard(getActivity());
             return false;
         });
 
         showInfoButton.setOnClickListener((view) -> {
-            CommonUtils.hideKeyboard(this.getActivity());
+            UIHelper.hideKeyboard(this.getActivity());
             presenter.requestWeatherInformation();
         });
     }
@@ -94,7 +94,7 @@ public class WeatherFragment extends BaseFragment implements WeatherView {
     }
 
     @Override
-    public void showError(final String error) { CommonUtils.showToastMessage(WeatherFragment.this.getActivity(), error); }
+    public void showGenericError(final int messageID) { UIHelper.showToastMessage(WeatherFragment.this.getActivity(), getString(messageID)); }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {

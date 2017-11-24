@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import com.test.xyz.demo.R;
-import com.test.xyz.demo.ui.common.util.CommonUtils;
+import com.test.xyz.demo.ui.common.util.UIHelper;
 import com.test.xyz.demo.ui.mainlobby.navdrawer.FragmentDrawer;
 import com.test.xyz.demo.ui.repolist.RepoListFragment;
 
@@ -23,7 +23,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     protected void loadFragment(Fragment fragment, String title) {
-        CommonUtils.hideKeyboard(this);
+        UIHelper.hideKeyboard(this);
 
         getSupportFragmentManager()
                 .beginTransaction()

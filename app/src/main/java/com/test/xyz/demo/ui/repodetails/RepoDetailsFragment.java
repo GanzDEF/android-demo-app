@@ -11,8 +11,7 @@ import com.test.xyz.demo.R;
 import com.test.xyz.demo.domain.repository.api.model.Repo;
 import com.test.xyz.demo.ui.common.BaseFragment;
 import com.test.xyz.demo.ui.common.di.DaggerApplication;
-import com.test.xyz.demo.ui.common.util.CommonConstants;
-import com.test.xyz.demo.ui.common.util.CommonUtils;
+import com.test.xyz.demo.ui.common.util.UIHelper;
 import com.test.xyz.demo.ui.repodetails.di.RepoDetailsFragmentModule;
 import com.test.xyz.demo.ui.repodetails.vp.RepoDetailsPresenter;
 import com.test.xyz.demo.ui.repodetails.vp.RepoDetailsView;
@@ -59,7 +58,7 @@ public class RepoDetailsFragment extends BaseFragment implements RepoDetailsView
     @Override
     public void showError(final String errorMessage) {
         dismissAllDialogs();
-        CommonUtils.showToastMessage(getActivity(), errorMessage);
+        UIHelper.showToastMessage(getActivity(), errorMessage);
         repoDetails.setText(R.string.repo_details_ret_error);
     }
 
@@ -80,7 +79,7 @@ public class RepoDetailsFragment extends BaseFragment implements RepoDetailsView
         RepoDetailsFragment fragment = new RepoDetailsFragment();
         Bundle args = new Bundle();
 
-        args.putString(CommonConstants.REPO_TITLE, repoItemTitle);
+        args.putString(UIHelper.Constants.REPO_TITLE, repoItemTitle);
         fragment.setArguments(args);
 
         return fragment;
@@ -88,7 +87,7 @@ public class RepoDetailsFragment extends BaseFragment implements RepoDetailsView
 
     private void loadRepoDetails() {
         showLoadingDialog();
-        repoItemTitle = getArguments().getString(CommonConstants.REPO_TITLE);
-        presenter.requestRepoDetails(CommonConstants.REPO_OWNER, repoItemTitle);
+        repoItemTitle = getArguments().getString(UIHelper.Constants.REPO_TITLE);
+        presenter.requestRepoDetails(UIHelper.Constants.REPO_OWNER, repoItemTitle);
     }
 }

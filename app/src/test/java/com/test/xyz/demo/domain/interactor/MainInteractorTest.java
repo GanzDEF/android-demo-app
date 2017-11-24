@@ -1,12 +1,12 @@
 package com.test.xyz.demo.domain.interactor;
 
 import com.test.xyz.demo.R;
-import com.test.xyz.demo.domain.repository.api.ErrorCode;
 import com.test.xyz.demo.domain.repository.api.HelloRepository;
 import com.test.xyz.demo.domain.repository.api.RepoListRepository;
 import com.test.xyz.demo.domain.repository.api.WeatherRepository;
 import com.test.xyz.demo.domain.repository.api.model.Repo;
 import com.test.xyz.demo.domain.repository.exception.InvalidCityException;
+import com.test.xyz.demo.ui.common.util.Logger;
 import com.test.xyz.demo.ui.repodetails.vp.OnRepoDetailsCompletedListener;
 import com.test.xyz.demo.ui.repolist.vp.OnRepoListCompletedListener;
 import com.test.xyz.demo.ui.weather.vp.OnWeatherInfoCompletedListener;
@@ -66,6 +66,9 @@ public class MainInteractorTest {
     @Mock
     private RepoListRepository repoListRepository;
 
+    @Mock
+    Logger logger;
+
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
@@ -73,6 +76,7 @@ public class MainInteractorTest {
         setupRxSchedulers();
 
         testSubject = new MainInteractorImpl(helloRepository, weatherRepository, repoListRepository);
+        testSubject.setLogger(logger);
     }
 
     private void setupRxSchedulers() {
@@ -125,8 +129,9 @@ public class MainInteractorTest {
             testSubject.getWeatherInformation(USER_NAME, INVALID_CITY, onInfoCompletedListener);
 
             //THEN
-            verify(onInfoCompletedListener).onFailure(any(String.class));
+            verify(onInfoCompletedListener).onFailure(R.string.weather_error);
         } catch (Exception exception) {
+            exception.printStackTrace();
             fail("Unable to getWeatherInfo !!!");
         }
     }
@@ -256,13 +261,13 @@ public class MainInteractorTest {
         // Empty City ...
         when(weatherRepository.getWeatherInfo(eq(EMPTY_VALUE)))
                 .thenReturn(Observable.error(
-                        new RuntimeException(ErrorCode.CITY_REQUIRED))
+                        new RuntimeException("City is required"))
                         .cast(Integer.class));
 
         // Invalid City ...
         when(weatherRepository.getWeatherInfo(eq(INVALID_CITY)))
                 .thenReturn(Observable.error(
-                        new InvalidCityException(ErrorCode.INVALID_CITY_PROVIDED))
+                        new InvalidCityException("Invalid city provided"))
                         .cast(Integer.class));
     }
 

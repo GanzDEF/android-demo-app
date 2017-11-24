@@ -16,6 +16,7 @@
 
     <string name="please_wait">Please wait</string>
     <string name="repo_details_ret_error">Unable to get Repo details!</string>
+    <string name="weather_error">Unable to show weather information now!</string>
 
     <string-array name="nav_drawer_labels">
         <item>@string/repo_list</item>

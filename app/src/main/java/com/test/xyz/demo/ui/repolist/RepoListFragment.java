@@ -13,8 +13,7 @@ import com.test.xyz.demo.R;
 import com.test.xyz.demo.domain.repository.api.model.Repo;
 import com.test.xyz.demo.ui.common.BaseFragment;
 import com.test.xyz.demo.ui.common.di.DaggerApplication;
-import com.test.xyz.demo.ui.common.util.CommonConstants;
-import com.test.xyz.demo.ui.common.util.CommonUtils;
+import com.test.xyz.demo.ui.common.util.UIHelper;
 import com.test.xyz.demo.ui.mainlobby.MainActivity;
 import com.test.xyz.demo.ui.repolist.di.RepoListFragmentModule;
 import com.test.xyz.demo.ui.repolist.vp.RepoListPresenter;
@@ -52,7 +51,7 @@ public class RepoListFragment extends BaseFragment implements RepoListView {
                 .inject(this);
 
         showLoadingDialog();
-        presenter.requestRepoList(CommonConstants.REPO_OWNER);
+        presenter.requestRepoList(UIHelper.Constants.REPO_OWNER);
     }
 
     @Override
@@ -64,7 +63,7 @@ public class RepoListFragment extends BaseFragment implements RepoListView {
     @Override
     public void showError(final String errorMessage) {
         dismissAllDialogs();
-        CommonUtils.showToastMessage(RepoListFragment.this.getActivity(), errorMessage);
+        UIHelper.showToastMessage(RepoListFragment.this.getActivity(), errorMessage);
          displayResults(new ArrayList<Repo>() {});
     }
 
