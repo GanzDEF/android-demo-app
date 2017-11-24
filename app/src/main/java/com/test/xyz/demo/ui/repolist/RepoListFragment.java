@@ -6,20 +6,19 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.test.xyz.demo.R;
-import com.test.xyz.demo.ui.common.di.DaggerApplication;
-import com.test.xyz.demo.ui.repolist.mvp.RepoListPresenter;
 import com.test.xyz.demo.domain.repository.api.model.Repo;
-import com.test.xyz.demo.ui.repodetails.RepoDetailsActivity;
 import com.test.xyz.demo.ui.common.BaseFragment;
+import com.test.xyz.demo.ui.common.di.DaggerApplication;
 import com.test.xyz.demo.ui.common.util.CommonConstants;
 import com.test.xyz.demo.ui.common.util.CommonUtils;
+import com.test.xyz.demo.ui.repodetails.RepoDetailsActivity;
 import com.test.xyz.demo.ui.repolist.di.RepoListFragmentModule;
+import com.test.xyz.demo.ui.repolist.mvp.RepoListPresenter;
 import com.test.xyz.demo.ui.repolist.mvp.RepoListView;
 
 import java.util.ArrayList;
@@ -29,26 +28,20 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 public class RepoListFragment extends BaseFragment implements RepoListView {
-    private final static String TAG = RepoListFragment.class.getName();
+    private Unbinder unbinder;
 
-    @Inject
-    RepoListPresenter presenter;
-
-    @BindView(R.id.repoList)
-    ListView repoListView;
-
-    @BindView(R.id.noAvlRepos)
-    TextView noAvlRepos;
+    @Inject RepoListPresenter presenter;
+    @BindView(R.id.repoList) ListView repoListView;
+    @BindView(R.id.noAvlRepos) TextView noAvlRepos;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_repolist, container, false);
-
-        ButterKnife.bind(this, view);
-
+        unbinder = ButterKnife.bind(this, view);
         return view;
     }
 
@@ -59,7 +52,7 @@ public class RepoListFragment extends BaseFragment implements RepoListView {
                 .plus(new RepoListFragmentModule(this))
                 .inject(this);
 
-        presenter.requestRepoList(CommonConstants.DEFAULT_USER_NAME);
+        presenter.requestRepoList(CommonConstants.REPO_OWNER);
     }
 
     @Override
@@ -73,6 +66,12 @@ public class RepoListFragment extends BaseFragment implements RepoListView {
          displayResults(new ArrayList<Repo>() {});
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
+
     private void displayResults(List<Repo> repos) {
         final List<String> values = getRepoNameList(repos);
 
@@ -82,29 +81,19 @@ public class RepoListFragment extends BaseFragment implements RepoListView {
         repoListView.setAdapter(adapter);
         repoListView.setEmptyView(noAvlRepos);
 
-        repoListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-
+        repoListView.setOnItemClickListener((parent,  view, position,  id) -> {
                 int itemPosition = position;
                 Intent intent = new Intent(RepoListFragment.this.getActivity(), RepoDetailsActivity.class);
-
                 intent.putExtra(CommonConstants.REPO_DESC, values.get(itemPosition));
-
                 startActivity(intent);
-            }
-
         });
     }
 
     private List<String> getRepoNameList(List<Repo> repos) {
-        final List<String> values = new ArrayList<>();
-
+        List<String> values = new ArrayList<>();
         for (int i = 0; i < repos.size(); ++i) {
             values.add(repos.get(i).name);
         }
-
         return values;
     }
 }

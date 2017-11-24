@@ -5,8 +5,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
 public abstract class BaseFragment extends Fragment {
-    String TAG = BaseFragment.class.getName();
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
