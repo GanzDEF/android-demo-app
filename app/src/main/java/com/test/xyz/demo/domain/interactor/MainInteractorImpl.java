@@ -21,16 +21,9 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public class MainInteractorImpl implements MainInteractor {
-    private static final String TAG = MainInteractorImpl.class.getName();
-
-    @Inject
-    HelloRepository helloRepository;
-
-    @Inject
-    WeatherRepository weatherRepository;
-
-    @Inject
-    RepoListRepository repoListRepository;
+    @Inject HelloRepository helloRepository;
+    @Inject WeatherRepository weatherRepository;
+    @Inject RepoListRepository repoListRepository;
 
     @Inject
     public MainInteractorImpl() {

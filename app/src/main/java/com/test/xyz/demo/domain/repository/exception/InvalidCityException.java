@@ -1,7 +1,7 @@
 package com.test.xyz.demo.domain.repository.exception;
 
 public class InvalidCityException extends Exception {
-    String message;
+    private String message;
 
     public InvalidCityException(String message) {
         this.message = message;

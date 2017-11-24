@@ -5,9 +5,8 @@ android {
     pitest {
         targetClasses = ['com.test.xyz.demo.ui.weather.mvp.*',
                          'com.test.xyz.demo.ui.repodetails.mvp.*',
-                         'com.test.xyz.demo.ui.repolist.mvp.*']  //by default "${project.group}.*"
+                         'com.test.xyz.demo.ui.repolist.mvp.*']
         excludedClasses = ['**Factory*', '**_MembersInjector*']
-        pitestVersion = "1.1.0" //not needed when a default PIT version should be used
         threads = 5
         timeoutFactor = 20000
         outputFormats = ['XML', 'HTML']
