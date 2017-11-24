@@ -10,7 +10,7 @@
 
     <!-- navigation drawer item labels  -->
     <string name="nav_item_main">Weather Now</string>
-    <string name="nav_item_repo_list">Google Repo List</string>
+    <string name="repo_list">Google Repo List</string>
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
 
@@ -18,7 +18,7 @@
     <string name="repo_details_ret_error">Unable to get Repo details!</string>
 
     <string-array name="nav_drawer_labels">
-        <item>@string/nav_item_repo_list</item>
+        <item>@string/repo_list</item>
         <item>@string/nav_item_main</item>
     </string-array>
 </resources>

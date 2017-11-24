@@ -3,7 +3,7 @@ package com.test.xyz.demo.ui.common.di.module;
 import com.test.xyz.demo.domain.repository.api.HelloRepository;
 import com.test.xyz.demo.domain.repository.api.RepoListRepository;
 import com.test.xyz.demo.domain.repository.api.WeatherRepository;
-import com.test.xyz.demo.domain.repository.impl.HelloRepositoryReleaseManager;
+import com.test.xyz.demo.domain.repository.impl.HelloRepositoryManager;
 import com.test.xyz.demo.domain.repository.impl.WeatherRepositoryManager;
 
 import javax.inject.Singleton;
@@ -38,6 +38,6 @@ public class CommonModule {
     @Provides
     @Singleton
     HelloRepository provideHelloService() {
-        return new HelloRepositoryReleaseManager();
+        return new HelloRepositoryManager();
     }
 }

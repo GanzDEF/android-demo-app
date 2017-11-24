@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -32,6 +33,7 @@ public class WeatherFragment extends BaseFragment implements WeatherView {
     @BindView(R.id.btnShowInfo) Button showInfoButton;
     @BindView(R.id.resultView) TextView resultView;
     @BindView(R.id.progress) ProgressBar progressBar;
+    @BindView(R.id.weatherContainer) LinearLayout weatherContainer;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -46,6 +48,11 @@ public class WeatherFragment extends BaseFragment implements WeatherView {
                 .getAppComponent()
                 .plus(new WeatherFragmentModule(this))
                 .inject(this);
+
+        weatherContainer.setOnTouchListener((view, motionEvent) -> {
+            CommonUtils.hideKeyboard(getActivity());
+            return false;
+        });
 
         showInfoButton.setOnClickListener((view) -> {
             CommonUtils.hideKeyboard(this.getActivity());
@@ -102,5 +109,11 @@ public class WeatherFragment extends BaseFragment implements WeatherView {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+    /** Creates weather fragment instance */
+    public static WeatherFragment newInstance() {
+        WeatherFragment fragment = new WeatherFragment();
+        return fragment;
     }
 }

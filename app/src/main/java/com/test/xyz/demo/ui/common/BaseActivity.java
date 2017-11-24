@@ -1,62 +1,47 @@
 package com.test.xyz.demo.ui.common;
 
-import android.app.ProgressDialog;
-import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 
 import com.test.xyz.demo.R;
-
-import butterknife.BindView;
+import com.test.xyz.demo.ui.common.util.CommonUtils;
+import com.test.xyz.demo.ui.mainlobby.navdrawer.FragmentDrawer;
+import com.test.xyz.demo.ui.repolist.RepoListFragment;
 
 public abstract class BaseActivity extends AppCompatActivity {
-    private ProgressDialog mDialog;
+    private Toolbar mToolbar;
+    private FragmentDrawer drawerFragment;
 
-    @BindView(R.id.toolbar) Toolbar toolbar;
+    protected final static int REPO_LIST_FRAG = 0;
+    protected final static int WEATHER_FRAG = 1;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        onCreateActivity();
-        initializeToolbar();
+    protected void setupNavigationDrawer(FragmentDrawer.FragmentDrawerListener listener) {
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+        drawerFragment = (FragmentDrawer) getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
+        drawerFragment.setUp(R.id.fragment_navigation_drawer, findViewById(R.id.drawer_layout), mToolbar);
+        drawerFragment.setDrawerListener(listener);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                break;
-        }
+    protected void loadFragment(Fragment fragment, String title) {
+        CommonUtils.hideKeyboard(this);
 
-        return super.onOptionsItemSelected(item);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .addToBackStack("")
+                .replace(R.id.container_body,
+                        fragment, null).commit();
+
+        getSupportActionBar().setTitle(title);
     }
 
-    public void showProgressDialog() {
-        mDialog = new ProgressDialog(this);
+    protected void loadMainFragment() {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.container_body,
+                        RepoListFragment.newInstance(), null).commit();
 
-        mDialog.setMessage(getString(R.string.please_wait));
-        mDialog.setCancelable(false);
-        mDialog.show();
+        getSupportActionBar().setTitle(R.string.repo_list);
     }
-
-    public void dismissAllDialogs() {
-        if (mDialog != null) {
-            mDialog.dismiss();
-        }
-    }
-
-    private void initializeToolbar() {
-        if (toolbar != null) {
-            setSupportActionBar(toolbar);
-
-            // Support back button
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-        }
-    }
-
-    abstract protected void onCreateActivity();
 }

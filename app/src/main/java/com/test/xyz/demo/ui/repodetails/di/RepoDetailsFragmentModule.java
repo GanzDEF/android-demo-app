@@ -11,8 +11,8 @@ import dagger.Module;
 import dagger.Provides;
 
 @Module
-public class RepoDetailsActivityModule {
-    public RepoDetailsActivityModule(RepoDetailsView view) {
+public class RepoDetailsFragmentModule {
+    public RepoDetailsFragmentModule(RepoDetailsView view) {
         this.view = view;
     }
 
