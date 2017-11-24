@@ -14,9 +14,9 @@
         android:theme="@style/AppTheme">
         <activity
             android:name="com.test.xyz.demo.ui.mainlobby.MainActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme"
-            android:screenOrientation="portrait">
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
