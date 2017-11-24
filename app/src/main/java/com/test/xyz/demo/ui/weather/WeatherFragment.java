@@ -21,8 +21,8 @@ import com.test.xyz.demo.ui.weather.mvp.WeatherView;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 public class WeatherFragment extends BaseFragment implements WeatherView, View.OnClickListener {
     private static String TAG = WeatherFragment.class.getName();
@@ -30,19 +30,19 @@ public class WeatherFragment extends BaseFragment implements WeatherView, View.O
     @Inject
     WeatherPresenter presenter;
 
-    @InjectView(R.id.userNameText)
+    @BindView(R.id.userNameText)
     EditText userNameText;
 
-    @InjectView(R.id.cityText)
+    @BindView(R.id.cityText)
     EditText cityText;
 
-    @InjectView(R.id.btnShowInfo)
+    @BindView(R.id.btnShowInfo)
     Button showInfoButton;
 
-    @InjectView(R.id.resultView)
+    @BindView(R.id.resultView)
     TextView resultView;
 
-    @InjectView(R.id.progress)
+    @BindView(R.id.progress)
     ProgressBar progressBar;
 
     @Override
@@ -52,7 +52,7 @@ public class WeatherFragment extends BaseFragment implements WeatherView, View.O
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_weather, container, false);
 
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
 
         return view;
     }

@@ -10,12 +10,12 @@ import android.view.MenuItem;
 
 import com.test.xyz.demo.R;
 
-import butterknife.InjectView;
+import butterknife.BindView;
 
 public abstract class BaseActivity extends AppCompatActivity {
     String TAG = BaseActivity.class.getName();
 
-    @InjectView(R.id.toolbar)
+    @BindView(R.id.toolbar)
     Toolbar toolbar;
 
     ProgressDialog mDialog;

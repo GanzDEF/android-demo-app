@@ -16,8 +16,8 @@ import com.test.xyz.demo.ui.repodetails.mvp.RepoDetailsView;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 public class RepoDetailsActivity extends BaseActivity implements RepoDetailsView {
     static String TAG = RepoDetailsActivity.class.getName();
@@ -25,10 +25,10 @@ public class RepoDetailsActivity extends BaseActivity implements RepoDetailsView
     @Inject
     RepoDetailsPresenter presenter;
 
-    @InjectView(R.id.repoDetails)
+    @BindView(R.id.repoDetails)
     TextView repoDetails;
 
-    @InjectView(R.id.repoTitle)
+    @BindView(R.id.repoTitle)
     TextView repoTitle;
 
     String repoItemTitle = "";
@@ -37,7 +37,7 @@ public class RepoDetailsActivity extends BaseActivity implements RepoDetailsView
     protected void onCreateActivity() {
         setContentView(R.layout.activity_repodetails);
 
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
 
         Log.i(TAG, "Getting custom component inside RepoDetailsActivity");
 

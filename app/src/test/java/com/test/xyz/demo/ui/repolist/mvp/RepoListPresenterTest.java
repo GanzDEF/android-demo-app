@@ -5,30 +5,30 @@ import com.test.xyz.demo.ui.BasePresenterTest;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Matchers;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.MockitoAnnotations;
 
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
-@RunWith(MockitoJUnitRunner.class)
 public class RepoListPresenterTest extends BasePresenterTest {
     private static final String USER_NAME = "google";
 
     private RepoListPresenter repoListPresenter;
 
     @Mock
-    RepoListView repoListView;
+    private RepoListView repoListView;
 
     @Mock
-    MainInteractor mainInteractor;
+    private MainInteractor mainInteractor;
 
     @Before
     public void setup() {
+        MockitoAnnotations.initMocks(this);
         mockInteractor(mainInteractor);
         repoListPresenter = new RepoListPresenterImpl(repoListView, mainInteractor);
     }
@@ -42,8 +42,8 @@ public class RepoListPresenterTest extends BasePresenterTest {
         repoListPresenter.requestRepoList(USER_NAME);
 
         //THEN
-        verify(repoListView).showRepoList(Matchers.any(List.class));
-        verify(repoListView, never()).showError(Matchers.any(String.class));
+        verify(repoListView).showRepoList(nullable(List.class));
+        verify(repoListView, never()).showError(any(String.class));
     }
 
     @Test
@@ -55,7 +55,7 @@ public class RepoListPresenterTest extends BasePresenterTest {
         repoListPresenter.requestRepoList("");
 
         //THEN
-        verify(repoListView, never()).showRepoList(Matchers.any(List.class));
-        verify(repoListView).showError(Matchers.any(String.class));
+        verify(repoListView, never()).showRepoList(any(List.class));
+        verify(repoListView).showError(any(String.class));
     }
 }

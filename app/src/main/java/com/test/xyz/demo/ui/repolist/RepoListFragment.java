@@ -27,8 +27,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 public class RepoListFragment extends BaseFragment implements RepoListView {
     private final static String TAG = RepoListFragment.class.getName();
@@ -36,10 +36,10 @@ public class RepoListFragment extends BaseFragment implements RepoListView {
     @Inject
     RepoListPresenter presenter;
 
-    @InjectView(R.id.repoList)
+    @BindView(R.id.repoList)
     ListView repoListView;
 
-    @InjectView(R.id.noAvlRepos)
+    @BindView(R.id.noAvlRepos)
     TextView noAvlRepos;
 
     @Nullable
@@ -47,7 +47,7 @@ public class RepoListFragment extends BaseFragment implements RepoListView {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_repolist, container, false);
 
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
 
         return view;
     }
