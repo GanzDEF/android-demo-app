@@ -1,20 +1,18 @@
 package com.test.xyz.demo.ui.weather.mvp;
 
+import com.test.xyz.demo.R;
 import com.test.xyz.demo.domain.interactor.MainInteractor;
 import com.test.xyz.demo.ui.BasePresenterTest;
-import com.test.xyz.demo.R;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.MockitoAnnotations;
 
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
 public class WeatherPresenterTest extends BasePresenterTest {
     private static final String USER_NAME = "hazems";
 
@@ -28,9 +26,8 @@ public class WeatherPresenterTest extends BasePresenterTest {
 
     @Before
     public void setup() {
+        MockitoAnnotations.initMocks(this);
         mockInteractor(mainInteractor);
-
-        // Instantiate main object
         weatherPresenter = new WeatherPresenterImpl(mainView, mainInteractor);
     }
 
@@ -63,7 +60,6 @@ public class WeatherPresenterTest extends BasePresenterTest {
         //TODO comment the next method to show how it work.
         //verify(mainView).showBusyIndicator();
         //verify(mainView).hideBusyIndicator();
-        //verify(mainView, never()).showResult(any(String.class));
         verify(mainView).showUserNameError(R.string.username_empty_message);
     }
 
@@ -80,7 +76,6 @@ public class WeatherPresenterTest extends BasePresenterTest {
         //TODO comment the next method to show how it work.
         //verify(mainView).showBusyIndicator();
         //verify(mainView).hideBusyIndicator();
-        //verify(mainView, never()).showResult(any(String.class));
         verify(mainView).showCityNameError(R.string.city_empty_message);
     }
 

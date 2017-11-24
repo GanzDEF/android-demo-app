@@ -87,7 +87,6 @@ public class FragmentDrawer extends Fragment {
         return layout;
     }
 
-
     public void setUp(int fragmentId, DrawerLayout drawerLayout, final Toolbar toolbar) {
         containerView = getActivity().findViewById(fragmentId);
         mDrawerLayout = drawerLayout;
@@ -122,9 +121,8 @@ public class FragmentDrawer extends Fragment {
     }
 
     public static interface ClickListener {
-        public void onClick(View view, int position);
-
-        public void onLongClick(View view, int position);
+        void onClick(View view, int position);
+        void onLongClick(View view, int position);
     }
 
     static class RecyclerTouchListener implements RecyclerView.OnItemTouchListener {

@@ -4,16 +4,14 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.test.xyz.demo.R;
 import com.test.xyz.demo.ui.mainlobby.navdrawer.FragmentDrawer;
 
-public class MainActivity extends ActionBarActivity implements FragmentDrawer.FragmentDrawerListener {
-    private final static String TAG = MainActivity.class.getSimpleName();
+public class MainActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener {
     private final static int REPO_LIST_FRAG = 0;
     private final static int WEATHER_FRAG = 1;
     private final static int FRAGMENT_COUNT = WEATHER_FRAG + 1;
@@ -29,13 +27,17 @@ public class MainActivity extends ActionBarActivity implements FragmentDrawer.Fr
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        initialize(savedInstanceState);
+    }
+
+    private void initialize(Bundle savedInstanceState) {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
 
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         drawerFragment = (FragmentDrawer) getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
-        drawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), mToolbar);
+        drawerFragment.setUp(R.id.fragment_navigation_drawer, findViewById(R.id.drawer_layout), mToolbar);
         drawerFragment.setDrawerListener(this);
 
         hideAllFragments();

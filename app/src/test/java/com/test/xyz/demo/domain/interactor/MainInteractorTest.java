@@ -1,23 +1,21 @@
 package com.test.xyz.demo.domain.interactor;
 
 import com.test.xyz.demo.R;
-import com.test.xyz.demo.domain.repository.api.RepoListRepository;
-import com.test.xyz.demo.ui.repodetails.mvp.OnRepoDetailsCompletedListener;
-import com.test.xyz.demo.ui.repolist.mvp.OnRepoListCompletedListener;
-import com.test.xyz.demo.ui.weather.mvp.OnWeatherInfoCompletedListener;
 import com.test.xyz.demo.domain.repository.api.ErrorMessages;
 import com.test.xyz.demo.domain.repository.api.HelloRepository;
+import com.test.xyz.demo.domain.repository.api.RepoListRepository;
 import com.test.xyz.demo.domain.repository.api.WeatherRepository;
 import com.test.xyz.demo.domain.repository.api.model.Repo;
 import com.test.xyz.demo.domain.repository.exception.InvalidCityException;
+import com.test.xyz.demo.ui.repodetails.mvp.OnRepoDetailsCompletedListener;
+import com.test.xyz.demo.ui.repolist.mvp.OnRepoListCompletedListener;
+import com.test.xyz.demo.ui.weather.mvp.OnWeatherInfoCompletedListener;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,14 +32,12 @@ import rx.schedulers.Schedulers;
 import static junit.framework.Assert.fail;
 import static org.mockito.AdditionalMatchers.and;
 import static org.mockito.AdditionalMatchers.not;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyList;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
 public class MainInteractorTest {
     private static final String USER_NAME = "hazems";
     private static final String CITY = "New York, USA";
@@ -176,7 +172,7 @@ public class MainInteractorTest {
         testSubject.getRepoList(USER_NAME, onRepoListCompletedListener);
 
         //THEN
-        verify(onRepoListCompletedListener).onRepoListRetrievalSuccess(anyList());
+        verify(onRepoListCompletedListener).onRepoListRetrievalSuccess(any(List.class));
     }
 
     @Test
