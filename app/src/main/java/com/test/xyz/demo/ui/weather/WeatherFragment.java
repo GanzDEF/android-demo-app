@@ -71,9 +71,7 @@ public class WeatherFragment extends BaseFragment implements WeatherView {
     }
 
     @Override
-    public void showUserNameError(final int messageId) {
-        userNameText.setError(getString(messageId));
-    }
+    public void showUserNameError(final int messageId) { userNameText.setError(getString(messageId)); }
 
     @Override
     public void showCityNameError(final int messageId) {
@@ -96,9 +94,7 @@ public class WeatherFragment extends BaseFragment implements WeatherView {
     }
 
     @Override
-    public void showError(final String error) {
-        CommonUtils.showToastMessage(WeatherFragment.this.getActivity(), error);
-    }
+    public void showError(final String error) { CommonUtils.showToastMessage(WeatherFragment.this.getActivity(), error); }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {

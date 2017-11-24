@@ -17,7 +17,9 @@ import android.view.ViewGroup;
 import com.test.xyz.demo.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class FragmentDrawer extends Fragment {
     private static String TAG = FragmentDrawer.class.getSimpleName();
@@ -74,7 +76,7 @@ public class FragmentDrawer extends Fragment {
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getActivity(), recyclerView, new ClickListener() {
             @Override
             public void onClick(View view, int position) {
-                drawerListener.onDrawerItemSelected(view, position);
+                drawerListener.onDrawerItemSelected(view, NavigationDrawerFragment.valueOf(position));
                 mDrawerLayout.closeDrawer(containerView);
             }
 
@@ -120,7 +122,7 @@ public class FragmentDrawer extends Fragment {
 
     }
 
-    public static interface ClickListener {
+    public interface ClickListener {
         void onClick(View view, int position);
         void onLongClick(View view, int position);
     }
@@ -168,6 +170,30 @@ public class FragmentDrawer extends Fragment {
     }
 
     public interface FragmentDrawerListener {
-        public void onDrawerItemSelected(View view, int position);
+        void onDrawerItemSelected(View view, NavigationDrawerFragment navigationDrawerFragment);
+    }
+
+    public enum NavigationDrawerFragment {
+        REPO_LIST_FRAG(0),
+        WEATHER_FRAG(1);
+
+        private static Map<Integer, NavigationDrawerFragment> map = new HashMap<Integer, NavigationDrawerFragment>();
+        private final int value;
+
+        static {
+            for (NavigationDrawerFragment navigationDrawerFragment : NavigationDrawerFragment.values()) {
+                map.put(navigationDrawerFragment.value, navigationDrawerFragment);
+            }
+        }
+
+        NavigationDrawerFragment(final int newValue) {
+            value = newValue;
+        }
+
+        public int getValue() { return value; }
+
+        public static NavigationDrawerFragment valueOf(int value) {
+            return map.get(value);
+        }
     }
 }

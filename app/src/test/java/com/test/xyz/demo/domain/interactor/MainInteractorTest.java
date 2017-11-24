@@ -1,7 +1,7 @@
 package com.test.xyz.demo.domain.interactor;
 
 import com.test.xyz.demo.R;
-import com.test.xyz.demo.domain.repository.api.ErrorMessages;
+import com.test.xyz.demo.domain.repository.api.ErrorCode;
 import com.test.xyz.demo.domain.repository.api.HelloRepository;
 import com.test.xyz.demo.domain.repository.api.RepoListRepository;
 import com.test.xyz.demo.domain.repository.api.WeatherRepository;
@@ -256,13 +256,13 @@ public class MainInteractorTest {
         // Empty City ...
         when(weatherRepository.getWeatherInfo(eq(EMPTY_VALUE)))
                 .thenReturn(Observable.error(
-                        new RuntimeException(ErrorMessages.CITY_REQUIRED))
+                        new RuntimeException(ErrorCode.CITY_REQUIRED))
                         .cast(Integer.class));
 
         // Invalid City ...
         when(weatherRepository.getWeatherInfo(eq(INVALID_CITY)))
                 .thenReturn(Observable.error(
-                        new InvalidCityException(ErrorMessages.INVALID_CITY_PROVIDED))
+                        new InvalidCityException(ErrorCode.INVALID_CITY_PROVIDED))
                         .cast(Integer.class));
     }
 

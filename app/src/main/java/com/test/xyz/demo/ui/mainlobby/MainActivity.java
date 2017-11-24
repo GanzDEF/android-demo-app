@@ -27,20 +27,20 @@ public class MainActivity extends BaseActivity implements FragmentDrawer.Fragmen
     }
 
     @Override
-    public void onDrawerItemSelected(View view, int position) {
-        loadFragmentByIndex(position);
+    public void onDrawerItemSelected(View view, FragmentDrawer.NavigationDrawerFragment navigationDrawerFragment) {
+        loadNavigationDrawerFragment(navigationDrawerFragment);
     }
 
-    public void loadRepoDetailsFragment(String description) {
-        RepoDetailsFragment repoDetailsFragment = RepoDetailsFragment.newInstance(description);
+    public void loadRepoDetailsFragment(String title) {
+        RepoDetailsFragment repoDetailsFragment = RepoDetailsFragment.newInstance(title);
         loadFragment(repoDetailsFragment, getString(R.string.repo_details));
     }
 
-    private void loadFragmentByIndex(int fragmentIndex) {
+    private void loadNavigationDrawerFragment(FragmentDrawer.NavigationDrawerFragment navigationDrawerFragment) {
         Fragment activeFragment = null;
         String title = "";
 
-        switch (fragmentIndex) {
+        switch (navigationDrawerFragment) {
             case REPO_LIST_FRAG:
                 title = getString(R.string.repo_list);
                 activeFragment = RepoListFragment.newInstance();

@@ -87,7 +87,7 @@ public class RepoListFragment extends BaseFragment implements RepoListView {
     }
 
     private void displayResults(List<Repo> repos) {
-        final List<String> values = getRepoNameList(repos);
+        final List<String> values = mapRepoList(repos);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(RepoListFragment.this.getActivity(),
                 android.R.layout.simple_list_item_1, android.R.id.text1, values);
@@ -99,13 +99,5 @@ public class RepoListFragment extends BaseFragment implements RepoListView {
                 int itemPosition = position;
             ((MainActivity) getActivity()).loadRepoDetailsFragment(values.get(itemPosition));
         });
-    }
-
-    private List<String> getRepoNameList(List<Repo> repos) {
-        List<String> values = new ArrayList<>();
-        for (int i = 0; i < repos.size(); ++i) {
-            values.add(repos.get(i).name);
-        }
-        return values;
     }
 }

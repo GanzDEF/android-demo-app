@@ -46,9 +46,7 @@ public class RepoDetailsFragment extends BaseFragment implements RepoDetailsView
                 .plus(new RepoDetailsFragmentModule(this))
                 .inject(this);
 
-        showLoadingDialog();
-        repoItemTitle = getArguments().getString(CommonConstants.REPO_DESC);
-        presenter.requestRepoDetails(CommonConstants.REPO_OWNER, repoItemTitle);
+        loadRepoDetails();
     }
 
     @Override
@@ -78,14 +76,19 @@ public class RepoDetailsFragment extends BaseFragment implements RepoDetailsView
     }
 
     /** Creates repo details fragment instance */
-    public static RepoDetailsFragment newInstance(String repoDescription) {
+    public static RepoDetailsFragment newInstance(String repoItemTitle) {
         RepoDetailsFragment fragment = new RepoDetailsFragment();
         Bundle args = new Bundle();
 
-        args.putString(CommonConstants.REPO_DESC, repoDescription);
+        args.putString(CommonConstants.REPO_TITLE, repoItemTitle);
         fragment.setArguments(args);
 
         return fragment;
     }
 
+    private void loadRepoDetails() {
+        showLoadingDialog();
+        repoItemTitle = getArguments().getString(CommonConstants.REPO_TITLE);
+        presenter.requestRepoDetails(CommonConstants.REPO_OWNER, repoItemTitle);
+    }
 }

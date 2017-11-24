@@ -1,6 +1,7 @@
 package com.test.xyz.demo.ui.common;
 
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -12,9 +13,6 @@ import com.test.xyz.demo.ui.repolist.RepoListFragment;
 public abstract class BaseActivity extends AppCompatActivity {
     private Toolbar mToolbar;
     private FragmentDrawer drawerFragment;
-
-    protected final static int REPO_LIST_FRAG = 0;
-    protected final static int WEATHER_FRAG = 1;
 
     protected void setupNavigationDrawer(FragmentDrawer.FragmentDrawerListener listener) {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -29,7 +27,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         getSupportFragmentManager()
                 .beginTransaction()
-                .addToBackStack("")
+                .addToBackStack(null)
                 .replace(R.id.container_body,
                         fragment, null).commit();
 
@@ -43,5 +41,15 @@ public abstract class BaseActivity extends AppCompatActivity {
                         RepoListFragment.newInstance(), null).commit();
 
         getSupportActionBar().setTitle(R.string.repo_list);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.container_body);
+        if (currentFragment instanceof RepoListFragment) {
+            getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        }
     }
 }
