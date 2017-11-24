@@ -1,6 +1,6 @@
 @file:Suppress("IllegalIdentifier")
 
-package com.test.xyz.demo.ui.weather.mvp
+package com.test.xyz.demo.ui.weather.vp
 
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock

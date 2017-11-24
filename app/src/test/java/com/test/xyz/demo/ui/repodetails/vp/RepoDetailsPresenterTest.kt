@@ -1,6 +1,6 @@
 @file:Suppress("IllegalIdentifier")
 
-package com.test.xyz.demo.ui.repodetails.mvp
+package com.test.xyz.demo.ui.repodetails.vp
 
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock

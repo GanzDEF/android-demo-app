@@ -1,5 +1,5 @@
 @file:Suppress("IllegalIdentifier")
-package com.test.xyz.demo.ui.repolist.mvp
+package com.test.xyz.demo.ui.repolist.vp
 
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock

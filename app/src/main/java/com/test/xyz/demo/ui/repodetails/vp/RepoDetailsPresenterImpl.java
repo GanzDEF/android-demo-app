@@ -1,4 +1,4 @@
-package com.test.xyz.demo.ui.repodetails.mvp;
+package com.test.xyz.demo.ui.repodetails.vp;
 
 import com.test.xyz.demo.domain.interactor.MainInteractor;
 import com.test.xyz.demo.domain.repository.api.model.Repo;

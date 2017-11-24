@@ -1,4 +1,4 @@
-package com.test.xyz.demo.ui.weather.mvp;
+package com.test.xyz.demo.ui.weather.vp;
 
 import com.test.xyz.demo.domain.interactor.MainInteractor;
 

@@ -3,9 +3,9 @@ apply plugin: 'pl.droidsonroids.pitest'
 android {
     //Pi Test Configuration ...
     pitest {
-        targetClasses = ['com.test.xyz.demo.ui.weather.mvp.*',
-                         'com.test.xyz.demo.ui.repodetails.mvp.*',
-                         'com.test.xyz.demo.ui.repolist.mvp.*']
+        targetClasses = ['com.test.xyz.demo.ui.weather.vp.*',
+                         'com.test.xyz.demo.ui.repodetails.vp.*',
+                         'com.test.xyz.demo.ui.repolist.vp.*']
         excludedClasses = ['**Factory*', '**_MembersInjector*']
         threads = 5
         timeoutFactor = 20000

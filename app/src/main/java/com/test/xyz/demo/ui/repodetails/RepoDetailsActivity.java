@@ -10,8 +10,8 @@ import com.test.xyz.demo.ui.common.di.DaggerApplication;
 import com.test.xyz.demo.ui.common.util.CommonConstants;
 import com.test.xyz.demo.ui.common.util.CommonUtils;
 import com.test.xyz.demo.ui.repodetails.di.RepoDetailsActivityModule;
-import com.test.xyz.demo.ui.repodetails.mvp.RepoDetailsPresenter;
-import com.test.xyz.demo.ui.repodetails.mvp.RepoDetailsView;
+import com.test.xyz.demo.ui.repodetails.vp.RepoDetailsPresenter;
+import com.test.xyz.demo.ui.repodetails.vp.RepoDetailsView;
 
 import javax.inject.Inject;
 

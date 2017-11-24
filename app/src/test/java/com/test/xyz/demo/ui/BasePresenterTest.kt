@@ -1,5 +1,6 @@
 package com.test.xyz.demo.ui
 
+import butterknife.internal.Utils.listOf
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.doAnswer
 import com.nhaarman.mockito_kotlin.eq
@@ -7,9 +8,9 @@ import com.nhaarman.mockito_kotlin.whenever
 import com.test.xyz.demo.R
 import com.test.xyz.demo.domain.interactor.MainInteractor
 import com.test.xyz.demo.domain.repository.api.model.Repo
-import com.test.xyz.demo.ui.repodetails.mvp.OnRepoDetailsCompletedListener
-import com.test.xyz.demo.ui.repolist.mvp.OnRepoListCompletedListener
-import com.test.xyz.demo.ui.weather.mvp.OnWeatherInfoCompletedListener
+import com.test.xyz.demo.ui.repodetails.vp.OnRepoDetailsCompletedListener
+import com.test.xyz.demo.ui.repolist.vp.OnRepoListCompletedListener
+import com.test.xyz.demo.ui.weather.vp.OnWeatherInfoCompletedListener
 import org.mockito.AdditionalMatchers.and
 import org.mockito.AdditionalMatchers.not
 
