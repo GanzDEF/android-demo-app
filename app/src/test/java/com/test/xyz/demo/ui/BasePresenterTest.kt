@@ -59,7 +59,7 @@ abstract class BasePresenterTest {
     private fun mockGetInformationAPI(mainInteractor: MainInteractor) {
         doAnswer {
             val args = it.arguments
-            (args[2] as OnWeatherInfoCompletedListener).onFailure("Invalid city provided!!!")
+            (args[2] as OnWeatherInfoCompletedListener).onFailure(R.string.weather_error)
              null
         }.whenever(mainInteractor).getWeatherInformation(any<String>(),
                 eq(INVALID_CITY),

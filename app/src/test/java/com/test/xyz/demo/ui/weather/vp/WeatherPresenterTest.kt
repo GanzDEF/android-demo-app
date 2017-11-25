@@ -2,7 +2,6 @@
 
 package com.test.xyz.demo.ui.weather.vp
 
-import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
@@ -92,7 +91,7 @@ class WeatherPresenterTest : BasePresenterTest() {
         //TODO comment the next method to show how it work.
         //verify(mainView).showBusyIndicator();
         //verify(mainView).hideBusyIndicator();
-        verify(mainView).showError(any< String>())
+        verify(mainView).showGenericError(R.string.weather_error)
     }
 
     companion object {

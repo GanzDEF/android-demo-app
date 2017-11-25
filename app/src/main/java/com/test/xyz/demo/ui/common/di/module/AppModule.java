@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.res.Resources;
 
 import com.test.xyz.demo.ui.common.di.DaggerApplication;
+import com.test.xyz.demo.ui.common.util.Logger;
+import com.test.xyz.demo.ui.common.util.LoggerProxy;
 
 import javax.inject.Singleton;
 
@@ -24,10 +26,15 @@ public class AppModule {
         return app;
     }
 
-
     @Provides
     @Singleton
     protected Resources provideResources() {
         return app.getResources();
+    }
+
+    @Provides
+    @Singleton
+    protected Logger provideLogger() {
+        return new LoggerProxy();
     }
 }

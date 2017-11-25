@@ -39,8 +39,8 @@ public class WeatherPresenterImpl implements WeatherPresenter {
     }
 
     @Override
-    public void onFailure(String errorMessage) {
+    public void onFailure(int errorMessage) {
         mainView.hideBusyIndicator();
-        mainView.showError(errorMessage);
+        mainView.showGenericError(errorMessage);
     }
 }

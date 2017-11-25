@@ -1,6 +1,5 @@
 package com.test.xyz.demo.ui.repolist;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -14,9 +13,8 @@ import com.test.xyz.demo.R;
 import com.test.xyz.demo.domain.repository.api.model.Repo;
 import com.test.xyz.demo.ui.common.BaseFragment;
 import com.test.xyz.demo.ui.common.di.DaggerApplication;
-import com.test.xyz.demo.ui.common.util.CommonConstants;
-import com.test.xyz.demo.ui.common.util.CommonUtils;
-import com.test.xyz.demo.ui.repodetails.RepoDetailsActivity;
+import com.test.xyz.demo.ui.common.util.UIHelper;
+import com.test.xyz.demo.ui.mainlobby.MainActivity;
 import com.test.xyz.demo.ui.repolist.di.RepoListFragmentModule;
 import com.test.xyz.demo.ui.repolist.vp.RepoListPresenter;
 import com.test.xyz.demo.ui.repolist.vp.RepoListView;
@@ -52,18 +50,27 @@ public class RepoListFragment extends BaseFragment implements RepoListView {
                 .plus(new RepoListFragmentModule(this))
                 .inject(this);
 
-        presenter.requestRepoList(CommonConstants.REPO_OWNER);
+        showLoadingDialog();
+        presenter.requestRepoList(UIHelper.Constants.REPO_OWNER);
     }
 
     @Override
     public void showRepoList(final List<Repo> values) {
+        dismissAllDialogs();
         displayResults(values);
     }
 
     @Override
     public void showError(final String errorMessage) {
-         CommonUtils.showToastMessage(RepoListFragment.this.getActivity(), errorMessage);
+        dismissAllDialogs();
+        UIHelper.showToastMessage(RepoListFragment.this.getActivity(), errorMessage);
          displayResults(new ArrayList<Repo>() {});
+    }
+
+    @Override
+    public void onPause() {
+        dismissAllDialogs();
+        super.onPause();
     }
 
     @Override
@@ -72,8 +79,14 @@ public class RepoListFragment extends BaseFragment implements RepoListView {
         unbinder.unbind();
     }
 
+    /** Creates repo list fragment instance */
+    public static RepoListFragment newInstance() {
+        RepoListFragment fragment = new RepoListFragment();
+        return fragment;
+    }
+
     private void displayResults(List<Repo> repos) {
-        final List<String> values = getRepoNameList(repos);
+        final List<String> values = mapRepoList(repos);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(RepoListFragment.this.getActivity(),
                 android.R.layout.simple_list_item_1, android.R.id.text1, values);
@@ -83,17 +96,7 @@ public class RepoListFragment extends BaseFragment implements RepoListView {
 
         repoListView.setOnItemClickListener((parent,  view, position,  id) -> {
                 int itemPosition = position;
-                Intent intent = new Intent(RepoListFragment.this.getActivity(), RepoDetailsActivity.class);
-                intent.putExtra(CommonConstants.REPO_DESC, values.get(itemPosition));
-                startActivity(intent);
+            ((MainActivity) getActivity()).loadRepoDetailsFragment(values.get(itemPosition));
         });
-    }
-
-    private List<String> getRepoNameList(List<Repo> repos) {
-        List<String> values = new ArrayList<>();
-        for (int i = 0; i < repos.size(); ++i) {
-            values.add(repos.get(i).name);
-        }
-        return values;
     }
 }
