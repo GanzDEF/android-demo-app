@@ -6,6 +6,9 @@ android {
         targetClasses = ['com.test.xyz.demo.ui.weather.vp.*',
                          'com.test.xyz.demo.ui.repodetails.vp.*',
                          'com.test.xyz.demo.ui.repolist.vp.*']
+
+        pitestVersion = "1.1.0" //not needed when a default PIT version should be used
+
         excludedClasses = ['**Factory*', '**_MembersInjector*']
         threads = 5
         timeoutFactor = 20000

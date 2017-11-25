@@ -1,6 +1,5 @@
 package com.test.xyz.demo.ui
 
-import butterknife.internal.Utils.listOf
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.doAnswer
 import com.nhaarman.mockito_kotlin.eq
@@ -23,15 +22,15 @@ abstract class BasePresenterTest {
     }
 
     private fun mockGetRepoItemsAPI(mainInteractor: MainInteractor) {
-        doAnswer({
+        doAnswer {
             val args = it.arguments
             (args[2] as OnRepoDetailsCompletedListener).onRepoDetailsRetrievalFailure("Error happens!!!")
             null
-        }).whenever(mainInteractor).getRepoItemDetails(eq(EMPTY_VALUE),
+        }.whenever(mainInteractor).getRepoItemDetails(eq(EMPTY_VALUE),
                 any< String>(),
                 any<OnRepoDetailsCompletedListener>())
 
-        doAnswer{
+        doAnswer {
             val args = it.arguments
             (args[2] as OnRepoDetailsCompletedListener).onRepoDetailsRetrievalSuccess(Repo())
             null
@@ -48,11 +47,12 @@ abstract class BasePresenterTest {
         }.whenever(mainInteractor).getRepoList(eq(EMPTY_VALUE),
                 any<OnRepoListCompletedListener>())
 
-        doAnswer({
+        doAnswer {
+            val repos = listOf(Repo("repo1"))
             val args = it.arguments
-            (args[1] as OnRepoListCompletedListener).onRepoListRetrievalSuccess(listOf(Repo()))
+            (args[1] as OnRepoListCompletedListener).onRepoListRetrievalSuccess(repos)
             null
-        }).whenever(mainInteractor).getRepoList(not<String>(eq(EMPTY_VALUE)),
+        }.whenever(mainInteractor).getRepoList(not<String>(eq(EMPTY_VALUE)),
                 any<OnRepoListCompletedListener>())
     }
 
