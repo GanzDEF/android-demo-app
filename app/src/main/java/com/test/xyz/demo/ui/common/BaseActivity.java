@@ -1,7 +1,6 @@
 package com.test.xyz.demo.ui.common;
 
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -45,11 +44,11 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-
         Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.container_body);
         if (currentFragment instanceof RepoListFragment) {
-            getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            finish();
+            return;
         }
+        super.onBackPressed();
     }
 }
