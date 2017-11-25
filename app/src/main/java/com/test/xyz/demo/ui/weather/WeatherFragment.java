@@ -6,13 +6,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.test.xyz.demo.R;
 import com.test.xyz.demo.ui.common.BaseFragment;
 import com.test.xyz.demo.ui.common.di.DaggerApplication;
-import com.test.xyz.demo.ui.common.util.CommonUtils;
+import com.test.xyz.demo.ui.common.util.UIHelper;
 import com.test.xyz.demo.ui.weather.di.WeatherFragmentModule;
 import com.test.xyz.demo.ui.weather.vp.WeatherPresenter;
 import com.test.xyz.demo.ui.weather.vp.WeatherView;
@@ -32,6 +33,7 @@ public class WeatherFragment extends BaseFragment implements WeatherView {
     @BindView(R.id.btnShowInfo) Button showInfoButton;
     @BindView(R.id.resultView) TextView resultView;
     @BindView(R.id.progress) ProgressBar progressBar;
+    @BindView(R.id.weatherContainer) LinearLayout weatherContainer;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -47,7 +49,15 @@ public class WeatherFragment extends BaseFragment implements WeatherView {
                 .plus(new WeatherFragmentModule(this))
                 .inject(this);
 
-        showInfoButton.setOnClickListener((view) -> presenter.requestWeatherInformation());
+        weatherContainer.setOnTouchListener((view, motionEvent) -> {
+            UIHelper.hideKeyboard(getActivity());
+            return false;
+        });
+
+        showInfoButton.setOnClickListener((view) -> {
+            UIHelper.hideKeyboard(this.getActivity());
+            presenter.requestWeatherInformation();
+        });
     }
 
     @Override
@@ -61,9 +71,7 @@ public class WeatherFragment extends BaseFragment implements WeatherView {
     }
 
     @Override
-    public void showUserNameError(final int messageId) {
-        userNameText.setError(getString(messageId));
-    }
+    public void showUserNameError(final int messageId) { userNameText.setError(getString(messageId)); }
 
     @Override
     public void showCityNameError(final int messageId) {
@@ -86,9 +94,7 @@ public class WeatherFragment extends BaseFragment implements WeatherView {
     }
 
     @Override
-    public void showError(final String error) {
-        CommonUtils.showToastMessage(WeatherFragment.this.getActivity(), error);
-    }
+    public void showGenericError(final int messageID) { UIHelper.showToastMessage(WeatherFragment.this.getActivity(), getString(messageID)); }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -99,5 +105,11 @@ public class WeatherFragment extends BaseFragment implements WeatherView {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+    /** Creates weather fragment instance */
+    public static WeatherFragment newInstance() {
+        WeatherFragment fragment = new WeatherFragment();
+        return fragment;
     }
 }

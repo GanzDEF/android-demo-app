@@ -9,7 +9,6 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -92,6 +91,6 @@ public class WeatherPresenterTest extends BasePresenterTest {
         //TODO comment the next method to show how it work.
         //verify(mainView).showBusyIndicator();
         //verify(mainView).hideBusyIndicator();
-        verify(mainView).showError(anyString());
+        verify(mainView).showGenericError(R.string.weather_error);
     }
 }

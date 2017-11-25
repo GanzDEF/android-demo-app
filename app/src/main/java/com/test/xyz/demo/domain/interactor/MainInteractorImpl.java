@@ -4,13 +4,14 @@ import android.support.annotation.VisibleForTesting;
 
 import com.google.common.base.Strings;
 import com.test.xyz.demo.R;
+import com.test.xyz.demo.domain.repository.api.HelloRepository;
 import com.test.xyz.demo.domain.repository.api.RepoListRepository;
+import com.test.xyz.demo.domain.repository.api.WeatherRepository;
+import com.test.xyz.demo.domain.repository.api.model.Repo;
+import com.test.xyz.demo.ui.common.util.Logger;
 import com.test.xyz.demo.ui.repodetails.vp.OnRepoDetailsCompletedListener;
 import com.test.xyz.demo.ui.repolist.vp.OnRepoListCompletedListener;
 import com.test.xyz.demo.ui.weather.vp.OnWeatherInfoCompletedListener;
-import com.test.xyz.demo.domain.repository.api.HelloRepository;
-import com.test.xyz.demo.domain.repository.api.WeatherRepository;
-import com.test.xyz.demo.domain.repository.api.model.Repo;
 
 import java.util.List;
 
@@ -21,6 +22,9 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public class MainInteractorImpl implements MainInteractor {
+    private static final String TAG = MainInteractorImpl.class.getName();
+
+    @Inject Logger logger;
     @Inject HelloRepository helloRepository;
     @Inject WeatherRepository weatherRepository;
     @Inject RepoListRepository repoListRepository;
@@ -59,13 +63,14 @@ public class MainInteractorImpl implements MainInteractor {
 
             @Override
             public void onError(Throwable e) {
-                listener.onFailure(e.getMessage());
+                logger.error(TAG, e.getMessage(), e);
+                listener.onFailure(R.string.weather_error);
             }
 
             @Override
             public void onNext(Integer temperature) {
                 String temp = "Current weather in " + cityName + " is " + temperature + "°F";
-
+                logger.info(TAG, temp);
                 listener.onSuccess(greeting + temp);
             }
         });
@@ -88,6 +93,7 @@ public class MainInteractorImpl implements MainInteractor {
 
                     @Override
                     public void onError(Throwable e) {
+                        logger.error(TAG, e.getMessage(), e);
                         listener.onRepoListRetrievalFailure("Unable to get repo items: " + e.getMessage());
                     }
 
@@ -115,6 +121,7 @@ public class MainInteractorImpl implements MainInteractor {
 
                     @Override
                     public void onError(Throwable e) {
+                        logger.error(TAG, e.getMessage(), e);
                         listener.onRepoDetailsRetrievalFailure("Unable to get repo item details: " + e.getMessage());
                     }
 
@@ -123,5 +130,10 @@ public class MainInteractorImpl implements MainInteractor {
                         listener.onRepoDetailsRetrievalSuccess(repo);
                     }
                 });
+    }
+
+    @VisibleForTesting
+    void setLogger(Logger logger) {
+        this.logger = logger;
     }
 }
