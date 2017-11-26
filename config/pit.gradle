@@ -5,7 +5,9 @@ android {
     pitest {
         targetClasses = ['com.test.xyz.demo.ui.weather.vp.*',
                          'com.test.xyz.demo.ui.repodetails.vp.*',
-                         'com.test.xyz.demo.ui.repolist.vp.*']
+                         'com.test.xyz.demo.ui.repolist.vp.*',
+                         'com.test.xyz.demo.domain.interactor.*'
+        ]
         excludedClasses = ['**Factory*', '**_MembersInjector*']
         threads = 5
         timeoutFactor = 20000
