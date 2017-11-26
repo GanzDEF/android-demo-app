@@ -5,7 +5,8 @@ android {
     pitest {
         targetClasses = ['com.test.xyz.demo.ui.weather.vp.*',
                          'com.test.xyz.demo.ui.repodetails.vp.*',
-                         'com.test.xyz.demo.ui.repolist.vp.*']
+                         'com.test.xyz.demo.ui.repolist.vp.*',
+                         'com.test.xyz.demo.domain.interactor.*']
 
         pitestVersion = "1.1.0" //not needed when a default PIT version should be used
 
