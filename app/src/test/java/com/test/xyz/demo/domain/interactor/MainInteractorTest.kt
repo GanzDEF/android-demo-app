@@ -54,7 +54,7 @@ class MainInteractorTest {
     }
 
     @Test
-    fun `getInformation shouldReturnWeatherInfo`() {
+    fun `getInformation should return weather information`() {
         try {
             //GIVEN
             mockWeatherServiceAPIs()
@@ -72,7 +72,7 @@ class MainInteractorTest {
     }
 
     @Test
-    fun `getInformation whenCityIsInvalid shouldReturnFailure`() {
+    fun `getInformation when city is invalid should return error`() {
         try {
             //GIVEN
             mockWeatherServiceAPIs()
@@ -89,7 +89,7 @@ class MainInteractorTest {
     }
 
     @Test
-    fun `getInformation whenUserNameIsEmpty shouldReturnValidationError`() {
+    fun `getInformation when user name is empty should return ValidationError`() {
         try {
             //GIVEN
             mockWeatherServiceAPIs()
@@ -106,7 +106,7 @@ class MainInteractorTest {
     }
 
     @Test
-    fun `getInformation whenCityIsEmpty shouldReturnValidationError`() {
+    fun `getInformation when city is empty should return ValidationError`() {
         try {
             //GIVEN
             mockWeatherServiceAPIs()
@@ -124,7 +124,7 @@ class MainInteractorTest {
 
     @Test
     @Throws(Exception::class)
-    fun `getRepoList whenUserNameIsCorrect shouldReturnRepoListInfo`() {
+    fun `getRepoList when user name is correct should return RepoList information`() {
         //GIVEN
         mockGetRepoListAPI()
 
@@ -137,7 +137,7 @@ class MainInteractorTest {
 
     @Test
     @Throws(Exception::class)
-    fun `getRepoList whenUserNameIsEmpty shouldReturnValidationError`() {
+    fun `getRepoList when user name is empty should return ValidationError`() {
         //GIVEN
         mockGetRepoListAPI()
 
@@ -150,7 +150,7 @@ class MainInteractorTest {
 
     @Test
     @Throws(Exception::class)
-    fun `getRepoList whenNetworkErrorHappen shouldReturnFailureError`() {
+    fun `getRepoList when network error happen should return error`() {
         //GIVEN
         mockGetRepoListAPI()
 
@@ -163,7 +163,7 @@ class MainInteractorTest {
 
     @Test
     @Throws(Exception::class)
-    fun `getRepoItemDetails whenUserNameAndProjectIDAreCorrect shouldReturnRepoItemInfo`() {
+    fun `getRepoItemDetails when UserName and ProjectID are correct should return RepoItem Information`() {
         //GIVEN
         mockGetRepoItemDetailsAPI()
 
@@ -176,7 +176,7 @@ class MainInteractorTest {
 
     @Test
     @Throws(Exception::class)
-    fun `getRepoItemDetails whenUserNameIsEmpty shouldReturnValidationError`() {
+    fun `getRepoItemDetails when username is empty should return ValidationError`() {
         //GIVEN
         mockGetRepoItemDetailsAPI()
 
@@ -189,7 +189,7 @@ class MainInteractorTest {
 
     @Test
     @Throws(Exception::class)
-    fun `getRepoItemDetails whenProjectIDIsEmpty shouldReturnValidationError`() {
+    fun `getRepoItemDetails when ProjectID is empty should return ValidationError`() {
         //GIVEN
         mockGetRepoItemDetailsAPI()
 
@@ -202,7 +202,7 @@ class MainInteractorTest {
 
     @Test
     @Throws(Exception::class)
-    fun `getRepoItemDetails whenNetworkErrorHappen shouldReturnFailureError`() {
+    fun `getRepoItemDetails when network error happens should return error`() {
         //GIVEN
         mockGetRepoItemDetailsAPI()
 

@@ -28,7 +28,7 @@ class WeatherPresenterTest : BasePresenterTest() {
 
     @Test
     @Throws(Exception::class)
-    fun `requestInformation shouldReturnInfo`() {
+    fun `requestInformation should return weather information`() {
         //GIVEN
         whenever(mainView.userNameText).thenReturn(USER_NAME)
         whenever(mainView.cityText).thenReturn(VALID_CITY)
@@ -45,7 +45,7 @@ class WeatherPresenterTest : BasePresenterTest() {
 
     @Test
     @Throws(Exception::class)
-    fun `requestInformation whenUserNameIsEmpty shouldReturnError`() {
+    fun `requestInformation when user name is empty should return error`() {
         //GIVEN
         whenever(mainView.userNameText).thenReturn("")
         whenever(mainView.cityText).thenReturn(VALID_CITY)
@@ -62,7 +62,7 @@ class WeatherPresenterTest : BasePresenterTest() {
 
     @Test
     @Throws(Exception::class)
-    fun `requestInformation whenCityIsEmpty shouldReturnError`() {
+    fun `requestInformation when city is empty should return error`() {
         //GIVEN
         whenever(mainView.userNameText).thenReturn(USER_NAME)
         whenever(mainView.cityText).thenReturn("")
@@ -79,7 +79,7 @@ class WeatherPresenterTest : BasePresenterTest() {
 
     @Test
     @Throws(Exception::class)
-    fun `requestInformation whenCityIsInvalid shouldReturnError`() {
+    fun `requestInformation when city is invalid should return error`() {
         //GIVEN
         whenever(mainView.userNameText).thenReturn(USER_NAME)
         whenever(mainView.cityText).thenReturn(INVALID_CITY)

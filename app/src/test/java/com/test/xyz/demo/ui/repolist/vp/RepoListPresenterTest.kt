@@ -24,7 +24,7 @@ class RepoListPresenterTest : BasePresenterTest() {
     }
 
     @Test
-    fun `requestRepoList shouldReturnRepoList`() {
+    fun `requestRepoList should return RepoList`() {
         //GIVEN
         //NOTHING
 
@@ -37,7 +37,7 @@ class RepoListPresenterTest : BasePresenterTest() {
     }
 
     @Test
-    fun `requestRepoList whenUserNameIsEmpty shouldReturnError`() {
+    fun `requestRepoList when UserName is empty should return Error`() {
         //GIVEN
         //NOTHING
 

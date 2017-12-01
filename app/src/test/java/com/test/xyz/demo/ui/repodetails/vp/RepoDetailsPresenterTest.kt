@@ -26,7 +26,7 @@ class RepoDetailsPresenterTest : BasePresenterTest() {
     }
 
     @Test
-    fun `requestRepoDetails shouldReturnRepoDetails`() {
+    fun `requestRepoDetails should return RepoDetails`() {
         //GIVEN
         //NOTHING
 
@@ -39,7 +39,7 @@ class RepoDetailsPresenterTest : BasePresenterTest() {
     }
 
     @Test
-    fun `requestRepoDetails whenUserNameIsEmpty shouldReturnError`() {
+    fun `requestRepoDetails when UserName is empty shouldReturnError`() {
         //GIVEN
         //NOTHING
 
