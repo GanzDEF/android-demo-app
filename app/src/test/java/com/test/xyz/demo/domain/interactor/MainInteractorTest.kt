@@ -13,7 +13,7 @@ import com.test.xyz.demo.ui.common.util.Logger
 import com.test.xyz.demo.ui.repodetails.vp.OnRepoDetailsCompletedListener
 import com.test.xyz.demo.ui.repolist.vp.OnRepoListCompletedListener
 import com.test.xyz.demo.ui.weather.vp.OnWeatherInfoCompletedListener
-import junit.framework.Assert.fail
+import org.junit.Assert.fail
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
