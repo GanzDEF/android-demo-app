@@ -4,8 +4,8 @@ android {
     //Pi Test Configuration ...
     pitest {
         targetClasses = ['com.test.xyz.demo.presentation.weather.presenter.*',
-                         'com.test.xyz.demo.presentation.repodetails.presenter.*',
-                         'com.test.xyz.demo.presentation.repolist.presenter.*',
+                         'com.test.xyz.demo.presentation.projectdetails.presenter.*',
+                         'com.test.xyz.demo.presentation.projectlist.presenter.*',
                          'com.test.xyz.demo.domain.interactor.*'
         ]
         excludedClasses = ['**Factory*', '**_MembersInjector*', '**Module*']

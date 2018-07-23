@@ -5,10 +5,10 @@ import android.support.v4.app.Fragment;
 import android.view.View;
 
 import com.test.xyz.demo.R;
-import com.test.xyz.demo.presentation.repodetails.RepoDetailsFragment;
+import com.test.xyz.demo.presentation.projectdetails.ProjectDetailsFragment;
 import com.test.xyz.demo.presentation.common.BaseActivity;
 import com.test.xyz.demo.presentation.mainlobby.navdrawer.FragmentDrawer;
-import com.test.xyz.demo.presentation.repolist.RepoListFragment;
+import com.test.xyz.demo.presentation.projectlist.ProjectListFragment;
 import com.test.xyz.demo.presentation.weather.WeatherFragment;
 
 public class MainActivity extends BaseActivity implements FragmentDrawer.FragmentDrawerListener {
@@ -32,8 +32,8 @@ public class MainActivity extends BaseActivity implements FragmentDrawer.Fragmen
     }
 
     public void loadRepoDetailsFragment(String title) {
-        RepoDetailsFragment repoDetailsFragment = RepoDetailsFragment.newInstance(title);
-        loadFragment(repoDetailsFragment, getString(R.string.repo_details));
+        ProjectDetailsFragment projectDetailsFragment = ProjectDetailsFragment.newInstance(title);
+        loadFragment(projectDetailsFragment, getString(R.string.repo_details));
     }
 
     private void loadNavigationDrawerFragment(FragmentDrawer.NavigationDrawerFragment navigationDrawerFragment) {
@@ -43,7 +43,7 @@ public class MainActivity extends BaseActivity implements FragmentDrawer.Fragmen
         switch (navigationDrawerFragment) {
             case REPO_LIST_FRAG:
                 title = getString(R.string.repo_list);
-                activeFragment = RepoListFragment.newInstance();
+                activeFragment = ProjectListFragment.newInstance();
                 break;
             case WEATHER_FRAG:
                 title = getString(R.string.nav_item_main);

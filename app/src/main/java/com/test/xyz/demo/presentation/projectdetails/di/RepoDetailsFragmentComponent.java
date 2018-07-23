@@ -1,7 +1,7 @@
-package com.test.xyz.demo.presentation.repodetails.di;
+package com.test.xyz.demo.presentation.projectdetails.di;
 
 import com.test.xyz.demo.presentation.common.di.scope.ActivityScope;
-import com.test.xyz.demo.presentation.repodetails.RepoDetailsFragment;
+import com.test.xyz.demo.presentation.projectdetails.ProjectDetailsFragment;
 
 import dagger.Subcomponent;
 
@@ -10,6 +10,6 @@ import dagger.Subcomponent;
         modules = {RepoDetailsFragmentModule.class}
 )
 public interface RepoDetailsFragmentComponent {
-    void inject(RepoDetailsFragment repoDetailsFragment);
+    void inject(ProjectDetailsFragment projectDetailsFragment);
 }
 

@@ -7,7 +7,7 @@ import android.support.v7.widget.Toolbar;
 import com.test.xyz.demo.R;
 import com.test.xyz.demo.presentation.common.util.UIHelper;
 import com.test.xyz.demo.presentation.mainlobby.navdrawer.FragmentDrawer;
-import com.test.xyz.demo.presentation.repolist.RepoListFragment;
+import com.test.xyz.demo.presentation.projectlist.ProjectListFragment;
 
 public abstract class BaseActivity extends AppCompatActivity {
     private Toolbar mToolbar;
@@ -37,7 +37,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.container_body,
-                        RepoListFragment.newInstance(), null).commit();
+                        ProjectListFragment.newInstance(), null).commit();
 
         getSupportActionBar().setTitle(R.string.repo_list);
     }
@@ -45,7 +45,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.container_body);
-        if (currentFragment instanceof RepoListFragment) {
+        if (currentFragment instanceof ProjectListFragment) {
             finish();
             return;
         }

@@ -1,4 +1,4 @@
-package com.test.xyz.demo.presentation.repolist;
+package com.test.xyz.demo.presentation.projectlist;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,12 +12,12 @@ import android.widget.TextView;
 import com.test.xyz.demo.R;
 import com.test.xyz.demo.domain.model.GitHubRepo;
 import com.test.xyz.demo.presentation.mainlobby.MainActivity;
-import com.test.xyz.demo.presentation.repolist.presenter.RepoListPresenter;
-import com.test.xyz.demo.presentation.repolist.presenter.RepoListView;
+import com.test.xyz.demo.presentation.projectlist.presenter.ProjectListPresenter;
+import com.test.xyz.demo.presentation.projectlist.presenter.ProjectListView;
 import com.test.xyz.demo.presentation.common.BaseFragment;
 import com.test.xyz.demo.presentation.common.di.DaggerApplication;
 import com.test.xyz.demo.presentation.common.util.UIHelper;
-import com.test.xyz.demo.presentation.repolist.di.RepoListFragmentModule;
+import com.test.xyz.demo.presentation.projectlist.di.ProjectListFragmentModule;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,12 +28,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class RepoListFragment extends BaseFragment implements RepoListView {
+public class ProjectListFragment extends BaseFragment implements ProjectListView {
     private Unbinder unbinder;
 
-    @Inject RepoListPresenter presenter;
     @BindView(R.id.gitHubRepoList) ListView repoListView;
     @BindView(R.id.noAvlRepos) TextView noAvlRepos;
+
+    @Inject ProjectListPresenter presenter;
 
     @Nullable
     @Override
@@ -47,23 +48,23 @@ public class RepoListFragment extends BaseFragment implements RepoListView {
     protected void initializeFragment(@Nullable Bundle savedInstanceState) {
         DaggerApplication.get(this.getContext())
                 .getAppComponent()
-                .plus(new RepoListFragmentModule(this))
+                .plus(new ProjectListFragmentModule(this))
                 .inject(this);
 
         showLoadingDialog();
-        presenter.requestRepoList(UIHelper.Constants.REPO_OWNER);
+        presenter.requestProjectList(UIHelper.Constants.REPO_OWNER);
     }
 
     @Override
-    public void showRepoList(final List<GitHubRepo> values) {
+    public void showProjectList(final List<GitHubRepo> projectList) {
         dismissAllDialogs();
-        displayResults(values);
+        displayResults(projectList);
     }
 
     @Override
     public void showError(final String errorMessage) {
         dismissAllDialogs();
-        UIHelper.showToastMessage(RepoListFragment.this.getActivity(), errorMessage);
+        UIHelper.showToastMessage(ProjectListFragment.this.getActivity(), errorMessage);
          displayResults(new ArrayList<GitHubRepo>() {});
     }
 
@@ -79,16 +80,15 @@ public class RepoListFragment extends BaseFragment implements RepoListView {
         unbinder.unbind();
     }
 
-    /** Creates repo list fragment instance */
-    public static RepoListFragment newInstance() {
-        RepoListFragment fragment = new RepoListFragment();
+    public static ProjectListFragment newInstance() {
+        ProjectListFragment fragment = new ProjectListFragment();
         return fragment;
     }
 
     private void displayResults(List<GitHubRepo> gitHubRepos) {
         final List<String> values = mapRepoList(gitHubRepos);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(RepoListFragment.this.getActivity(),
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(ProjectListFragment.this.getActivity(),
                 android.R.layout.simple_list_item_1, android.R.id.text1, values);
 
         repoListView.setAdapter(adapter);

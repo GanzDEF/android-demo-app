@@ -31,8 +31,8 @@ task jacocoTestReport(type:JacocoReport, dependsOn: buildVariant) {
                        '**/com/test/xyz/demo/presentation/common*',
 
                        '**/com/test/xyz/demo/presentation/weather/*.*',
-                       '**/com/test/xyz/demo/presentation/repolist/*.*',
-                       '**/com/test/xyz/demo/presentation/repodetails/*.*',
+                       '**/com/test/xyz/demo/presentation/projectlist/*.*',
+                       '**/com/test/xyz/demo/presentation/projectdetails/*.*',
                        '**/com/test/xyz/demo/presentation/mainlobby*',
 
                        '**/com/test/xyz/demo/domain/model*',

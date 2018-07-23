@@ -15,11 +15,10 @@ import static org.mockito.Mockito.when;
 public class WeatherPresenterTest extends BasePresenterTest {
     private static final String USER_NAME = "hazems";
 
-    private WeatherPresenter weatherPresenter;
-
     @Mock WeatherInteractor weatherInteractor;
-    @Mock
-    WeatherView mainView;
+    @Mock WeatherView mainView;
+
+    WeatherPresenter weatherPresenter;
 
     @Before
     public void setup() {
@@ -29,7 +28,7 @@ public class WeatherPresenterTest extends BasePresenterTest {
     }
 
     @Test
-    public void requestInformation_shouldReturnInfo() throws Exception {
+    public void requestWeatherInformation_shouldReturnInfo() throws Exception {
         //GIVEN
         when(mainView.getUserNameText()).thenReturn(USER_NAME);
         when(mainView.getCityText()).thenReturn(VALID_CITY);
@@ -45,7 +44,7 @@ public class WeatherPresenterTest extends BasePresenterTest {
     }
 
     @Test
-    public void requestInformation_whenUserNameIsEmpty_shouldReturnError() throws Exception {
+    public void requestWeatherInformation_whenUserNameIsEmpty_shouldReturnError() throws Exception {
         //GIVEN
         when(mainView.getUserNameText()).thenReturn("");
         when(mainView.getCityText()).thenReturn(VALID_CITY);
@@ -61,7 +60,7 @@ public class WeatherPresenterTest extends BasePresenterTest {
     }
 
     @Test
-    public void requestInformation_whenCityIsEmpty_shouldReturnError() throws Exception {
+    public void requestWeatherInformation_whenCityIsEmpty_shouldReturnError() throws Exception {
         //GIVEN
         when(mainView.getUserNameText()).thenReturn(USER_NAME);
         when(mainView.getCityText()).thenReturn("");
@@ -77,7 +76,7 @@ public class WeatherPresenterTest extends BasePresenterTest {
     }
 
     @Test
-    public void requestInformation_whenCityIsInvalid_shouldReturnError() throws Exception {
+    public void requestWeatherInformation_whenCityIsInvalid_shouldReturnError() throws Exception {
         //GIVEN
         when(mainView.getUserNameText()).thenReturn(USER_NAME);
         when(mainView.getCityText()).thenReturn(INVALID_CITY);

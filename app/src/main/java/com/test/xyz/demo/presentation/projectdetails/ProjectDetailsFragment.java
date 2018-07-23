@@ -1,4 +1,4 @@
-package com.test.xyz.demo.presentation.repodetails;
+package com.test.xyz.demo.presentation.projectdetails;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,9 +9,9 @@ import android.widget.TextView;
 
 import com.test.xyz.demo.R;
 import com.test.xyz.demo.domain.model.GitHubRepo;
-import com.test.xyz.demo.presentation.repodetails.di.RepoDetailsFragmentModule;
-import com.test.xyz.demo.presentation.repodetails.presenter.RepoDetailsPresenter;
-import com.test.xyz.demo.presentation.repodetails.presenter.RepoDetailsView;
+import com.test.xyz.demo.presentation.projectdetails.di.RepoDetailsFragmentModule;
+import com.test.xyz.demo.presentation.projectdetails.presenter.ProjectDetailsPresenter;
+import com.test.xyz.demo.presentation.projectdetails.presenter.ProjectDetailsView;
 import com.test.xyz.demo.presentation.common.BaseFragment;
 import com.test.xyz.demo.presentation.common.di.DaggerApplication;
 import com.test.xyz.demo.presentation.common.util.UIHelper;
@@ -22,14 +22,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class RepoDetailsFragment extends BaseFragment implements RepoDetailsView {
+public class ProjectDetailsFragment extends BaseFragment implements ProjectDetailsView {
     private String repoItemTitle;
     private Unbinder unbinder;
 
-    @Inject
-    RepoDetailsPresenter presenter;
     @BindView(R.id.repoDetails) TextView repoDetails;
     @BindView(R.id.repoTitle) TextView repoTitle;
+
+    @Inject ProjectDetailsPresenter presenter;
 
     @Nullable
     @Override
@@ -50,7 +50,7 @@ public class RepoDetailsFragment extends BaseFragment implements RepoDetailsView
     }
 
     @Override
-    public void showRepoDetails(final GitHubRepo gitHubRepo) {
+    public void showProjectDetails(final GitHubRepo gitHubRepo) {
         dismissAllDialogs();
         repoTitle.setText(repoItemTitle);
         repoDetails.setText(gitHubRepo.description);
@@ -75,9 +75,8 @@ public class RepoDetailsFragment extends BaseFragment implements RepoDetailsView
         unbinder.unbind();
     }
 
-    /** Creates repo details fragment instance */
-    public static RepoDetailsFragment newInstance(String repoItemTitle) {
-        RepoDetailsFragment fragment = new RepoDetailsFragment();
+    public static ProjectDetailsFragment newInstance(String repoItemTitle) {
+        ProjectDetailsFragment fragment = new ProjectDetailsFragment();
         Bundle args = new Bundle();
 
         args.putString(UIHelper.Constants.REPO_TITLE, repoItemTitle);
@@ -89,6 +88,6 @@ public class RepoDetailsFragment extends BaseFragment implements RepoDetailsView
     private void loadRepoDetails() {
         showLoadingDialog();
         repoItemTitle = getArguments().getString(UIHelper.Constants.REPO_TITLE);
-        presenter.requestRepoDetails(UIHelper.Constants.REPO_OWNER, repoItemTitle);
+        presenter.requestProjectDetails(UIHelper.Constants.REPO_OWNER, repoItemTitle);
     }
 }
