@@ -19,17 +19,17 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 
 public abstract class BasePresenterTest {
-    protected static final String MOCK_INFO_SUCCESS_MSG = "MOCK INFO SUCCESS MSG";
+    protected static final String INFO_SUCCESS_MSG = "MOCK INFO SUCCESS MSG";
     protected static final String INVALID_CITY = "INVALID";
     protected static final String VALID_CITY = "New York, USA";
     protected static final String EMPTY_VALUE = "";
 
-    protected void mockProjectInteractor(ProjectInteractor projectInteractor) {
+    protected void mockProjectInteractorBehavior(ProjectInteractor projectInteractor) {
         mockGetProjectListAPI(projectInteractor);
         mockGetProjectDetailsAPI(projectInteractor);
     }
 
-    protected void mockWeatherInteractor(WeatherInteractor weatherInteractor) {
+    protected void mockWeatherInteractorBehavior(WeatherInteractor weatherInteractor) {
         mockGetWeatherInformationAPI(weatherInteractor);
     }
 
@@ -74,7 +74,7 @@ public abstract class BasePresenterTest {
         }).when(weatherInteractor).getWeatherInformation(anyString(), eq(EMPTY_VALUE), any(WeatherInfoActionCallback.class));
 
         doAnswer((invocation) -> {
-            ((WeatherInfoActionCallback) invocation.getArguments()[2]).onSuccess(MOCK_INFO_SUCCESS_MSG);
+            ((WeatherInfoActionCallback) invocation.getArguments()[2]).onSuccess(INFO_SUCCESS_MSG);
             return null;
         }).when(weatherInteractor).getWeatherInformation(not(eq(EMPTY_VALUE)),
                 and(not(eq(INVALID_CITY)), not(eq(EMPTY_VALUE))),

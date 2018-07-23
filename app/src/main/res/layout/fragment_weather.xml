@@ -8,7 +8,6 @@
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/weatherContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -21,9 +20,9 @@
             android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Know your city weather!"
-            style="@style/TextAppearance.AppCompat.Headline"
-            android:paddingBottom="40dp"
+            android:text="@string/city_weather"
+            android:textSize="@dimen/regular_text_size"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
             android:textIsSelectable="false" />
 
         <android.support.design.widget.TextInputLayout
@@ -36,7 +35,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/test_user"
-                android:hint="User Name" />
+                android:textSize="@dimen/regular_text_size"
+                android:hint="@string/your_name" />
 
         </android.support.design.widget.TextInputLayout>
 
@@ -49,8 +49,9 @@
             <EditText android:id="@+id/cityText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="NYC, USA"
-                android:hint="City Full Name like 'NYC, USA'" />
+                android:text="@string/nyc_usa"
+                android:textSize="@dimen/regular_text_size"
+                android:hint="@string/example_city_name" />
 
         </android.support.design.widget.TextInputLayout>
 
@@ -58,8 +59,8 @@
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:paddingLeft="@dimen/activity_horizontal_margin"
-            style="@style/TextAppearance.AppCompat.Caption"
-            android:text="Show Info!" />
+            android:textSize="@dimen/regular_text_size"
+            android:text="@string/show_info" />
 
         <TextView
             android:id="@+id/resultView"
@@ -70,7 +71,7 @@
             android:layout_marginTop="@dimen/activity_vertical_margin"
             android:text=""
             android:gravity="center"
-            android:textSize="20sp"
+            android:textSize="@dimen/regular_text_size"
             android:textIsSelectable="false" />
 
         <ProgressBar
@@ -80,8 +81,7 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:layout_gravity="center"
-            android:visibility="gone"
-            />
+            android:visibility="gone" />
 
     </LinearLayout>
 </ScrollView>
