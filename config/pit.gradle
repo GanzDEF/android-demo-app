@@ -3,12 +3,12 @@ apply plugin: 'pl.droidsonroids.pitest'
 android {
     //Pi Test Configuration ...
     pitest {
-        targetClasses = ['com.test.xyz.demo.ui.weather.vp.*',
-                         'com.test.xyz.demo.ui.repodetails.vp.*',
-                         'com.test.xyz.demo.ui.repolist.vp.*',
+        targetClasses = ['com.test.xyz.demo.presentation.weather.presenter.*',
+                         'com.test.xyz.demo.presentation.repodetails.presenter.*',
+                         'com.test.xyz.demo.presentation.repolist.presenter.*',
                          'com.test.xyz.demo.domain.interactor.*'
         ]
-        excludedClasses = ['**Factory*', '**_MembersInjector*']
+        excludedClasses = ['**Factory*', '**_MembersInjector*', '**Module*']
         threads = 5
         timeoutFactor = 20000
         outputFormats = ['XML', 'HTML']

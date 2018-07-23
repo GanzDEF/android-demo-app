@@ -25,15 +25,17 @@ task jacocoTestReport(type:JacocoReport, dependsOn: buildVariant) {
                        '**/BuildConfig.*',
                        '**/Manifest*.*',
                        '**/**Factory*',
+                       '**/*Module.*',
                        '**/*_MembersInjector*.*',
                        '**/di*',
-                       '**/com/test/xyz/demo/ui/common*',
+                       '**/com/test/xyz/demo/presentation/common*',
 
-                       '**/com/test/xyz/demo/ui/weather/*.*',
-                       '**/com/test/xyz/demo/ui/repolist/*.*',
-                       '**/com/test/xyz/demo/ui/repodetails/*.*',
-                       '**/com/test/xyz/demo/ui/mainlobby*',
+                       '**/com/test/xyz/demo/presentation/weather/*.*',
+                       '**/com/test/xyz/demo/presentation/repolist/*.*',
+                       '**/com/test/xyz/demo/presentation/repodetails/*.*',
+                       '**/com/test/xyz/demo/presentation/mainlobby*',
 
+                       '**/com/test/xyz/demo/domain/model*',
                        '**/com/test/xyz/demo/domain/repository*'
             ]
     )

@@ -58,7 +58,7 @@ public class WeatherRepositoryManager implements WeatherRepository {
             httpURLConnection.setInstanceFollowRedirects(true);
 
             httpURLConnection.setRequestMethod("GET");
-            httpURLConnection.setRequestProperty("User-Agent", "Mozilla/5.0");
+            httpURLConnection.setRequestProperty("GitHubUser-Agent", "Mozilla/5.0");
 
             // Receive response ...
             int responseCode = httpURLConnection.getResponseCode();

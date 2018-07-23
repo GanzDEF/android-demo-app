@@ -10,10 +10,10 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:name="com.test.xyz.demo.ui.common.di.DaggerApplication"
+        android:name="com.test.xyz.demo.presentation.common.di.DaggerApplication"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.test.xyz.demo.ui.mainlobby.MainActivity"
+            android:name="com.test.xyz.demo.presentation.mainlobby.MainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name"
             android:theme="@style/AppTheme">
