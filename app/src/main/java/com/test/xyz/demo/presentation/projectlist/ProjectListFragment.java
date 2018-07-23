@@ -31,15 +31,15 @@ import butterknife.Unbinder;
 public class ProjectListFragment extends BaseFragment implements ProjectListView {
     private Unbinder unbinder;
 
-    @BindView(R.id.gitHubRepoList) ListView repoListView;
-    @BindView(R.id.noAvlRepos) TextView noAvlRepos;
+    @BindView(R.id.projectList) ListView repoListView;
+    @BindView(R.id.noAvlProjects) TextView noAvlRepos;
 
     @Inject ProjectListPresenter presenter;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_repolist, container, false);
+        View view = inflater.inflate(R.layout.fragment_projectlist, container, false);
         unbinder = ButterKnife.bind(this, view);
         return view;
     }

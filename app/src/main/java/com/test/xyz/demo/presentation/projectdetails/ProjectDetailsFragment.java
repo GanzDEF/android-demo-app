@@ -26,15 +26,15 @@ public class ProjectDetailsFragment extends BaseFragment implements ProjectDetai
     private String repoItemTitle;
     private Unbinder unbinder;
 
-    @BindView(R.id.repoDetails) TextView repoDetails;
-    @BindView(R.id.repoTitle) TextView repoTitle;
+    @BindView(R.id.projectDetails) TextView repoDetails;
+    @BindView(R.id.projectTitle) TextView repoTitle;
 
     @Inject ProjectDetailsPresenter presenter;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_repodetails, container, false);
+        View view = inflater.inflate(R.layout.fragment_projectdetails, container, false);
         unbinder = ButterKnife.bind(this, view);
         return view;
     }

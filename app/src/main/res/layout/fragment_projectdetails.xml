@@ -3,24 +3,25 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     android:orientation="vertical"
-    android:id="@+id/activity_repolist">
-
-    <ListView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/gitHubRepoList">
-    </ListView>
+    android:id="@+id/activity_projectdetails">
 
     <TextView
-        android:id="@+id/noAvlRepos"
+        android:id="@+id/projectTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
         android:layout_gravity="center"
-        android:text="No Repos are available!"
-        android:visibility="gone"
+        android:text=""
+        style="@style/TextAppearance.AppCompat.Headline" />
+
+    <TextView
+        android:id="@+id/projectDetails"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text=""
         style="@style/TextAppearance.AppCompat.Body1" />
 </LinearLayout>
