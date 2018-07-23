@@ -34,9 +34,9 @@ public class WeatherInteractorTest {
     static final String INVALID_CITY = "INVALID_CITY";
     static final String EMPTY_VALUE = "";
 
-    @Mock private WeatherInfoActionCallback weatherInfoActionCallback;
-    @Mock private GreetRepository greetRepository;
-    @Mock private WeatherRepository weatherRepository;
+    @Mock WeatherInfoActionCallback weatherInfoActionCallback;
+    @Mock GreetRepository greetRepository;
+    @Mock WeatherRepository weatherRepository;
 
     WeatherInteractor testSubject;
 
