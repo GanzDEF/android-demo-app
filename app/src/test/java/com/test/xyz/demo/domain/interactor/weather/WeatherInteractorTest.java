@@ -43,9 +43,7 @@ public class WeatherInteractorTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-
         setupRxSchedulers();
-
         testSubject = new WeatherInteractorImpl(greetRepository, weatherRepository);
     }
 

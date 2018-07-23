@@ -1,7 +1,5 @@
 package com.test.xyz.demo.domain.interactor.project;
 
-import android.util.Log;
-
 import com.google.common.base.Strings;
 import com.test.xyz.demo.domain.model.GitHubRepo;
 import com.test.xyz.demo.domain.repository.api.ProjectListRepository;

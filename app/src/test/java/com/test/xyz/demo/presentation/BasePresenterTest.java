@@ -19,7 +19,7 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 
 public abstract class BasePresenterTest {
-    protected static final String INFO_SUCCESS_MSG = "MOCK INFO SUCCESS MSG";
+    protected static final String INFO_SUCCESS_MSG = "INFO SUCCESS MSG";
     protected static final String INVALID_CITY = "INVALID";
     protected static final String VALID_CITY = "New York, USA";
     protected static final String EMPTY_VALUE = "";
