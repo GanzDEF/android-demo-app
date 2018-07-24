@@ -1,17 +1,22 @@
 package com.test.xyz.demo.presentation.weather.presenter;
 
 import com.test.xyz.demo.domain.interactor.weather.WeatherInteractor;
+import com.test.xyz.demo.domain.model.WeatherInfo;
 
 import javax.inject.Inject;
 
 public class WeatherPresenterImpl implements WeatherPresenter, WeatherInteractor.WeatherInfoActionCallback {
     private WeatherView mainView;
     private WeatherInteractor weatherInteractor;
+    private WeatherDataFormatter weatherDataFormatter;
 
     @Inject
-    public WeatherPresenterImpl(WeatherView mainView, WeatherInteractor weatherInteractor) {
+    public WeatherPresenterImpl(WeatherView mainView, WeatherInteractor weatherInteractor,
+                                WeatherDataFormatter weatherDataFormatter) {
+
         this.mainView = mainView;
         this.weatherInteractor = weatherInteractor;
+        this.weatherDataFormatter = weatherDataFormatter;
     }
 
     @Override
@@ -33,9 +38,9 @@ public class WeatherPresenterImpl implements WeatherPresenter, WeatherInteractor
     }
 
     @Override
-    public void onSuccess(String data) {
+    public void onSuccess(WeatherInfo weatherInfo) {
         mainView.hideBusyIndicator();
-        mainView.showResult(data);
+        mainView.showResult(weatherDataFormatter.format(weatherInfo));
     }
 
     @Override

@@ -16,9 +16,9 @@
 
     <string name="please_wait">Please wait</string>
     <string name="repo_details_ret_error">Unable to get Project details!</string>
-    <string name="weather_error">Unable to show weather information now!</string>
+    <string name="weather_error">Unable to show weatherInfo information now!</string>
     <string name="test_user">Test User</string>
-    <string name="city_weather">This is the weather sample view. Fill the form below to get weather information and then touch the button below!</string>
+    <string name="city_weather">This is the weatherInfo sample view. Fill the form below to get weatherInfo information and then touch the button below!</string>
     <string name="show_info">GO</string>
     <string name="nyc_usa">NYC, USA</string>
     <string name="example_city_name">City Full Name like \'NYC, USA\'</string>

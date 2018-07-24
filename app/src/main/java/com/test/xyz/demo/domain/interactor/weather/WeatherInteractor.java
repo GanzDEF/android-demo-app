@@ -1,8 +1,10 @@
 package com.test.xyz.demo.domain.interactor.weather;
 
+import com.test.xyz.demo.domain.model.WeatherInfo;
+
 public interface WeatherInteractor {
     interface WeatherInfoActionCallback {
-        void onSuccess(String data);
+        void onSuccess(WeatherInfo weatherInfo);
         void onFailure(int messageID);
         void onUserNameValidationError(int messageID);
         void onCityValidationError(int messageID);

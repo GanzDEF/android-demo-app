@@ -1,6 +1,7 @@
 package com.test.xyz.demo.domain.interactor.weather;
 
 import com.test.xyz.demo.R;
+import com.test.xyz.demo.domain.model.WeatherInfo;
 import com.test.xyz.demo.domain.repository.api.GreetRepository;
 import com.test.xyz.demo.domain.repository.api.WeatherRepository;
 import com.test.xyz.demo.domain.repository.exception.InvalidCityException;
@@ -28,7 +29,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class WeatherInteractorTest {
+public class WeatherInfoInteractorTest {
     static final String USER_NAME = "hazems";
     static final String CITY = "New York, USA";
     static final String INVALID_CITY = "INVALID_CITY";
@@ -57,7 +58,7 @@ public class WeatherInteractorTest {
             testSubject.getWeatherInformation(USER_NAME, CITY, weatherInfoActionCallback);
 
             //THEN
-            verify(weatherInfoActionCallback).onSuccess(any(String.class));
+            verify(weatherInfoActionCallback).onSuccess(any(WeatherInfo.class));
         } catch (Exception exception) {
             exception.printStackTrace();
             fail("Unable to getWeatherInfo !!!");

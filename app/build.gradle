@@ -8,7 +8,7 @@ project.ext {
     rxbinding = "0.3.0"
     annotation = "1.0"
     junit = "4.12"
-    mockito = "2.10.0"
+    mockito = "2.19.1"
 }
 
 apply plugin: 'com.android.application'

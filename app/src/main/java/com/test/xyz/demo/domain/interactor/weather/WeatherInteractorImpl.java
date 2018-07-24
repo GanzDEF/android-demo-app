@@ -2,6 +2,7 @@ package com.test.xyz.demo.domain.interactor.weather;
 
 import com.google.common.base.Strings;
 import com.test.xyz.demo.R;
+import com.test.xyz.demo.domain.model.WeatherInfo;
 import com.test.xyz.demo.domain.repository.api.GreetRepository;
 import com.test.xyz.demo.domain.repository.api.WeatherRepository;
 
@@ -44,8 +45,7 @@ public class WeatherInteractorImpl implements WeatherInteractor {
 
             @Override
             public void onNext(Integer temperature) {
-                String temp = "Current weather in " + cityName + " is " + temperature + "°F";
-                listener.onSuccess(greeting + temp);
+                listener.onSuccess(new WeatherInfo(cityName, greeting, temperature));
             }
         });
     }}
