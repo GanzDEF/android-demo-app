@@ -2,7 +2,7 @@ package com.test.xyz.demo.presentation.weather.presenter;
 
 import com.test.xyz.demo.R;
 import com.test.xyz.demo.domain.interactor.weather.WeatherInteractor;
-import com.test.xyz.demo.domain.model.WeatherInfo;
+import com.test.xyz.demo.domain.model.weather.WeatherSummaryInfo;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -19,7 +19,7 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class WeatherInfoPresenterTest {
+public class WeatherPresenterTest {
     @Mock WeatherInteractor weatherInteractor;
     @Mock WeatherView weatherView;
     @Mock WeatherDataFormatter weatherDataFormatter;
@@ -39,7 +39,7 @@ public class WeatherInfoPresenterTest {
         String weatherDataFormatterOutput = "NYC weather is 75 F";
         when(weatherView.getUserNameText()).thenReturn(USER_NAME);
         when(weatherView.getCityText()).thenReturn(VALID_CITY);
-        when(weatherDataFormatter.format(validWeatherInfo)).thenReturn(weatherDataFormatterOutput);
+        when(weatherDataFormatter.format(weatherSummaryInfo)).thenReturn(weatherDataFormatterOutput);
 
         //WHEN
         weatherPresenter.requestWeatherInformation();
@@ -98,7 +98,7 @@ public class WeatherInfoPresenterTest {
 
     private void mockSuccessFlow(WeatherInteractor weatherInteractor) {
         doAnswer((invocation) -> {
-            ((WeatherInfoActionCallback) invocation.getArguments()[2]).onSuccess(validWeatherInfo);
+            ((WeatherInfoActionCallback) invocation.getArguments()[2]).onSuccess(weatherSummaryInfo);
 
             return null;
         }).when(weatherInteractor).getWeatherInformation(not(eq(EMPTY_VALUE)),
@@ -133,11 +133,11 @@ public class WeatherInfoPresenterTest {
         }).when(weatherInteractor).getWeatherInformation(anyString(), eq(INVALID_CITY), any(WeatherInfoActionCallback.class));
     }
 
-    private static final String EMPTY_VALUE = "";
-    private static final String INVALID_CITY = "INVALID";
-    private static final String VALID_CITY = "New York, USA";
-    private static final String USER_NAME = "hazems";
-    private static final String INTRO_MESSAGE_SAMPLE = "Hello Test";
-    private static final int TEMPERATURE_SAMPLE = 100;
-    private static final WeatherInfo validWeatherInfo = new WeatherInfo(VALID_CITY, INTRO_MESSAGE_SAMPLE, TEMPERATURE_SAMPLE);
+    static final String EMPTY_VALUE = "";
+    static final String INVALID_CITY = "INVALID";
+    static final String VALID_CITY = "New York, USA";
+    static final String USER_NAME = "hazems";
+    static final String INTRO_MESSAGE_SAMPLE = "Hello Test";
+    static final int TEMPERATURE_SAMPLE = 100;
+    static final WeatherSummaryInfo weatherSummaryInfo = new WeatherSummaryInfo(VALID_CITY, INTRO_MESSAGE_SAMPLE, TEMPERATURE_SAMPLE);
 }

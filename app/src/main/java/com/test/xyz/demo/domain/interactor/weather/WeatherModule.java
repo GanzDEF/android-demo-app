@@ -1,21 +1,33 @@
 package com.test.xyz.demo.domain.interactor.weather;
 
+import com.test.xyz.demo.domain.common.di.CommonModule;
 import com.test.xyz.demo.domain.repository.api.GreetRepository;
 import com.test.xyz.demo.domain.repository.api.WeatherRepository;
 import com.test.xyz.demo.domain.repository.impl.GreetRepositoryManager;
-import com.test.xyz.demo.domain.repository.impl.WeatherRepositoryManager;
 
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import okhttp3.OkHttpClient;
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
 
-@Module
+@Module(includes = CommonModule.class)
 public class WeatherModule {
+
     @Provides
     @Singleton
-    WeatherRepository provideWeatherService() {
-        return new WeatherRepositoryManager();
+    WeatherRepository provideWeatherRepository(OkHttpClient client) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(WeatherRepository.HTTPS_API_WEATHER_URL)
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
+                .build();
+
+        return retrofit.create(WeatherRepository.class);
     }
 
     @Provides
@@ -27,6 +39,6 @@ public class WeatherModule {
     @Provides
     @Singleton
     WeatherInteractor provideWeatherInteractor(GreetRepository greetRepository, WeatherRepository weatherRepository) {
-        return new WeatherInteractorImpl(greetRepository, weatherRepository);
+        return new WeatherInteractorImpl(greetRepository, weatherRepository, new WeatherQueryBuilder());
     }
 }

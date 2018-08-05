@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.test.xyz.demo.R;
-import com.test.xyz.demo.domain.model.GitHubRepo;
+import com.test.xyz.demo.domain.model.github.GitHubRepo;
 import com.test.xyz.demo.presentation.projectdetails.di.RepoDetailsFragmentModule;
 import com.test.xyz.demo.presentation.projectdetails.presenter.ProjectDetailsPresenter;
 import com.test.xyz.demo.presentation.projectdetails.presenter.ProjectDetailsView;

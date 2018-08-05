@@ -10,7 +10,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.test.xyz.demo.R;
-import com.test.xyz.demo.domain.model.GitHubRepo;
+import com.test.xyz.demo.domain.model.github.GitHubRepo;
 import com.test.xyz.demo.presentation.mainlobby.MainActivity;
 import com.test.xyz.demo.presentation.projectlist.presenter.ProjectListPresenter;
 import com.test.xyz.demo.presentation.projectlist.presenter.ProjectListView;

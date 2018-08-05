@@ -1,7 +1,8 @@
 package com.test.xyz.demo.domain.interactor.weather;
 
 import com.test.xyz.demo.R;
-import com.test.xyz.demo.domain.model.WeatherInfo;
+import com.test.xyz.demo.domain.model.weather.WeatherRawResponse;
+import com.test.xyz.demo.domain.model.weather.WeatherSummaryInfo;
 import com.test.xyz.demo.domain.repository.api.GreetRepository;
 import com.test.xyz.demo.domain.repository.api.WeatherRepository;
 import com.test.xyz.demo.domain.repository.exception.InvalidCityException;
@@ -25,7 +26,9 @@ import static junit.framework.Assert.fail;
 import static org.mockito.AdditionalMatchers.and;
 import static org.mockito.AdditionalMatchers.not;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -38,6 +41,7 @@ public class WeatherInfoInteractorTest {
     @Mock WeatherInfoActionCallback weatherInfoActionCallback;
     @Mock GreetRepository greetRepository;
     @Mock WeatherRepository weatherRepository;
+    @Mock WeatherQueryBuilder weatherQueryBuilder;
 
     WeatherInteractor testSubject;
 
@@ -45,7 +49,9 @@ public class WeatherInfoInteractorTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         setupRxSchedulers();
-        testSubject = new WeatherInteractorImpl(greetRepository, weatherRepository);
+        mockWeatherQueryBuilder();
+
+        testSubject = new WeatherInteractorImpl(greetRepository, weatherRepository, weatherQueryBuilder);
     }
 
     @Test
@@ -58,7 +64,7 @@ public class WeatherInfoInteractorTest {
             testSubject.getWeatherInformation(USER_NAME, CITY, weatherInfoActionCallback);
 
             //THEN
-            verify(weatherInfoActionCallback).onSuccess(any(WeatherInfo.class));
+            verify(weatherInfoActionCallback).onSuccess(any(WeatherSummaryInfo.class));
         } catch (Exception exception) {
             exception.printStackTrace();
             fail("Unable to getWeatherInfo !!!");
@@ -120,9 +126,14 @@ public class WeatherInfoInteractorTest {
         RxJavaPlugins.getInstance().reset();
     }
 
+    private void mockWeatherQueryBuilder() {
+        doAnswer((invocation) -> invocation.getArguments()[0]).when(weatherQueryBuilder).createWeatherQuery(anyString());
+    }
+
     private void mockWeatherInfoAPI() {
         // Happy Path Scenario ...
-        Observable<Integer> observable = Observable.just(10);
+        WeatherRawResponse weatherRawResponse = WeatherRawResponse.createWeatherSuccessRawResponse("10");
+        Observable<WeatherRawResponse> observable = Observable.just(weatherRawResponse);
 
         when(weatherRepository.getWeatherInfo(and(not(eq(EMPTY_VALUE)), not(eq(INVALID_CITY))))).thenReturn(observable);
 
@@ -130,13 +141,13 @@ public class WeatherInfoInteractorTest {
         when(weatherRepository.getWeatherInfo(eq(EMPTY_VALUE)))
                 .thenReturn(Observable.error(
                         new RuntimeException("City is required"))
-                        .cast(Integer.class));
+                        .cast(WeatherRawResponse.class));
 
         // Invalid City ...
         when(weatherRepository.getWeatherInfo(eq(INVALID_CITY)))
                 .thenReturn(Observable.error(
                         new InvalidCityException("Invalid city provided"))
-                        .cast(Integer.class));
+                        .cast(WeatherRawResponse.class));
     }
 
     private void setupRxSchedulers() {

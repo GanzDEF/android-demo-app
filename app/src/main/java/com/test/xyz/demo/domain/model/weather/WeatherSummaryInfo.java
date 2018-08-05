@@ -1,12 +1,12 @@
-package com.test.xyz.demo.domain.model;
+package com.test.xyz.demo.domain.model.weather;
 
-public class WeatherInfo {
+public class WeatherSummaryInfo {
     private String city;
     private int temperature;
     private long time;
     private String introMessage;
 
-    public WeatherInfo(String city, String introMessage, int temperature) {
+    public WeatherSummaryInfo(String city, String introMessage, int temperature) {
         this.city = city;
         this.introMessage = introMessage;
         this.temperature = temperature;

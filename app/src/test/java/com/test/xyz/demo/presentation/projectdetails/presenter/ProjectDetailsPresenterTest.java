@@ -1,7 +1,7 @@
 package com.test.xyz.demo.presentation.projectdetails.presenter;
 
 import com.test.xyz.demo.domain.interactor.project.ProjectInteractor;
-import com.test.xyz.demo.domain.model.GitHubRepo;
+import com.test.xyz.demo.domain.model.github.GitHubRepo;
 import com.test.xyz.demo.presentation.BasePresenterTest;
 
 import org.junit.Before;

@@ -1,4 +1,4 @@
-package com.test.xyz.demo.domain.model;
+package com.test.xyz.demo.domain.model.github;
 
 import java.util.Date;
 

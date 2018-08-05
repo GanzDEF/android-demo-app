@@ -6,7 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
 import com.test.xyz.demo.R;
-import com.test.xyz.demo.domain.model.GitHubRepo;
+import com.test.xyz.demo.domain.model.github.GitHubRepo;
 
 import java.util.ArrayList;
 import java.util.List;

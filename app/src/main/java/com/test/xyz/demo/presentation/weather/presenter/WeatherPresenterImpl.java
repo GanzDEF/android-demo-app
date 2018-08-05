@@ -1,7 +1,7 @@
 package com.test.xyz.demo.presentation.weather.presenter;
 
 import com.test.xyz.demo.domain.interactor.weather.WeatherInteractor;
-import com.test.xyz.demo.domain.model.WeatherInfo;
+import com.test.xyz.demo.domain.model.weather.WeatherSummaryInfo;
 
 import javax.inject.Inject;
 
@@ -38,9 +38,9 @@ public class WeatherPresenterImpl implements WeatherPresenter, WeatherInteractor
     }
 
     @Override
-    public void onSuccess(WeatherInfo weatherInfo) {
+    public void onSuccess(WeatherSummaryInfo weatherSummaryInfo) {
         mainView.hideBusyIndicator();
-        mainView.showResult(weatherDataFormatter.format(weatherInfo));
+        mainView.showResult(weatherDataFormatter.format(weatherSummaryInfo));
     }
 
     @Override

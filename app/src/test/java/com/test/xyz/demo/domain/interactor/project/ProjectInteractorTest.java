@@ -1,6 +1,6 @@
 package com.test.xyz.demo.domain.interactor.project;
 
-import com.test.xyz.demo.domain.model.GitHubRepo;
+import com.test.xyz.demo.domain.model.github.GitHubRepo;
 import com.test.xyz.demo.domain.repository.api.ProjectListRepository;
 
 import org.junit.After;
@@ -42,9 +42,7 @@ public class ProjectInteractorTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-
         setupRxSchedulers();
-
         testSubject = new ProjectInteractorImpl(projectListRepository);
     }
 

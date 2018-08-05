@@ -1,7 +1,7 @@
 package com.test.xyz.demo.domain.interactor.project;
 
 import com.google.common.base.Strings;
-import com.test.xyz.demo.domain.model.GitHubRepo;
+import com.test.xyz.demo.domain.model.github.GitHubRepo;
 import com.test.xyz.demo.domain.repository.api.ProjectListRepository;
 
 import java.util.List;

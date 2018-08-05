@@ -1,6 +1,6 @@
 package com.test.xyz.demo.domain.repository.api;
 
-import com.test.xyz.demo.domain.model.GitHubRepo;
+import com.test.xyz.demo.domain.model.github.GitHubRepo;
 
 import java.util.List;
 
