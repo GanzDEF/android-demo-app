@@ -1,5 +1,6 @@
 package com.test.xyz.demo.presentation.projectdetails.presenter;
 
+import com.test.xyz.demo.R;
 import com.test.xyz.demo.domain.interactor.project.ProjectInteractor;
 import com.test.xyz.demo.domain.model.github.GitHubRepo;
 
@@ -27,6 +28,6 @@ public class ProjectDetailsPresenterImpl implements ProjectDetailsPresenter, Pro
 
     @Override
     public void onFailure(Throwable throwable) {
-        projectDetailsView.showError("Unable to show project details. Message: " + throwable.getMessage());
+        projectDetailsView.showError(R.string.repo_details_ret_error);
     }
 }

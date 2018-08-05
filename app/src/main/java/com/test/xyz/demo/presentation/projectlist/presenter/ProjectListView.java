@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface ProjectListView {
     void showProjectList(List<GitHubRepo> projectList);
-    void showError(final String errorMessage);
+    void showError(int messageID);
 }

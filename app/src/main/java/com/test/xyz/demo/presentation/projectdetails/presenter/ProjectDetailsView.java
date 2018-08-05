@@ -4,5 +4,5 @@ import com.test.xyz.demo.domain.model.github.GitHubRepo;
 
 public interface ProjectDetailsView {
     void showProjectDetails(GitHubRepo gitHubRepo);
-    void showError(final String errorMessage);
+    void showError(int errorMessage);
 }

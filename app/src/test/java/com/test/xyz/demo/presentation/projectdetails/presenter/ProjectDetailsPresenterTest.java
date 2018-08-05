@@ -1,5 +1,6 @@
 package com.test.xyz.demo.presentation.projectdetails.presenter;
 
+import com.test.xyz.demo.R;
 import com.test.xyz.demo.domain.interactor.project.ProjectInteractor;
 import com.test.xyz.demo.domain.model.github.GitHubRepo;
 import com.test.xyz.demo.presentation.BasePresenterTest;
@@ -12,7 +13,6 @@ import org.mockito.MockitoAnnotations;
 import static com.test.xyz.demo.domain.interactor.project.ProjectInteractor.ProjectActionCallback;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
@@ -40,7 +40,7 @@ public class ProjectDetailsPresenterTest extends BasePresenterTest {
         //THEN
         verify(projectInteractor).getProjectDetails(eq(USER_NAME), eq(PROJECT_ID), any(ProjectActionCallback.class));
         verify(projectDetailsView).showProjectDetails(any(GitHubRepo.class));
-        verify(projectDetailsView, never()).showError(any(String.class));
+        verify(projectDetailsView, never()).showError(R.string.repo_details_ret_error);
     }
 
     @Test
@@ -51,6 +51,6 @@ public class ProjectDetailsPresenterTest extends BasePresenterTest {
         //THEN
         verify(projectInteractor).getProjectDetails(eq(""), eq(PROJECT_ID), any(ProjectActionCallback.class));
         verify(projectDetailsView, never()).showProjectDetails(any(GitHubRepo.class));
-        verify(projectDetailsView).showError(nullable(String.class));
+        verify(projectDetailsView).showError(R.string.repo_details_ret_error);
     }
 }

@@ -1,7 +1,6 @@
 package com.test.xyz.demo.domain.interactor.weather;
 
 import com.google.common.base.Strings;
-import com.test.xyz.demo.R;
 import com.test.xyz.demo.domain.model.weather.WeatherRawResponse;
 import com.test.xyz.demo.domain.model.weather.WeatherSummaryInfo;
 import com.test.xyz.demo.domain.repository.api.GreetRepository;
@@ -32,12 +31,12 @@ public class WeatherInteractorImpl implements WeatherInteractor {
         final String greeting = greetRepository.greet(userName) + "\n";
 
         if (Strings.isNullOrEmpty(userName)) {
-            listener.onUserNameValidationError(R.string.username_empty_message);
+            listener.onUserNameValidationError();
             return;
         }
 
         if (Strings.isNullOrEmpty(cityName)) {
-            listener.onCityValidationError(R.string.city_empty_message);
+            listener.onCityValidationError();
             return;
         }
 
@@ -52,7 +51,7 @@ public class WeatherInteractorImpl implements WeatherInteractor {
                     @Override
                     public void onError(Throwable e) {
                         e.printStackTrace();
-                        listener.onFailure(R.string.weather_error);
+                        listener.onFailure();
                     }
 
                     @Override

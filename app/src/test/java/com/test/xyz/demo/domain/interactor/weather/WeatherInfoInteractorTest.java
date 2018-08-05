@@ -1,6 +1,5 @@
 package com.test.xyz.demo.domain.interactor.weather;
 
-import com.test.xyz.demo.R;
 import com.test.xyz.demo.domain.model.weather.WeatherRawResponse;
 import com.test.xyz.demo.domain.model.weather.WeatherSummaryInfo;
 import com.test.xyz.demo.domain.repository.api.GreetRepository;
@@ -81,7 +80,7 @@ public class WeatherInfoInteractorTest {
             testSubject.getWeatherInformation(USER_NAME, INVALID_CITY, weatherInfoActionCallback);
 
             //THEN
-            verify(weatherInfoActionCallback).onFailure(R.string.weather_error);
+            verify(weatherInfoActionCallback).onFailure();
         } catch (Exception exception) {
             exception.printStackTrace();
             fail("Unable to getWeatherInfo !!!");
@@ -98,7 +97,7 @@ public class WeatherInfoInteractorTest {
             testSubject.getWeatherInformation("", CITY, weatherInfoActionCallback);
 
             //THEN
-            verify(weatherInfoActionCallback).onUserNameValidationError(R.string.username_empty_message);
+            verify(weatherInfoActionCallback).onUserNameValidationError();
         } catch (Exception exception) {
             fail("Unable to getWeatherInfo !!!");
         }
@@ -114,7 +113,7 @@ public class WeatherInfoInteractorTest {
             testSubject.getWeatherInformation(USER_NAME, "", weatherInfoActionCallback);
 
             //THEN
-            verify(weatherInfoActionCallback).onCityValidationError(R.string.city_empty_message);
+            verify(weatherInfoActionCallback).onCityValidationError();
         } catch (Exception exception) {
             fail("Unable to getWeatherInfo !!!");
         }

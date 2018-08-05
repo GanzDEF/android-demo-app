@@ -62,9 +62,9 @@ public class ProjectListFragment extends BaseFragment implements ProjectListView
     }
 
     @Override
-    public void showError(final String errorMessage) {
+    public void showError(int errorMessage) {
         dismissAllDialogs();
-        UIHelper.showToastMessage(ProjectListFragment.this.getActivity(), errorMessage);
+        UIHelper.showToastMessage(ProjectListFragment.this.getActivity(), getString(errorMessage));
          displayResults(new ArrayList<GitHubRepo>() {});
     }
 

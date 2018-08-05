@@ -1,5 +1,6 @@
 package com.test.xyz.demo.presentation.projectlist.presenter;
 
+import com.test.xyz.demo.R;
 import com.test.xyz.demo.domain.interactor.project.ProjectInteractor;
 import com.test.xyz.demo.domain.model.github.GitHubRepo;
 
@@ -29,6 +30,6 @@ public class ProjectListPresenterImpl implements ProjectListPresenter, ProjectIn
 
     @Override
     public void onFailure(Throwable throwable) {
-        projectListView.showError("Unable to show project list. Message: " + throwable.getMessage());
+        projectListView.showError(R.string.repo_list_ret_error);
     }
 }

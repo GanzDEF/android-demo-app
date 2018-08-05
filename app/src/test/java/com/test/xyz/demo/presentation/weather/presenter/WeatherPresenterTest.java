@@ -114,21 +114,21 @@ public class WeatherPresenterTest {
 
     private void mockEmptyCityErrorFlow(WeatherInteractor weatherInteractor) {
         doAnswer((invocation) -> {
-            ((WeatherInfoActionCallback) invocation.getArguments()[2]).onCityValidationError(R.string.city_empty_message);
+            ((WeatherInfoActionCallback) invocation.getArguments()[2]).onCityValidationError();
             return null;
         }).when(weatherInteractor).getWeatherInformation(anyString(), eq(EMPTY_VALUE), any(WeatherInfoActionCallback.class));
     }
 
     private void mockEmptyUserErrorFlow(WeatherInteractor weatherInteractor) {
         doAnswer((invocation) -> {
-            ((WeatherInfoActionCallback) invocation.getArguments()[2]).onUserNameValidationError(R.string.username_empty_message);
+            ((WeatherInfoActionCallback) invocation.getArguments()[2]).onUserNameValidationError();
             return null;
         }).when(weatherInteractor).getWeatherInformation(eq(EMPTY_VALUE), eq(VALID_CITY), any(WeatherInfoActionCallback.class));
     }
 
     private void mockInvalidCityErrorFlow(WeatherInteractor weatherInteractor) {
         doAnswer((invocation) -> {
-            ((WeatherInfoActionCallback) invocation.getArguments()[2]).onFailure(R.string.weather_error);
+            ((WeatherInfoActionCallback) invocation.getArguments()[2]).onFailure();
             return null;
         }).when(weatherInteractor).getWeatherInformation(anyString(), eq(INVALID_CITY), any(WeatherInfoActionCallback.class));
     }

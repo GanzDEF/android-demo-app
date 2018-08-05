@@ -1,5 +1,6 @@
 package com.test.xyz.demo.presentation.projectlist.presenter;
 
+import com.test.xyz.demo.R;
 import com.test.xyz.demo.domain.interactor.project.ProjectInteractor;
 import com.test.xyz.demo.presentation.BasePresenterTest;
 
@@ -39,7 +40,7 @@ public class ProjectListPresenterTest extends BasePresenterTest {
         //THEN
         verify(projectInteractor).getProjectList(eq(USER_NAME), any(ProjectActionCallback.class));
         verify(projectListView).showProjectList(any(List.class));
-        verify(projectListView, never()).showError(any(String.class));
+        verify(projectListView, never()).showError(R.string.repo_list_ret_error);
     }
 
     @Test
@@ -50,6 +51,6 @@ public class ProjectListPresenterTest extends BasePresenterTest {
         //THEN
         verify(projectInteractor).getProjectList(eq(""), any(ProjectActionCallback.class));
         verify(projectListView, never()).showProjectList(any(List.class));
-        verify(projectListView).showError(any(String.class));
+        verify(projectListView).showError(R.string.repo_list_ret_error);
     }
 }

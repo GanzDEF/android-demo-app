@@ -1,5 +1,6 @@
 package com.test.xyz.demo.presentation.weather.presenter;
 
+import com.test.xyz.demo.R;
 import com.test.xyz.demo.domain.interactor.weather.WeatherInteractor;
 import com.test.xyz.demo.domain.model.weather.WeatherSummaryInfo;
 
@@ -26,15 +27,15 @@ public class WeatherPresenterImpl implements WeatherPresenter, WeatherInteractor
     }
 
     @Override
-    public void onUserNameValidationError(int messageID) {
+    public void onUserNameValidationError() {
         mainView.hideBusyIndicator();
-        mainView.showUserNameError(messageID);
+        mainView.showUserNameError(R.string.username_empty_message);
     }
 
     @Override
-    public void onCityValidationError(int messageID) {
+    public void onCityValidationError() {
         mainView.hideBusyIndicator();
-        mainView.showCityNameError(messageID);
+        mainView.showCityNameError(R.string.city_empty_message);
     }
 
     @Override
@@ -44,8 +45,8 @@ public class WeatherPresenterImpl implements WeatherPresenter, WeatherInteractor
     }
 
     @Override
-    public void onFailure(int errorMessage) {
+    public void onFailure() {
         mainView.hideBusyIndicator();
-        mainView.showGenericError(errorMessage);
+        mainView.showGenericError(R.string.weather_error);
     }
 }

@@ -57,9 +57,9 @@ public class ProjectDetailsFragment extends BaseFragment implements ProjectDetai
     }
 
     @Override
-    public void showError(final String errorMessage) {
+    public void showError(int errorMessage) {
         dismissAllDialogs();
-        UIHelper.showToastMessage(getActivity(), errorMessage);
+        UIHelper.showToastMessage(getActivity(), getString(errorMessage));
         repoDetails.setText(R.string.repo_details_ret_error);
     }
 
