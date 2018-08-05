@@ -3,7 +3,6 @@ package com.test.xyz.demo.domain.interactor.project;
 import com.test.xyz.demo.domain.model.github.GitHubRepo;
 import com.test.xyz.demo.domain.repository.api.ProjectListRepository;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -13,13 +12,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import rx.Observable;
-import rx.Scheduler;
-import rx.android.plugins.RxAndroidPlugins;
-import rx.android.plugins.RxAndroidSchedulersHook;
-import rx.plugins.RxJavaPlugins;
-import rx.plugins.RxJavaSchedulersHook;
-import rx.schedulers.Schedulers;
+import io.reactivex.Observable;
+import io.reactivex.android.plugins.RxAndroidPlugins;
+import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.schedulers.Schedulers;
 
 import static com.test.xyz.demo.domain.interactor.project.ProjectInteractor.ProjectActionCallback;
 import static org.mockito.AdditionalMatchers.not;
@@ -130,12 +126,6 @@ public class ProjectInteractorTest {
         verify(projectActionCallback).onFailure(any(Throwable.class));
     }
 
-    @After
-    public void tearDown() {
-        RxAndroidPlugins.getInstance().reset();
-        RxJavaPlugins.getInstance().reset();
-    }
-
     private void mockGetProjectListAPI() {
         mockGetProjectListHappyPath();
         mockGetProjectListErrorPath();
@@ -174,19 +164,9 @@ public class ProjectInteractorTest {
     }
 
     private void setupRxSchedulers() {
-        RxJavaPlugins.getInstance().reset();
-        RxJavaPlugins.getInstance().registerSchedulersHook(new RxJavaSchedulersHook() {
-            @Override
-            public Scheduler getIOScheduler() {
-                return Schedulers.immediate();
-            }
-        });
-        RxAndroidPlugins.getInstance().reset();
-        RxAndroidPlugins.getInstance().registerSchedulersHook(new RxAndroidSchedulersHook() {
-            @Override
-            public Scheduler getMainThreadScheduler() {
-                return Schedulers.immediate();
-            }
-        });
+        RxJavaPlugins.setIoSchedulerHandler(scheduler -> Schedulers.trampoline());
+        RxJavaPlugins.setComputationSchedulerHandler(scheduler -> Schedulers.trampoline());
+        RxJavaPlugins.setNewThreadSchedulerHandler(scheduler -> Schedulers.trampoline());
+        RxAndroidPlugins.setInitMainThreadSchedulerHandler(scheduler -> Schedulers.trampoline());
     }
 }

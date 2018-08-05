@@ -2,9 +2,9 @@ package com.test.xyz.demo.domain.repository.api;
 
 import com.test.xyz.demo.domain.model.weather.WeatherRawResponse;
 
+import io.reactivex.Observable;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
-import rx.Observable;
 
 public interface WeatherRepository {
     String HTTPS_API_WEATHER_URL = "http://query.yahooapis.com/";

@@ -1,5 +1,6 @@
 package com.test.xyz.demo.presentation.projectlist;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -11,13 +12,13 @@ import android.widget.TextView;
 
 import com.test.xyz.demo.R;
 import com.test.xyz.demo.domain.model.github.GitHubRepo;
-import com.test.xyz.demo.presentation.mainlobby.MainActivity;
-import com.test.xyz.demo.presentation.projectlist.presenter.ProjectListPresenter;
-import com.test.xyz.demo.presentation.projectlist.presenter.ProjectListView;
 import com.test.xyz.demo.presentation.common.BaseFragment;
 import com.test.xyz.demo.presentation.common.di.DaggerApplication;
 import com.test.xyz.demo.presentation.common.util.UIHelper;
+import com.test.xyz.demo.presentation.mainlobby.MainActivity;
 import com.test.xyz.demo.presentation.projectlist.di.ProjectListFragmentModule;
+import com.test.xyz.demo.presentation.projectlist.presenter.ProjectListPresenter;
+import com.test.xyz.demo.presentation.projectlist.presenter.ProjectListView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,13 +31,18 @@ import butterknife.Unbinder;
 
 public class ProjectListFragment extends BaseFragment implements ProjectListView {
     private Unbinder unbinder;
+    private List<GitHubRepo> projectList;
 
     @BindView(R.id.projectList) ListView repoListView;
     @BindView(R.id.noAvlProjects) TextView noAvlRepos;
 
     @Inject ProjectListPresenter presenter;
 
-    @Nullable
+    public static ProjectListFragment newInstance() {
+        ProjectListFragment fragment = new ProjectListFragment();
+        return fragment;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_projectlist, container, false);
@@ -45,33 +51,38 @@ public class ProjectListFragment extends BaseFragment implements ProjectListView
     }
 
     @Override
-    protected void initializeFragment(@Nullable Bundle savedInstanceState) {
-        DaggerApplication.get(this.getContext())
-                .getAppComponent()
-                .plus(new ProjectListFragmentModule(this))
-                .inject(this);
-
-        showLoadingDialog();
-        presenter.requestProjectList(UIHelper.Constants.REPO_OWNER);
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        loadProjectList();
     }
 
     @Override
-    public void showProjectList(final List<GitHubRepo> projectList) {
-        dismissAllDialogs();
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof MainActivity) {
+            DaggerApplication.get(this.getContext())
+                    .getAppComponent()
+                    .plus(new ProjectListFragmentModule(this))
+                    .inject(this);
+        }
+    }
+
+    @Override
+    public void showProjectList(List<GitHubRepo> projectList) {
+        this.projectList = projectList;
         displayResults(projectList);
     }
 
     @Override
     public void showError(int errorMessage) {
-        dismissAllDialogs();
         UIHelper.showToastMessage(ProjectListFragment.this.getActivity(), getString(errorMessage));
-         displayResults(new ArrayList<GitHubRepo>() {});
+        displayResults(new ArrayList<GitHubRepo>() {});
     }
 
     @Override
-    public void onPause() {
-        dismissAllDialogs();
-        super.onPause();
+    public void onStop() {
+        super.onStop();
+        presenter.onStop();
     }
 
     @Override
@@ -80,9 +91,13 @@ public class ProjectListFragment extends BaseFragment implements ProjectListView
         unbinder.unbind();
     }
 
-    public static ProjectListFragment newInstance() {
-        ProjectListFragment fragment = new ProjectListFragment();
-        return fragment;
+    private void loadProjectList() {
+        if (this.projectList == null) {
+            presenter.requestProjectList(UIHelper.Constants.PROJECT_OWNER);
+            return;
+        }
+
+        showProjectList(this.projectList);
     }
 
     private void displayResults(List<GitHubRepo> gitHubRepos) {
@@ -95,8 +110,8 @@ public class ProjectListFragment extends BaseFragment implements ProjectListView
         repoListView.setEmptyView(noAvlRepos);
 
         repoListView.setOnItemClickListener((parent,  view, position,  id) -> {
-                int itemPosition = position;
-            ((MainActivity) getActivity()).loadRepoDetailsFragment(values.get(itemPosition));
+            int itemPosition = position;
+            ((MainActivity) getActivity()).loadProjectDetailsFragment(values.get(itemPosition));
         });
     }
 }

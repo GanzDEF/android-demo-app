@@ -3,13 +3,15 @@ package com.test.xyz.demo.presentation.weather.presenter;
 import com.test.xyz.demo.R;
 import com.test.xyz.demo.domain.interactor.weather.WeatherInteractor;
 import com.test.xyz.demo.domain.model.weather.WeatherSummaryInfo;
+import com.test.xyz.demo.presentation.common.DisposableManager;
 
 import javax.inject.Inject;
 
 public class WeatherPresenterImpl implements WeatherPresenter, WeatherInteractor.WeatherInfoActionCallback {
-    private WeatherView mainView;
-    private WeatherInteractor weatherInteractor;
-    private WeatherDataFormatter weatherDataFormatter;
+    private final WeatherView mainView;
+    private final WeatherInteractor weatherInteractor;
+    private final WeatherDataFormatter weatherDataFormatter;
+    private final DisposableManager disposableManager;
 
     @Inject
     public WeatherPresenterImpl(WeatherView mainView, WeatherInteractor weatherInteractor,
@@ -18,12 +20,21 @@ public class WeatherPresenterImpl implements WeatherPresenter, WeatherInteractor
         this.mainView = mainView;
         this.weatherInteractor = weatherInteractor;
         this.weatherDataFormatter = weatherDataFormatter;
+        this.disposableManager = new DisposableManager();
     }
 
     @Override
     public void requestWeatherInformation() {
         mainView.showBusyIndicator();
-        weatherInteractor.getWeatherInformation(mainView.getUserNameText(), mainView.getCityText(), this);
+
+        disposableManager.add(
+                weatherInteractor.getWeatherInformation(mainView.getUserNameText(), mainView.getCityText(), this)
+        );
+    }
+
+    @Override
+    public void onStop() {
+        disposableManager.dispose();
     }
 
     @Override

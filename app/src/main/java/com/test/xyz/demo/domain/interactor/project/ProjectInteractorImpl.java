@@ -6,9 +6,10 @@ import com.test.xyz.demo.domain.repository.api.ProjectListRepository;
 
 import java.util.List;
 
-import rx.Observer;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
 
 class ProjectInteractorImpl implements ProjectInteractor {
     private static final String TAG = ProjectInteractorImpl.class.getName();
@@ -20,18 +21,20 @@ class ProjectInteractorImpl implements ProjectInteractor {
     }
 
     @Override
-    public void getProjectList(String userName, ProjectActionCallback listener) {
+    public Disposable getProjectList(String userName, ProjectActionCallback listener) {
         if (Strings.isNullOrEmpty(userName)) {
             listener.onFailure(new Exception("Username must be provided!"));
-            return;
+            return null;
         }
 
-        projectListRepository.getProjectList(userName)
+        return projectListRepository.getProjectList(userName)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<List<GitHubRepo>>() {
+                .subscribeWith(new DisposableObserver<List<GitHubRepo>>() {
+
                     @Override
-                    public void onCompleted() {
+                    public void onNext(List<GitHubRepo> gitHubRepoList) {
+                        listener.onSuccess(gitHubRepoList);
                     }
 
                     @Override
@@ -40,27 +43,22 @@ class ProjectInteractorImpl implements ProjectInteractor {
                     }
 
                     @Override
-                    public void onNext(List<GitHubRepo> gitHubRepoList) {
-                        listener.onSuccess(gitHubRepoList);
+                    public void onComplete() {
                     }
                 });
     }
 
     @Override
-    public void getProjectDetails(String userName, String projectID, ProjectActionCallback listener) {
+    public Disposable getProjectDetails(String userName, String projectID, ProjectActionCallback listener) {
         if (Strings.isNullOrEmpty(userName)) {
             listener.onFailure(new Exception("Username must be provided!"));
-            return;
+            return null;
         }
 
-        projectListRepository.getProjectDetails(userName, projectID)
+        return projectListRepository.getProjectDetails(userName, projectID)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<GitHubRepo>() {
-                    @Override
-                    public void onCompleted() {
-                    }
-
+                .subscribeWith(new DisposableObserver<GitHubRepo>() {
                     @Override
                     public void onError(Throwable e) {
                         listener.onFailure(e);
@@ -69,6 +67,10 @@ class ProjectInteractorImpl implements ProjectInteractor {
                     @Override
                     public void onNext(GitHubRepo gitHubRepo) {
                         listener.onSuccess(gitHubRepo);
+                    }
+
+                    @Override
+                    public void onComplete() {
                     }
                 });
     }

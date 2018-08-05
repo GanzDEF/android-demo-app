@@ -9,7 +9,7 @@ import dagger.Module;
 import dagger.Provides;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 @Module(includes = CommonModule.class)
@@ -20,7 +20,7 @@ public class ProjectInteractorModule {
     ProjectListRepository provideProjectListRepository(OkHttpClient client) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(ProjectListRepository.HTTPS_API_GITHUB_URL)
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build();

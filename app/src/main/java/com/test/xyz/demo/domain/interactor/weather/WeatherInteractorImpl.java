@@ -6,9 +6,10 @@ import com.test.xyz.demo.domain.model.weather.WeatherSummaryInfo;
 import com.test.xyz.demo.domain.repository.api.GreetRepository;
 import com.test.xyz.demo.domain.repository.api.WeatherRepository;
 
-import rx.Observer;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
 
 public class WeatherInteractorImpl implements WeatherInteractor {
     private static final String TAG = WeatherInteractorImpl.class.getName();
@@ -27,33 +28,23 @@ public class WeatherInteractorImpl implements WeatherInteractor {
     }
 
     @Override
-    public void getWeatherInformation(final String userName, final String cityName, final WeatherInfoActionCallback listener) {
+    public Disposable getWeatherInformation(final String userName, final String cityName, final WeatherInfoActionCallback listener) {
         final String greeting = greetRepository.greet(userName) + "\n";
 
         if (Strings.isNullOrEmpty(userName)) {
             listener.onUserNameValidationError();
-            return;
+            return null;
         }
 
         if (Strings.isNullOrEmpty(cityName)) {
             listener.onCityValidationError();
-            return;
+            return null;
         }
 
-        weatherRepository.getWeatherInfo(weatherQueryBuilder.createWeatherQuery(cityName))
+        return weatherRepository.getWeatherInfo(weatherQueryBuilder.createWeatherQuery(cityName))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<WeatherRawResponse>() {
-                    @Override
-                    public void onCompleted() {
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                        listener.onFailure();
-                    }
-
+                .subscribeWith(new DisposableObserver<WeatherRawResponse>() {
                     @Override
                     public void onNext(WeatherRawResponse weatherRawResponse) {
                         if (weatherRawResponse.query.count == 0) {
@@ -66,6 +57,16 @@ public class WeatherInteractorImpl implements WeatherInteractor {
                         } catch (Exception exception) {
                             throw new RuntimeException("Unexpected error occurs ...");
                         }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                        listener.onFailure();
+                    }
+
+                    @Override
+                    public void onComplete() {
                     }
                 });
     }

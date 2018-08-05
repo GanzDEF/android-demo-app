@@ -91,6 +91,7 @@ public class WeatherPresenterTest {
         verify(weatherView).showGenericError(R.string.weather_error);
     }
 
+    //region Helper mocks
     private void mockWeatherInteractorBehavior(WeatherInteractor weatherInteractor) {
         mockErrorFlow(weatherInteractor);
         mockSuccessFlow(weatherInteractor);
@@ -140,4 +141,5 @@ public class WeatherPresenterTest {
     static final String INTRO_MESSAGE_SAMPLE = "Hello Test";
     static final int TEMPERATURE_SAMPLE = 100;
     static final WeatherSummaryInfo weatherSummaryInfo = new WeatherSummaryInfo(VALID_CITY, INTRO_MESSAGE_SAMPLE, TEMPERATURE_SAMPLE);
+    //endregion
 }

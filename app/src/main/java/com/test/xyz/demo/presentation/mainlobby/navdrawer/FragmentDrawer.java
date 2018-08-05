@@ -174,7 +174,7 @@ public class FragmentDrawer extends Fragment {
     }
 
     public enum NavigationDrawerFragment {
-        REPO_LIST_FRAG(0),
+        PROJECT_LIST_FRAG(0),
         WEATHER_FRAG(1);
 
         private static Map<Integer, NavigationDrawerFragment> map = new HashMap<Integer, NavigationDrawerFragment>();

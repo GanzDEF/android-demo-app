@@ -26,7 +26,7 @@ public class UIHelper {
     }
 
     public interface Constants {
-        String REPO_OWNER = "google";
-        String REPO_TITLE = "Repo_Title";
+        String PROJECT_OWNER = "google";
+        String PROJECT_TITLE = "Repo_Title";
     }
 }

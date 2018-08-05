@@ -1,6 +1,8 @@
 package com.test.xyz.demo.presentation.weather;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,12 +13,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.test.xyz.demo.R;
-import com.test.xyz.demo.presentation.weather.di.WeatherFragmentModule;
-import com.test.xyz.demo.presentation.weather.presenter.WeatherPresenter;
-import com.test.xyz.demo.presentation.weather.presenter.WeatherView;
 import com.test.xyz.demo.presentation.common.BaseFragment;
 import com.test.xyz.demo.presentation.common.di.DaggerApplication;
 import com.test.xyz.demo.presentation.common.util.UIHelper;
+import com.test.xyz.demo.presentation.mainlobby.MainActivity;
+import com.test.xyz.demo.presentation.weather.di.WeatherFragmentModule;
+import com.test.xyz.demo.presentation.weather.presenter.WeatherPresenter;
+import com.test.xyz.demo.presentation.weather.presenter.WeatherView;
 
 import javax.inject.Inject;
 
@@ -27,14 +30,19 @@ import butterknife.Unbinder;
 public class WeatherFragment extends BaseFragment implements WeatherView {
     private Unbinder unbinder;
 
-    @Inject
-    WeatherPresenter presenter;
     @BindView(R.id.userNameText) EditText userNameText;
     @BindView(R.id.cityText) EditText cityText;
     @BindView(R.id.btnShowInfo) Button showInfoButton;
     @BindView(R.id.resultView) TextView resultView;
     @BindView(R.id.progress) ProgressBar progressBar;
     @BindView(R.id.weatherContainer) LinearLayout weatherContainer;
+
+    @Inject WeatherPresenter presenter;
+
+    public static WeatherFragment newInstance() {
+        WeatherFragment fragment = new WeatherFragment();
+        return fragment;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -44,21 +52,33 @@ public class WeatherFragment extends BaseFragment implements WeatherView {
     }
 
     @Override
-    protected void initializeFragment(Bundle savedInstanceState) {
-        DaggerApplication.get(this.getContext())
-                .getAppComponent()
-                .plus(new WeatherFragmentModule(this))
-                .inject(this);
-
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         weatherContainer.setOnTouchListener((view, motionEvent) -> {
             UIHelper.hideKeyboard(getActivity());
             return false;
         });
-
         showInfoButton.setOnClickListener((view) -> {
             UIHelper.hideKeyboard(this.getActivity());
             presenter.requestWeatherInformation();
         });
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof MainActivity) {
+            DaggerApplication.get(this.getContext())
+                    .getAppComponent()
+                    .plus(new WeatherFragmentModule(this))
+                    .inject(this);
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        presenter.onStop();
     }
 
     @Override
@@ -106,11 +126,5 @@ public class WeatherFragment extends BaseFragment implements WeatherView {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
-    }
-
-    /** Creates weather fragment instance */
-    public static WeatherFragment newInstance() {
-        WeatherFragment fragment = new WeatherFragment();
-        return fragment;
     }
 }

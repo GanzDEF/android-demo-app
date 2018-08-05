@@ -6,19 +6,15 @@ import com.test.xyz.demo.domain.repository.api.GreetRepository;
 import com.test.xyz.demo.domain.repository.api.WeatherRepository;
 import com.test.xyz.demo.domain.repository.exception.InvalidCityException;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import rx.Observable;
-import rx.Scheduler;
-import rx.android.plugins.RxAndroidPlugins;
-import rx.android.plugins.RxAndroidSchedulersHook;
-import rx.plugins.RxJavaPlugins;
-import rx.plugins.RxJavaSchedulersHook;
-import rx.schedulers.Schedulers;
+import io.reactivex.Observable;
+import io.reactivex.android.plugins.RxAndroidPlugins;
+import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.schedulers.Schedulers;
 
 import static com.test.xyz.demo.domain.interactor.weather.WeatherInteractor.WeatherInfoActionCallback;
 import static junit.framework.Assert.fail;
@@ -119,12 +115,6 @@ public class WeatherInfoInteractorTest {
         }
     }
 
-    @After
-    public void tearDown() {
-        RxAndroidPlugins.getInstance().reset();
-        RxJavaPlugins.getInstance().reset();
-    }
-
     private void mockWeatherQueryBuilder() {
         doAnswer((invocation) -> invocation.getArguments()[0]).when(weatherQueryBuilder).createWeatherQuery(anyString());
     }
@@ -150,19 +140,9 @@ public class WeatherInfoInteractorTest {
     }
 
     private void setupRxSchedulers() {
-        RxJavaPlugins.getInstance().reset();
-        RxJavaPlugins.getInstance().registerSchedulersHook(new RxJavaSchedulersHook() {
-            @Override
-            public Scheduler getIOScheduler() {
-                return Schedulers.immediate();
-            }
-        });
-        RxAndroidPlugins.getInstance().reset();
-        RxAndroidPlugins.getInstance().registerSchedulersHook(new RxAndroidSchedulersHook() {
-            @Override
-            public Scheduler getMainThreadScheduler() {
-                return Schedulers.immediate();
-            }
-        });
+        RxJavaPlugins.setIoSchedulerHandler(scheduler -> Schedulers.trampoline());
+        RxJavaPlugins.setComputationSchedulerHandler(scheduler -> Schedulers.trampoline());
+        RxJavaPlugins.setNewThreadSchedulerHandler(scheduler -> Schedulers.trampoline());
+        RxAndroidPlugins.setInitMainThreadSchedulerHandler(scheduler -> Schedulers.trampoline());
     }
 }

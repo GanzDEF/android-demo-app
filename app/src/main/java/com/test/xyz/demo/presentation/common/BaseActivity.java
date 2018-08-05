@@ -9,7 +9,7 @@ import com.test.xyz.demo.presentation.common.util.UIHelper;
 import com.test.xyz.demo.presentation.mainlobby.navdrawer.FragmentDrawer;
 import com.test.xyz.demo.presentation.projectlist.ProjectListFragment;
 
-public abstract class BaseActivity extends AppCompatActivity {
+public class BaseActivity extends AppCompatActivity {
     private Toolbar mToolbar;
     private FragmentDrawer drawerFragment;
 
@@ -24,22 +24,11 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void loadFragment(Fragment fragment, String title) {
         UIHelper.hideKeyboard(this);
 
-        getSupportFragmentManager()
-                .beginTransaction()
+        getSupportFragmentManager().beginTransaction()
                 .addToBackStack(null)
-                .replace(R.id.container_body,
-                        fragment, null).commit();
+                .replace(R.id.container_body, fragment, null).commit();
 
         getSupportActionBar().setTitle(title);
-    }
-
-    protected void loadMainFragment() {
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.container_body,
-                        ProjectListFragment.newInstance(), null).commit();
-
-        getSupportActionBar().setTitle(R.string.repo_list);
     }
 
     @Override

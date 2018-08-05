@@ -4,9 +4,9 @@ import com.test.xyz.demo.domain.model.github.GitHubRepo;
 
 import java.util.List;
 
+import io.reactivex.Observable;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
-import rx.Observable;
 
 public interface ProjectListRepository {
     String HTTPS_API_GITHUB_URL = "https://api.github.com/";

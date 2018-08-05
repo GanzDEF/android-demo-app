@@ -1,5 +1,6 @@
 package com.test.xyz.demo.presentation.projectdetails;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -9,12 +10,13 @@ import android.widget.TextView;
 
 import com.test.xyz.demo.R;
 import com.test.xyz.demo.domain.model.github.GitHubRepo;
-import com.test.xyz.demo.presentation.projectdetails.di.RepoDetailsFragmentModule;
-import com.test.xyz.demo.presentation.projectdetails.presenter.ProjectDetailsPresenter;
-import com.test.xyz.demo.presentation.projectdetails.presenter.ProjectDetailsView;
 import com.test.xyz.demo.presentation.common.BaseFragment;
 import com.test.xyz.demo.presentation.common.di.DaggerApplication;
 import com.test.xyz.demo.presentation.common.util.UIHelper;
+import com.test.xyz.demo.presentation.mainlobby.MainActivity;
+import com.test.xyz.demo.presentation.projectdetails.di.RepoDetailsFragmentModule;
+import com.test.xyz.demo.presentation.projectdetails.presenter.ProjectDetailsPresenter;
+import com.test.xyz.demo.presentation.projectdetails.presenter.ProjectDetailsView;
 
 import javax.inject.Inject;
 
@@ -23,7 +25,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 public class ProjectDetailsFragment extends BaseFragment implements ProjectDetailsView {
-    private String repoItemTitle;
+    private String projectTitle;
     private Unbinder unbinder;
 
     @BindView(R.id.projectDetails) TextView repoDetails;
@@ -31,7 +33,16 @@ public class ProjectDetailsFragment extends BaseFragment implements ProjectDetai
 
     @Inject ProjectDetailsPresenter presenter;
 
-    @Nullable
+    public static ProjectDetailsFragment newInstance(String projectTitle) {
+        ProjectDetailsFragment fragment = new ProjectDetailsFragment();
+        Bundle args = new Bundle();
+
+        args.putString(UIHelper.Constants.PROJECT_TITLE, projectTitle);
+        fragment.setArguments(args);
+
+        return fragment;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_projectdetails, container, false);
@@ -40,33 +51,38 @@ public class ProjectDetailsFragment extends BaseFragment implements ProjectDetai
     }
 
     @Override
-    protected void initializeFragment(@Nullable Bundle savedInstanceState) {
-        DaggerApplication.get(this.getContext())
-                .getAppComponent()
-                .plus(new RepoDetailsFragmentModule(this))
-                .inject(this);
-
-        loadRepoDetails();
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        loadProjectDetails();
     }
 
     @Override
-    public void showProjectDetails(final GitHubRepo gitHubRepo) {
-        dismissAllDialogs();
-        repoTitle.setText(repoItemTitle);
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof MainActivity) {
+            DaggerApplication.get(this.getContext())
+                    .getAppComponent()
+                    .plus(new RepoDetailsFragmentModule(this))
+                    .inject(this);
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        presenter.onStop();
+    }
+
+    @Override
+    public void showProjectDetails(GitHubRepo gitHubRepo) {
+        repoTitle.setText(projectTitle);
         repoDetails.setText(gitHubRepo.description);
     }
 
     @Override
     public void showError(int errorMessage) {
-        dismissAllDialogs();
         UIHelper.showToastMessage(getActivity(), getString(errorMessage));
-        repoDetails.setText(R.string.repo_details_ret_error);
-    }
-
-    @Override
-    public void onPause() {
-        dismissAllDialogs();
-        super.onPause();
+        repoDetails.setText(R.string.project_details_ret_error);
     }
 
     @Override
@@ -75,19 +91,8 @@ public class ProjectDetailsFragment extends BaseFragment implements ProjectDetai
         unbinder.unbind();
     }
 
-    public static ProjectDetailsFragment newInstance(String repoItemTitle) {
-        ProjectDetailsFragment fragment = new ProjectDetailsFragment();
-        Bundle args = new Bundle();
-
-        args.putString(UIHelper.Constants.REPO_TITLE, repoItemTitle);
-        fragment.setArguments(args);
-
-        return fragment;
-    }
-
-    private void loadRepoDetails() {
-        showLoadingDialog();
-        repoItemTitle = getArguments().getString(UIHelper.Constants.REPO_TITLE);
-        presenter.requestProjectDetails(UIHelper.Constants.REPO_OWNER, repoItemTitle);
+    private void loadProjectDetails() {
+        projectTitle = getArguments().getString(UIHelper.Constants.PROJECT_TITLE);
+        presenter.requestProjectDetails(UIHelper.Constants.PROJECT_OWNER, projectTitle);
     }
 }
