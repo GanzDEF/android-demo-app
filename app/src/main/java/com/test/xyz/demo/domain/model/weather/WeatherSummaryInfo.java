@@ -13,18 +13,19 @@ public class WeatherSummaryInfo {
         this.time = System.currentTimeMillis();
     }
 
+    public void setTemperature(int temperature) {
+        this.temperature = temperature;
+    }
+
     public String city() {
         return city;
     }
-
     public int temperature() {
         return temperature;
     }
-
     public long time() {
         return time;
     }
-
     public String introMessage() {
         return introMessage;
     }

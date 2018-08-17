@@ -10,7 +10,7 @@ public final class WeatherDataFormatter {
                 .append(weatherSummaryInfo.city())
                 .append(" is ")
                 .append(weatherSummaryInfo.temperature())
-                .append("°F");
+                .append("°C");
 
         return output.toString();
     }

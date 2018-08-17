@@ -23,6 +23,7 @@ public class WeatherPresenterTest {
     @Mock WeatherInteractor weatherInteractor;
     @Mock WeatherView weatherView;
     @Mock WeatherDataFormatter weatherDataFormatter;
+    @Mock WeatherDegreeConverterProxy weatherDegreeConverterProxy;
 
     WeatherPresenter weatherPresenter;
 
@@ -30,22 +31,26 @@ public class WeatherPresenterTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         mockWeatherInteractorBehavior(weatherInteractor);
-        weatherPresenter = new WeatherPresenterImpl(weatherView, weatherInteractor, weatherDataFormatter);
+        weatherPresenter = new WeatherPresenterImpl(weatherView, weatherInteractor,
+                                                    weatherDataFormatter,
+                                                    weatherDegreeConverterProxy);
     }
 
     @Test
-    public void requestWeatherInformation_shouldReturnInfo() throws Exception {
+    public void requestWeatherInformation_shouldReturnInfo() {
         //GIVEN
-        String weatherDataFormatterOutput = "NYC weather is 75 F";
+        String weatherDataFormatterOutput = "NYC weather is 25°C";
         when(weatherView.getUserNameText()).thenReturn(USER_NAME);
         when(weatherView.getCityText()).thenReturn(VALID_CITY);
-        when(weatherDataFormatter.format(weatherSummaryInfo)).thenReturn(weatherDataFormatterOutput);
+        when(weatherDataFormatter.format(weatherSummarySuccessInfo)).thenReturn(weatherDataFormatterOutput);
 
         //WHEN
         weatherPresenter.requestWeatherInformation();
 
         //THEN
         verify(weatherInteractor).getWeatherInformation(eq(USER_NAME), eq(VALID_CITY), any(WeatherInfoActionCallback.class));
+        verify(weatherDegreeConverterProxy).convertFahrenheitToCelsius(FAHRENHEIT_TEMPERATURE_SAMPLE);
+        verify(weatherDataFormatter).format(weatherSummarySuccessInfo);
         verify(weatherView).showResult(weatherDataFormatterOutput);
     }
 
@@ -99,7 +104,7 @@ public class WeatherPresenterTest {
 
     private void mockSuccessFlow(WeatherInteractor weatherInteractor) {
         doAnswer((invocation) -> {
-            ((WeatherInfoActionCallback) invocation.getArguments()[2]).onSuccess(weatherSummaryInfo);
+            ((WeatherInfoActionCallback) invocation.getArguments()[2]).onSuccess(weatherSummarySuccessInfo);
 
             return null;
         }).when(weatherInteractor).getWeatherInformation(not(eq(EMPTY_VALUE)),
@@ -139,7 +144,7 @@ public class WeatherPresenterTest {
     static final String VALID_CITY = "New York, USA";
     static final String USER_NAME = "hazems";
     static final String INTRO_MESSAGE_SAMPLE = "Hello Test";
-    static final int TEMPERATURE_SAMPLE = 100;
-    static final WeatherSummaryInfo weatherSummaryInfo = new WeatherSummaryInfo(VALID_CITY, INTRO_MESSAGE_SAMPLE, TEMPERATURE_SAMPLE);
+    static final int FAHRENHEIT_TEMPERATURE_SAMPLE = 100;
+    static final WeatherSummaryInfo weatherSummarySuccessInfo = new WeatherSummaryInfo(VALID_CITY, INTRO_MESSAGE_SAMPLE, FAHRENHEIT_TEMPERATURE_SAMPLE);
     //endregion
 }

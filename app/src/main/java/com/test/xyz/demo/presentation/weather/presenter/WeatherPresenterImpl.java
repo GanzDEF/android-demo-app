@@ -11,15 +11,18 @@ public class WeatherPresenterImpl implements WeatherPresenter, WeatherInteractor
     private final WeatherView mainView;
     private final WeatherInteractor weatherInteractor;
     private final WeatherDataFormatter weatherDataFormatter;
+    private final WeatherDegreeConverterProxy weatherDegreeConverterProxy;
     private final DisposableManager disposableManager;
 
     @Inject
     public WeatherPresenterImpl(WeatherView mainView, WeatherInteractor weatherInteractor,
-                                WeatherDataFormatter weatherDataFormatter) {
+                                WeatherDataFormatter weatherDataFormatter,
+                                WeatherDegreeConverterProxy weatherDegreeConverterProxy) {
 
         this.mainView = mainView;
         this.weatherInteractor = weatherInteractor;
         this.weatherDataFormatter = weatherDataFormatter;
+        this.weatherDegreeConverterProxy = weatherDegreeConverterProxy;
         this.disposableManager = new DisposableManager();
     }
 
@@ -52,6 +55,11 @@ public class WeatherPresenterImpl implements WeatherPresenter, WeatherInteractor
     @Override
     public void onSuccess(WeatherSummaryInfo weatherSummaryInfo) {
         mainView.hideBusyIndicator();
+
+        weatherSummaryInfo.setTemperature(
+            weatherDegreeConverterProxy.convertFahrenheitToCelsius(weatherSummaryInfo.temperature())
+        );
+
         mainView.showResult(weatherDataFormatter.format(weatherSummaryInfo));
     }
 

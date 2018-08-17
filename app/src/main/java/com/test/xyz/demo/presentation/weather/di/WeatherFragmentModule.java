@@ -2,6 +2,7 @@ package com.test.xyz.demo.presentation.weather.di;
 
 import com.test.xyz.demo.presentation.common.di.scope.ActivityScope;
 import com.test.xyz.demo.presentation.weather.presenter.WeatherDataFormatter;
+import com.test.xyz.demo.presentation.weather.presenter.WeatherDegreeConverterProxy;
 import com.test.xyz.demo.presentation.weather.presenter.WeatherPresenter;
 import com.test.xyz.demo.presentation.weather.presenter.WeatherPresenterImpl;
 import com.test.xyz.demo.presentation.weather.presenter.WeatherView;
@@ -27,6 +28,12 @@ public class WeatherFragmentModule {
     @ActivityScope
     WeatherDataFormatter provideWeatherDataFormatter() {
         return new WeatherDataFormatter();
+    }
+
+    @Provides
+    @ActivityScope
+    WeatherDegreeConverterProxy provideWeatherDegreeConverterProxy() {
+        return new WeatherDegreeConverterProxy();
     }
 
     @Provides
