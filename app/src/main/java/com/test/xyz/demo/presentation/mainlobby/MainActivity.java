@@ -2,10 +2,12 @@ package com.test.xyz.demo.presentation.mainlobby;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.test.xyz.demo.R;
-import com.test.xyz.demo.presentation.common.BaseActivity;
+import com.test.xyz.demo.presentation.common.util.UIHelper;
 import com.test.xyz.demo.presentation.mainlobby.navdrawer.FragmentDrawer;
 import com.test.xyz.demo.presentation.projectdetails.ProjectDetailsFragment;
 import com.test.xyz.demo.presentation.projectlist.ProjectListFragment;
@@ -14,8 +16,10 @@ import com.test.xyz.demo.presentation.weather.WeatherFragment;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends BaseActivity implements FragmentDrawer.FragmentDrawerListener {
+public class MainActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener {
     private final List<Fragment> fragmentList = new ArrayList<>();
+    private Toolbar toolbar;
+    private FragmentDrawer drawerFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +59,18 @@ public class MainActivity extends BaseActivity implements FragmentDrawer.Fragmen
         loadFragment(projectDetailsFragment, getString(R.string.project_details));
     }
 
+
+    @Override
+    public void onBackPressed() {
+        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.container_body);
+        if (currentFragment instanceof ProjectListFragment) {
+            finish();
+            return;
+        }
+        super.onBackPressed();
+    }
+
+    //region Activity helpers
     private void loadMainFragment() {
         getSupportFragmentManager()
                 .beginTransaction()
@@ -62,4 +78,23 @@ public class MainActivity extends BaseActivity implements FragmentDrawer.Fragmen
 
         getSupportActionBar().setTitle(R.string.project_list);
     }
+
+    private void loadFragment(Fragment fragment, String title) {
+        UIHelper.hideKeyboard(this);
+
+        getSupportFragmentManager().beginTransaction()
+                .addToBackStack(null)
+                .replace(R.id.container_body, fragment, null).commit();
+
+        getSupportActionBar().setTitle(title);
+    }
+
+    private void setupNavigationDrawer(FragmentDrawer.FragmentDrawerListener listener) {
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        drawerFragment = (FragmentDrawer) getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
+        drawerFragment.setUp(R.id.fragment_navigation_drawer, findViewById(R.id.drawer_layout), toolbar);
+        drawerFragment.setDrawerListener(listener);
+    }
+    //endregion
 }
