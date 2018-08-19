@@ -7,7 +7,11 @@ import com.test.xyz.demo.presentation.common.DisposableManager;
 
 import javax.inject.Inject;
 
-public class WeatherPresenterImpl implements WeatherPresenter, WeatherInteractor.WeatherInfoActionCallback {
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.observers.DisposableObserver;
+
+public class WeatherPresenterImpl implements WeatherPresenter {
     private final WeatherView mainView;
     private final WeatherInteractor weatherInteractor;
     private final WeatherDataFormatter weatherDataFormatter;
@@ -30,42 +34,47 @@ public class WeatherPresenterImpl implements WeatherPresenter, WeatherInteractor
     public void requestWeatherInformation() {
         mainView.showBusyIndicator();
 
-        disposableManager.add(
-                weatherInteractor.getWeatherInformation(mainView.getUserNameText(), mainView.getCityText(), this)
-        );
+        Disposable disposable = weatherInteractor.getWeatherInformation(mainView.getUserNameText(), mainView.getCityText())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableObserver<WeatherSummaryInfo>() {
+                    @Override
+                    public void onNext(WeatherSummaryInfo weatherSummaryInfo) {
+                        mainView.hideBusyIndicator();
+
+                        weatherSummaryInfo.setTemperature(
+                                weatherDegreeConverterProxy.convertFahrenheitToCelsius(weatherSummaryInfo.temperature())
+                        );
+
+                        mainView.showResult(weatherDataFormatter.format(weatherSummaryInfo));
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        mainView.hideBusyIndicator();
+
+                        if (e instanceof UserNameValidationException) {
+                            mainView.showUserNameError(R.string.username_validation_error_message);
+                            return;
+                        }
+
+                        if (e instanceof CityValidationException) {
+                            mainView.showCityNameError(R.string.cityname_validation_error_message);
+                            return;
+                        }
+
+                        mainView.showGenericError(R.string.weather_error);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                    }
+                });
+
+        disposableManager.add(disposable);
     }
 
     @Override
     public void onStop() {
         disposableManager.dispose();
-    }
-
-    @Override
-    public void onUserNameValidationError() {
-        mainView.hideBusyIndicator();
-        mainView.showUserNameError(R.string.username_empty_message);
-    }
-
-    @Override
-    public void onCityValidationError() {
-        mainView.hideBusyIndicator();
-        mainView.showCityNameError(R.string.city_empty_message);
-    }
-
-    @Override
-    public void onSuccess(WeatherSummaryInfo weatherSummaryInfo) {
-        mainView.hideBusyIndicator();
-
-        weatherSummaryInfo.setTemperature(
-            weatherDegreeConverterProxy.convertFahrenheitToCelsius(weatherSummaryInfo.temperature())
-        );
-
-        mainView.showResult(weatherDataFormatter.format(weatherSummaryInfo));
-    }
-
-    @Override
-    public void onFailure() {
-        mainView.hideBusyIndicator();
-        mainView.showGenericError(R.string.weather_error);
     }
 }

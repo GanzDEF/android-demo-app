@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Demo App</string>
     <string name="action_settings">Settings</string>
-    <string name="username_empty_message">Empty user name</string>
-    <string name="city_empty_message">Empty City</string>
+    <string name="username_validation_error_message">Empty user name</string>
+    <string name="cityname_validation_error_message">Empty City</string>
 
     <string name="city_invalid_provided_message">Invalid City Provided!</string>
 

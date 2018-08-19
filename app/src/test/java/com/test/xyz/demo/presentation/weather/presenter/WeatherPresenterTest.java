@@ -9,17 +9,26 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import static com.test.xyz.demo.domain.interactor.weather.WeatherInteractor.WeatherInfoActionCallback;
-import static org.mockito.AdditionalMatchers.and;
-import static org.mockito.AdditionalMatchers.not;
-import static org.mockito.ArgumentMatchers.any;
+import java.util.List;
+
+import io.reactivex.Observable;
+import io.reactivex.android.plugins.RxAndroidPlugins;
+import io.reactivex.schedulers.Schedulers;
+
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class WeatherPresenterTest {
+    private static final String EMPTY_VALUE = "";
+    private static final String INVALID_CITY = "INVALID";
+    private static final String VALID_CITY = "New York, USA";
+    private static final String VALID_USER_NAME = "hazems";
+    private static final String INTRO_MESSAGE_SAMPLE = "Hello Test";
+    private static final int FAHRENHEIT_TEMPERATURE_SAMPLE = 77;
+    private WeatherSummaryInfo weatherSummaryInfoSuccessResult;
+
     @Mock WeatherInteractor weatherInteractor;
     @Mock WeatherView weatherView;
     @Mock WeatherDataFormatter weatherDataFormatter;
@@ -29,7 +38,7 @@ public class WeatherPresenterTest {
 
     @Before
     public void setup() {
-        MockitoAnnotations.initMocks(this);
+        initializeTest();
         mockWeatherInteractorBehavior(weatherInteractor);
         weatherPresenter = new WeatherPresenterImpl(weatherView, weatherInteractor,
                                                     weatherDataFormatter,
@@ -39,112 +48,84 @@ public class WeatherPresenterTest {
     @Test
     public void requestWeatherInformation_shouldReturnInfo() {
         //GIVEN
-        String weatherDataFormatterOutput = "NYC weather is 25°C";
-        when(weatherView.getUserNameText()).thenReturn(USER_NAME);
+        String output = "NYC weather is 25°C";
+        int fahrenheitTemp = weatherSummaryInfoSuccessResult.temperature();
+
+        when(weatherView.getUserNameText()).thenReturn(VALID_USER_NAME);
         when(weatherView.getCityText()).thenReturn(VALID_CITY);
-        when(weatherDataFormatter.format(weatherSummarySuccessInfo)).thenReturn(weatherDataFormatterOutput);
+        when(weatherDataFormatter.format(weatherSummaryInfoSuccessResult)).thenReturn(output);
 
         //WHEN
         weatherPresenter.requestWeatherInformation();
 
         //THEN
-        verify(weatherInteractor).getWeatherInformation(eq(USER_NAME), eq(VALID_CITY), any(WeatherInfoActionCallback.class));
-        verify(weatherDegreeConverterProxy).convertFahrenheitToCelsius(FAHRENHEIT_TEMPERATURE_SAMPLE);
-        verify(weatherDataFormatter).format(weatherSummarySuccessInfo);
-        verify(weatherView).showResult(weatherDataFormatterOutput);
+        verify(weatherInteractor).getWeatherInformation(eq(VALID_USER_NAME), eq(VALID_CITY));
+        verify(weatherDegreeConverterProxy).convertFahrenheitToCelsius(fahrenheitTemp);
+        verify(weatherDataFormatter).format(weatherSummaryInfoSuccessResult);
+        verify(weatherView).showResult(output);
     }
 
     @Test
-    public void requestWeatherInformation_whenUserNameIsEmpty_shouldReturnError() throws Exception {
+    public void requestWeatherInformation_whenUserNameIsEmpty_shouldReturnError() {
         //GIVEN
-        when(weatherView.getUserNameText()).thenReturn("");
+        when(weatherView.getUserNameText()).thenReturn(EMPTY_VALUE);
         when(weatherView.getCityText()).thenReturn(VALID_CITY);
 
         //WHEN
         weatherPresenter.requestWeatherInformation();
 
         //THEN
-        verify(weatherInteractor).getWeatherInformation(eq(""), eq(VALID_CITY), any(WeatherInfoActionCallback.class));
-        verify(weatherView).showUserNameError(R.string.username_empty_message);
+        verify(weatherInteractor).getWeatherInformation(eq(EMPTY_VALUE), eq(VALID_CITY));
+        verify(weatherView).showUserNameError(R.string.username_validation_error_message);
     }
 
     @Test
-    public void requestWeatherInformation_whenCityIsEmpty_shouldReturnError() throws Exception {
+    public void requestWeatherInformation_whenCityIsEmpty_shouldReturnError() {
         //GIVEN
-        when(weatherView.getUserNameText()).thenReturn(USER_NAME);
-        when(weatherView.getCityText()).thenReturn("");
+        when(weatherView.getUserNameText()).thenReturn(VALID_USER_NAME);
+        when(weatherView.getCityText()).thenReturn(EMPTY_VALUE);
 
         //WHEN
         weatherPresenter.requestWeatherInformation();
 
         //THEN
-        verify(weatherInteractor).getWeatherInformation(eq(USER_NAME), eq(""), any(WeatherInfoActionCallback.class));
-        verify(weatherView).showCityNameError(R.string.city_empty_message);
+        verify(weatherInteractor).getWeatherInformation(eq(VALID_USER_NAME), eq(EMPTY_VALUE));
+        verify(weatherView).showCityNameError(R.string.cityname_validation_error_message);
     }
 
     @Test
-    public void requestWeatherInformation_whenCityIsInvalid_shouldReturnError() throws Exception {
+    public void requestWeatherInformation_whenCityIsInvalid_shouldReturnError() {
         //GIVEN
-        when(weatherView.getUserNameText()).thenReturn(USER_NAME);
+        when(weatherView.getUserNameText()).thenReturn(VALID_USER_NAME);
         when(weatherView.getCityText()).thenReturn(INVALID_CITY);
 
         //WHEN
         weatherPresenter.requestWeatherInformation();
 
         //THEN
-        verify(weatherInteractor).getWeatherInformation(eq(USER_NAME), eq(INVALID_CITY), any(WeatherInfoActionCallback.class));
+        verify(weatherInteractor).getWeatherInformation(eq(VALID_USER_NAME), eq(INVALID_CITY));
         verify(weatherView).showGenericError(R.string.weather_error);
     }
 
     //region Helper mocks
     private void mockWeatherInteractorBehavior(WeatherInteractor weatherInteractor) {
-        mockErrorFlow(weatherInteractor);
-        mockSuccessFlow(weatherInteractor);
+        Observable<WeatherSummaryInfo> observable = Observable.just(weatherSummaryInfoSuccessResult);
+
+        when(weatherInteractor.getWeatherInformation(eq(VALID_USER_NAME), eq(VALID_CITY))).thenReturn(observable);
+
+        when(weatherInteractor.getWeatherInformation(anyString(), eq(EMPTY_VALUE))).thenReturn(
+                Observable.error(new CityValidationException("City must be provided!")).cast((Class) List.class));
+        when(weatherInteractor.getWeatherInformation(eq(EMPTY_VALUE), eq(VALID_CITY))).thenReturn(
+                Observable.error(new UserNameValidationException("User must be provided!")).cast((Class) List.class));
+        when(weatherInteractor.getWeatherInformation(anyString(), eq(INVALID_CITY))).thenReturn(
+                Observable.error(new Exception("City is invalid!")).cast((Class) List.class));
     }
 
-    private void mockSuccessFlow(WeatherInteractor weatherInteractor) {
-        doAnswer((invocation) -> {
-            ((WeatherInfoActionCallback) invocation.getArguments()[2]).onSuccess(weatherSummarySuccessInfo);
+    private void initializeTest() {
+        MockitoAnnotations.initMocks(this);
+        RxAndroidPlugins.setInitMainThreadSchedulerHandler(scheduler ->  Schedulers.trampoline());
 
-            return null;
-        }).when(weatherInteractor).getWeatherInformation(not(eq(EMPTY_VALUE)),
-                and(not(eq(INVALID_CITY)), not(eq(EMPTY_VALUE))),
-                any(WeatherInfoActionCallback.class));
+        weatherSummaryInfoSuccessResult = new WeatherSummaryInfo(VALID_CITY, INTRO_MESSAGE_SAMPLE, FAHRENHEIT_TEMPERATURE_SAMPLE);
     }
-
-    private void mockErrorFlow(WeatherInteractor weatherInteractor) {
-        mockInvalidCityErrorFlow(weatherInteractor);
-        mockEmptyUserErrorFlow(weatherInteractor);
-        mockEmptyCityErrorFlow(weatherInteractor);
-    }
-
-    private void mockEmptyCityErrorFlow(WeatherInteractor weatherInteractor) {
-        doAnswer((invocation) -> {
-            ((WeatherInfoActionCallback) invocation.getArguments()[2]).onCityValidationError();
-            return null;
-        }).when(weatherInteractor).getWeatherInformation(anyString(), eq(EMPTY_VALUE), any(WeatherInfoActionCallback.class));
-    }
-
-    private void mockEmptyUserErrorFlow(WeatherInteractor weatherInteractor) {
-        doAnswer((invocation) -> {
-            ((WeatherInfoActionCallback) invocation.getArguments()[2]).onUserNameValidationError();
-            return null;
-        }).when(weatherInteractor).getWeatherInformation(eq(EMPTY_VALUE), eq(VALID_CITY), any(WeatherInfoActionCallback.class));
-    }
-
-    private void mockInvalidCityErrorFlow(WeatherInteractor weatherInteractor) {
-        doAnswer((invocation) -> {
-            ((WeatherInfoActionCallback) invocation.getArguments()[2]).onFailure();
-            return null;
-        }).when(weatherInteractor).getWeatherInformation(anyString(), eq(INVALID_CITY), any(WeatherInfoActionCallback.class));
-    }
-
-    static final String EMPTY_VALUE = "";
-    static final String INVALID_CITY = "INVALID";
-    static final String VALID_CITY = "New York, USA";
-    static final String USER_NAME = "hazems";
-    static final String INTRO_MESSAGE_SAMPLE = "Hello Test";
-    static final int FAHRENHEIT_TEMPERATURE_SAMPLE = 100;
-    static final WeatherSummaryInfo weatherSummarySuccessInfo = new WeatherSummaryInfo(VALID_CITY, INTRO_MESSAGE_SAMPLE, FAHRENHEIT_TEMPERATURE_SAMPLE);
     //endregion
 }

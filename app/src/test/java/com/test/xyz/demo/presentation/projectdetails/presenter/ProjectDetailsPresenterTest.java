@@ -23,6 +23,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class ProjectDetailsPresenterTest {
+    private static final String EMPTY_VALUE = "";
     private static final String USER_NAME = "google";
     private static final String PROJECT_ID = "test";
     private GitHubRepo gitHubRepo;
@@ -90,7 +91,5 @@ public class ProjectDetailsPresenterTest {
         RxAndroidPlugins.setInitMainThreadSchedulerHandler(scheduler ->  Schedulers.trampoline());
         gitHubRepo = new GitHubRepo("Fake gitHubRepo");
     }
-
-    private static final String EMPTY_VALUE = "";
     //endregion
 }
