@@ -6,9 +6,7 @@ import com.test.xyz.demo.domain.repository.api.ProjectListRepository;
 
 import java.util.List;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.observers.DisposableObserver;
+import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
 
 class ProjectInteractorImpl implements ProjectInteractor {
@@ -21,57 +19,22 @@ class ProjectInteractorImpl implements ProjectInteractor {
     }
 
     @Override
-    public Disposable getProjectList(String userName, ProjectActionCallback listener) {
+    public Observable<List<GitHubRepo>> getProjectList(String userName) {
         if (Strings.isNullOrEmpty(userName)) {
-            listener.onFailure(new Exception("Username must be provided!"));
-            return null;
+            return Observable.error(new IllegalArgumentException("Username must be provided!"));
         }
 
         return projectListRepository.getProjectList(userName)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableObserver<List<GitHubRepo>>() {
-
-                    @Override
-                    public void onNext(List<GitHubRepo> gitHubRepoList) {
-                        listener.onSuccess(gitHubRepoList);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        listener.onFailure(e);
-                    }
-
-                    @Override
-                    public void onComplete() {
-                    }
-                });
+                .subscribeOn(Schedulers.io());
     }
 
     @Override
-    public Disposable getProjectDetails(String userName, String projectID, ProjectActionCallback listener) {
-        if (Strings.isNullOrEmpty(userName)) {
-            listener.onFailure(new Exception("Username must be provided!"));
-            return null;
+    public Observable<GitHubRepo> getProjectDetails(String userName, String projectID) {
+        if (Strings.isNullOrEmpty(userName) || Strings.isNullOrEmpty(projectID)) {
+            return Observable.error(new IllegalArgumentException("Username and projectID must be provided!"));
         }
 
         return projectListRepository.getProjectDetails(userName, projectID)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableObserver<GitHubRepo>() {
-                    @Override
-                    public void onError(Throwable e) {
-                        listener.onFailure(e);
-                    }
-
-                    @Override
-                    public void onNext(GitHubRepo gitHubRepo) {
-                        listener.onSuccess(gitHubRepo);
-                    }
-
-                    @Override
-                    public void onComplete() {
-                    }
-                });
+                .subscribeOn(Schedulers.io());
     }
 }

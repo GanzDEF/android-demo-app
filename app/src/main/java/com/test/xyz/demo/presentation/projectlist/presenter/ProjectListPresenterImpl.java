@@ -9,7 +9,11 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class ProjectListPresenterImpl implements ProjectListPresenter, ProjectInteractor.ProjectActionCallback<List<GitHubRepo>> {
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.observers.DisposableObserver;
+
+public class ProjectListPresenterImpl implements ProjectListPresenter {
     private final ProjectListView projectListView;
     private final ProjectInteractor projectInteractor;
     private final DisposableManager disposableManager;
@@ -23,23 +27,29 @@ public class ProjectListPresenterImpl implements ProjectListPresenter, ProjectIn
 
     @Override
     public void requestProjectList(String userName) {
-        disposableManager.add(
-                projectInteractor.getProjectList(userName, this)
-        );
+        Disposable disposable = projectInteractor.getProjectList(userName)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableObserver<List<GitHubRepo>>() {
+                    @Override
+                    public void onNext(List<GitHubRepo> gitHubRepos) {
+                        projectListView.showProjectList(gitHubRepos);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        projectListView.showError(R.string.project_list_ret_error);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                    }
+                });
+
+        disposableManager.add(disposable);
     }
 
     @Override
     public void onStop() {
         disposableManager.dispose();
-    }
-
-    @Override
-    public void onSuccess(List<GitHubRepo> data) {
-        projectListView.showProjectList(data);
-    }
-
-    @Override
-    public void onFailure(Throwable throwable) {
-        projectListView.showError(R.string.project_list_ret_error);
     }
 }

@@ -9,18 +9,23 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import static com.test.xyz.demo.domain.interactor.project.ProjectInteractor.ProjectActionCallback;
+import java.util.List;
+
+import io.reactivex.Observable;
+import io.reactivex.android.plugins.RxAndroidPlugins;
+import io.reactivex.schedulers.Schedulers;
+
 import static org.mockito.AdditionalMatchers.not;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class ProjectDetailsPresenterTest {
     private static final String USER_NAME = "google";
     private static final String PROJECT_ID = "test";
+    private GitHubRepo gitHubRepo;
 
     @Mock ProjectInteractor projectInteractor;
     @Mock ProjectDetailsView projectDetailsView;
@@ -29,7 +34,7 @@ public class ProjectDetailsPresenterTest {
 
     @Before
     public void setup() {
-        MockitoAnnotations.initMocks(this);
+        initializeTest();
         mockGetProjectDetailsAPI(projectInteractor);
         projectDetailsPresenter = new ProjectDetailsPresenterImpl(projectDetailsView, projectInteractor);
     }
@@ -40,8 +45,8 @@ public class ProjectDetailsPresenterTest {
         projectDetailsPresenter.requestProjectDetails(USER_NAME, PROJECT_ID);
 
         //THEN
-        verify(projectInteractor).getProjectDetails(eq(USER_NAME), eq(PROJECT_ID), any(ProjectActionCallback.class));
-        verify(projectDetailsView).showProjectDetails(any(GitHubRepo.class));
+        verify(projectInteractor).getProjectDetails(eq(USER_NAME), eq(PROJECT_ID));
+        verify(projectDetailsView).showProjectDetails(gitHubRepo);
         verify(projectDetailsView, never()).showError(R.string.project_details_ret_error);
     }
 
@@ -51,24 +56,41 @@ public class ProjectDetailsPresenterTest {
         projectDetailsPresenter.requestProjectDetails("", PROJECT_ID);
 
         //THEN
-        verify(projectInteractor).getProjectDetails(eq(""), eq(PROJECT_ID), any(ProjectActionCallback.class));
+        verify(projectInteractor).getProjectDetails(eq(""), eq(PROJECT_ID));
+        verify(projectDetailsView, never()).showProjectDetails(any(GitHubRepo.class));
+        verify(projectDetailsView).showError(R.string.project_details_ret_error);
+    }
+
+    @Test
+    public void requestProjectDetails_whenProjectIdIsEmpty_shouldReturnError() {
+        //WHEN
+        projectDetailsPresenter.requestProjectDetails(USER_NAME, "");
+
+        //THEN
+        verify(projectInteractor).getProjectDetails(eq(USER_NAME), eq(""));
         verify(projectDetailsView, never()).showProjectDetails(any(GitHubRepo.class));
         verify(projectDetailsView).showError(R.string.project_details_ret_error);
     }
 
     //region Helper Mocks
     private void mockGetProjectDetailsAPI(ProjectInteractor projectInteractor) {
-        doAnswer((invocation) -> {
-            ((ProjectActionCallback) invocation.getArguments()[2]).onFailure(mock(Throwable.class));
-            return null;
-        }).when(projectInteractor).getProjectDetails(eq(EMPTY_VALUE), any(String.class), any(ProjectActionCallback.class));
+        Observable<GitHubRepo> observable = Observable.just(gitHubRepo);
 
-        doAnswer((invocation) -> {
-            ((ProjectActionCallback) invocation.getArguments()[2]).onSuccess(new GitHubRepo("Fake gitHubRepo"));
-            return null;
-        }).when(projectInteractor).getProjectDetails(not(eq(EMPTY_VALUE)), any(String.class), any(ProjectActionCallback.class));
+        when(projectInteractor.getProjectDetails(eq(EMPTY_VALUE), any(String.class)))
+                .thenReturn(Observable.error(new IllegalArgumentException("Username must be provided!")).cast((Class) List.class));
+
+        when(projectInteractor.getProjectDetails(any(String.class), eq(EMPTY_VALUE)))
+                .thenReturn(Observable.error(new IllegalArgumentException("Project ID must be provided!")).cast((Class) List.class));
+
+        when(projectInteractor.getProjectDetails(not(eq(EMPTY_VALUE)), not(eq(EMPTY_VALUE)))).thenReturn(observable);
     }
 
-    static final String EMPTY_VALUE = "";
+    private void initializeTest() {
+        MockitoAnnotations.initMocks(this);
+        RxAndroidPlugins.setInitMainThreadSchedulerHandler(scheduler ->  Schedulers.trampoline());
+        gitHubRepo = new GitHubRepo("Fake gitHubRepo");
+    }
+
+    private static final String EMPTY_VALUE = "";
     //endregion
 }

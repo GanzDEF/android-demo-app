@@ -7,7 +7,11 @@ import com.test.xyz.demo.presentation.common.DisposableManager;
 
 import javax.inject.Inject;
 
-public class ProjectDetailsPresenterImpl implements ProjectDetailsPresenter, ProjectInteractor.ProjectActionCallback<GitHubRepo> {
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.observers.DisposableObserver;
+
+public class ProjectDetailsPresenterImpl implements ProjectDetailsPresenter {
     private final ProjectDetailsView projectDetailsView;
     private final ProjectInteractor projectInteractor;
     private final DisposableManager disposableManager;
@@ -21,23 +25,29 @@ public class ProjectDetailsPresenterImpl implements ProjectDetailsPresenter, Pro
 
     @Override
     public void requestProjectDetails(String userName, String projectID) {
-        disposableManager.add(
-            projectInteractor.getProjectDetails(userName, projectID, this)
-        );
+        Disposable disposable = projectInteractor.getProjectDetails(userName, projectID)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableObserver<GitHubRepo>() {
+                    @Override
+                    public void onNext(GitHubRepo gitHubRepo) {
+                        projectDetailsView.showProjectDetails(gitHubRepo);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        projectDetailsView.showError(R.string.project_details_ret_error);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                    }
+                });
+
+        disposableManager.add(disposable);
     }
 
     @Override
     public void onStop() {
         disposableManager.dispose();
-    }
-
-    @Override
-    public void onSuccess(GitHubRepo data) {
-        projectDetailsView.showProjectDetails(data);
-    }
-
-    @Override
-    public void onFailure(Throwable throwable) {
-        projectDetailsView.showError(R.string.project_details_ret_error);
     }
 }

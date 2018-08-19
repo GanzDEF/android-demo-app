@@ -12,17 +12,20 @@ import org.mockito.MockitoAnnotations;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.test.xyz.demo.domain.interactor.project.ProjectInteractor.ProjectActionCallback;
+import io.reactivex.Observable;
+import io.reactivex.android.plugins.RxAndroidPlugins;
+import io.reactivex.schedulers.Schedulers;
+
 import static org.mockito.AdditionalMatchers.not;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class ProjectListPresenterTest {
     private static final String USER_NAME = "google";
+    private List<GitHubRepo> gitHubRepoList;
 
     @Mock ProjectListView projectListView;
     @Mock ProjectInteractor projectInteractor;
@@ -31,7 +34,7 @@ public class ProjectListPresenterTest {
 
     @Before
     public void setup() {
-        MockitoAnnotations.initMocks(this);
+        initializeTest();
         mockGetProjectListAPI(projectInteractor);
         projectListPresenter = new ProjectListPresenterImpl(projectListView, projectInteractor);
     }
@@ -42,8 +45,8 @@ public class ProjectListPresenterTest {
         projectListPresenter.requestProjectList(USER_NAME);
 
         //THEN
-        verify(projectInteractor).getProjectList(eq(USER_NAME), any(ProjectActionCallback.class));
-        verify(projectListView).showProjectList(any(List.class));
+        verify(projectInteractor).getProjectList(eq(USER_NAME));
+        verify(projectListView).showProjectList(gitHubRepoList);
         verify(projectListView, never()).showError(R.string.project_list_ret_error);
     }
 
@@ -53,30 +56,32 @@ public class ProjectListPresenterTest {
         projectListPresenter.requestProjectList("");
 
         //THEN
-        verify(projectInteractor).getProjectList(eq(""), any(ProjectActionCallback.class));
+        verify(projectInteractor).getProjectList(eq(""));
         verify(projectListView, never()).showProjectList(any(List.class));
         verify(projectListView).showError(R.string.project_list_ret_error);
     }
 
     //region Helper mocks
     private void mockGetProjectListAPI(ProjectInteractor projectInteractor) {
-        doAnswer((invocation) -> {
-            ((ProjectActionCallback) invocation.getArguments()[1]).onFailure(mock(Throwable.class));
-            return null;
-        }).when(projectInteractor).getProjectList(eq(EMPTY_VALUE), any(ProjectActionCallback.class));
+        Observable<List<GitHubRepo>> observable = Observable.just(gitHubRepoList);
 
-        doAnswer((invocation) -> {
-            ((ProjectActionCallback) invocation.getArguments()[1]).onSuccess(getFakeRepoList());
-            return null;
-        }).when(projectInteractor).getProjectList(not(eq(EMPTY_VALUE)), any(ProjectActionCallback.class));
+        when(projectInteractor.getProjectList(eq(EMPTY_VALUE)))
+                .thenReturn(Observable.error(new IllegalArgumentException("Username must be provided!")).cast((Class) List.class));
+
+        when(projectInteractor.getProjectList(not(eq(EMPTY_VALUE)))).thenReturn(observable);
     }
 
-    private List<GitHubRepo> getFakeRepoList() {
-        List<GitHubRepo> gitHubRepoList = new ArrayList<>();
-        gitHubRepoList.add(new GitHubRepo("Fake gitHubRepo"));
-        return gitHubRepoList;
+    private void initializeTest() {
+        MockitoAnnotations.initMocks(this);
+        RxAndroidPlugins.setInitMainThreadSchedulerHandler(scheduler ->  Schedulers.trampoline());
+
+        gitHubRepoList = new ArrayList<>();
+
+        for (int i = 0; i < 10; ++i) {
+            gitHubRepoList.add(new GitHubRepo("Fake gitHubRepo: " + i));
+        }
     }
 
-    static final String EMPTY_VALUE = "";
+    private static final String EMPTY_VALUE = "";
     //endregion
 }
