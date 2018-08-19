@@ -6,11 +6,9 @@
 
     <string name="city_invalid_provided_message">Invalid City Provided!</string>
 
-    <string name="project_details">Google Projects</string>
-
     <!-- navigation drawer item labels  -->
     <string name="weather">Weather</string>
-    <string name="project_list">Google Projects</string>
+    <string name="projects">Google Projects</string>
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
 
@@ -26,7 +24,7 @@
     <string name="your_name">Your Name</string>
 
     <string-array name="nav_drawer_labels">
-        <item>@string/project_list</item>
+        <item>@string/projects</item>
         <item>@string/weather</item>
     </string-array>
 </resources>

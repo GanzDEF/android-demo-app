@@ -1,6 +1,8 @@
 package com.test.xyz.demo.presentation.weather.presenter;
 
 import com.test.xyz.demo.R;
+import com.test.xyz.demo.domain.interactor.weather.CityValidationException;
+import com.test.xyz.demo.domain.interactor.weather.UserNameValidationException;
 import com.test.xyz.demo.domain.interactor.weather.WeatherInteractor;
 import com.test.xyz.demo.domain.model.weather.WeatherSummaryInfo;
 

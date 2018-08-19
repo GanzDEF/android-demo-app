@@ -17,22 +17,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener {
-    private final List<Fragment> fragmentList = new ArrayList<>();
     private Toolbar toolbar;
     private FragmentDrawer drawerFragment;
+    private List<Fragment> fragmentList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initialize(savedInstanceState);
-    }
-
-    private void initialize(Bundle savedInstanceState) {
-        fragmentList.add(ProjectListFragment.newInstance());
-        fragmentList.add(WeatherFragment.newInstance());
-        setupNavigationDrawer(this);
-        loadMainFragment();
     }
 
     @Override
@@ -42,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
 
         switch (navigationDrawerFragment) {
             case PROJECT_LIST_FRAG:
-                title = getString(R.string.project_list);
+                title = getString(R.string.projects);
                 activeFragment = fragmentList.get(0);
                 break;
             case WEATHER_FRAG:
@@ -51,14 +44,14 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 break;
         }
 
-        loadFragment(activeFragment, title);
+        loadFragment(activeFragment);
+        getSupportActionBar().setTitle(title);
     }
 
     public void loadProjectDetailsFragment(String title) {
         ProjectDetailsFragment projectDetailsFragment = ProjectDetailsFragment.newInstance(title);
-        loadFragment(projectDetailsFragment, getString(R.string.project_details));
+        loadFragment(projectDetailsFragment);
     }
-
 
     @Override
     public void onBackPressed() {
@@ -70,23 +63,22 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         super.onBackPressed();
     }
 
-    //region Activity helpers
-    private void loadMainFragment() {
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.container_body, fragmentList.get(0), null).commit();
-
-        getSupportActionBar().setTitle(R.string.project_list);
+    private void initialize(Bundle savedInstanceState) {
+        fragmentList = new ArrayList<>();
+        fragmentList.add(ProjectListFragment.newInstance());
+        fragmentList.add(WeatherFragment.newInstance());
+        setupNavigationDrawer(this);
+        loadFragment(fragmentList.get(0));
+        getSupportActionBar().setTitle(R.string.projects);
     }
 
-    private void loadFragment(Fragment fragment, String title) {
+    //region Activity Helpers
+    private void loadFragment(Fragment fragment) {
         UIHelper.hideKeyboard(this);
 
         getSupportFragmentManager().beginTransaction()
                 .addToBackStack(null)
                 .replace(R.id.container_body, fragment, null).commit();
-
-        getSupportActionBar().setTitle(title);
     }
 
     private void setupNavigationDrawer(FragmentDrawer.FragmentDrawerListener listener) {

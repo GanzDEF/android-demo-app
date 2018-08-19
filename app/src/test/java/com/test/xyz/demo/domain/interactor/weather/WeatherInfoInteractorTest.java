@@ -4,8 +4,6 @@ import com.test.xyz.demo.domain.model.weather.WeatherRawResponse;
 import com.test.xyz.demo.domain.model.weather.WeatherSummaryInfo;
 import com.test.xyz.demo.domain.repository.api.GreetRepository;
 import com.test.xyz.demo.domain.repository.api.WeatherRepository;
-import com.test.xyz.demo.presentation.weather.presenter.CityValidationException;
-import com.test.xyz.demo.presentation.weather.presenter.UserNameValidationException;
 
 import org.junit.Before;
 import org.junit.Test;
