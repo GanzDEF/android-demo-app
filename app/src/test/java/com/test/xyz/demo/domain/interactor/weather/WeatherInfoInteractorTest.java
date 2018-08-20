@@ -27,7 +27,8 @@ public class WeatherInfoInteractorTest {
 
     @Mock GreetRepository greetRepository;
     @Mock WeatherRepository weatherRepository;
-    @Mock WeatherQueryBuilder weatherQueryBuilder;
+    @Mock
+    WeatherQueryBuilder weatherQueryBuilder;
 
     WeatherInteractor testSubject;
 
@@ -82,7 +83,7 @@ public class WeatherInfoInteractorTest {
     private void mockWeatherInfoAPI() {
         doAnswer((invocation) -> invocation.getArguments()[0]).when(weatherQueryBuilder).createWeatherQuery(anyString());
 
-        WeatherRawResponse weatherRawResponse = WeatherRawResponse.createWeatherSuccessRawResponse("10");
+        WeatherRawResponse weatherRawResponse = WeatherRawResponse.Companion.createWeatherSuccessRawResponse("10");
         Observable<WeatherRawResponse> observable = Observable.just(weatherRawResponse);
 
         when(weatherRepository.getWeatherInfo(not(eq(INVALID_CITY)))).thenReturn(observable);

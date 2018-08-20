@@ -12,6 +12,8 @@ project.ext {
 }
 
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 
 apply from: "../config/signing.gradle"
 apply from: "../config/jacoco.gradle"
@@ -46,6 +48,9 @@ android {
     sourceSets {
         main {
             java.srcDirs = ['src/main/java']
+
+            java.srcDirs += 'src/main/kotlin'
+            java.srcDirs += 'src/test/kotlin'
         }
     }
 
@@ -71,13 +76,19 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxjava:$project.rxjava"
 
     // Dagger-2
+    compileOnly 'org.glassfish:javax.annotation:10.0-b28'
     implementation "com.google.dagger:dagger-compiler:$project.dagger"
-    implementation "com.google.dagger:dagger:$project.dagger"
+
     annotationProcessor "com.google.dagger:dagger-compiler:$project.dagger"
+    kapt "com.google.dagger:dagger-compiler:$project.dagger"
+    //implementation "com.google.dagger:dagger:$project.dagger"
 
     // ButterKnife
     implementation "com.jakewharton:butterknife:$project.butterknife"
-    annotationProcessor "com.jakewharton:butterknife-compiler:$project.butterknife"
+    kapt "com.jakewharton:butterknife-compiler:$project.butterknife"
+
+    // Kotlin
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     // Test
     testAnnotationProcessor "com.google.dagger:dagger-compiler:$project.dagger"
@@ -85,4 +96,7 @@ dependencies {
     testImplementation "com.google.dagger:dagger:$project.dagger"
     testImplementation "com.google.dagger:dagger-compiler:$project.dagger"
     testImplementation "org.mockito:mockito-core:$project.mockito"
+}
+repositories {
+    mavenCentral()
 }
