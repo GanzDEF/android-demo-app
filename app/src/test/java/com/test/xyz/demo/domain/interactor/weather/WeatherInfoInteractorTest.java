@@ -7,27 +7,33 @@ import com.test.xyz.demo.domain.repository.api.WeatherRepository;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import io.reactivex.Observable;
 import io.reactivex.plugins.RxJavaPlugins;
 import io.reactivex.schedulers.Schedulers;
 
 import static org.mockito.AdditionalMatchers.not;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(WeatherQueryBuilder.class)
 public class WeatherInfoInteractorTest {
     private static final String USER_NAME = "hazems";
     private static final String CITY = "New York, USA";
     private static final String INVALID_CITY = "INVALID_CITY";
+    private WeatherQueryBuilder weatherQueryBuilder;
 
     @Mock GreetRepository greetRepository;
     @Mock WeatherRepository weatherRepository;
-    @Mock WeatherQueryBuilder weatherQueryBuilder;
 
     WeatherInteractor testSubject;
 
@@ -80,6 +86,9 @@ public class WeatherInfoInteractorTest {
     }
 
     private void mockWeatherInfoAPI() {
+        //FIXME See here before Mockito 2.x, In order to mock final method, you need to mock instance using PowerMockito.mock() API.
+        weatherQueryBuilder = PowerMockito.mock(WeatherQueryBuilder.class);
+
         doAnswer((invocation) -> invocation.getArguments()[0]).when(weatherQueryBuilder).createWeatherQuery(anyString());
 
         WeatherRawResponse weatherRawResponse = WeatherRawResponse.createWeatherSuccessRawResponse("10");

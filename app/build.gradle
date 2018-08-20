@@ -8,7 +8,8 @@ project.ext {
     rxbinding = "0.3.0"
     annotation = "1.0"
     junit = "4.12"
-    mockito = "2.19.1"
+    mockito = "1.10.19"
+    powerMockVersion = "1.6.5"
 }
 
 apply plugin: 'com.android.application'
@@ -85,4 +86,10 @@ dependencies {
     testImplementation "com.google.dagger:dagger:$project.dagger"
     testImplementation "com.google.dagger:dagger-compiler:$project.dagger"
     testImplementation "org.mockito:mockito-core:$project.mockito"
+
+    testImplementation "org.powermock:powermock-api-mockito:$project.powerMockVersion"
+    testImplementation "org.powermock:powermock-module-junit4-rule-agent:$project.powerMockVersion"
+    testImplementation "org.powermock:powermock-classloading-xstream:$project.powerMockVersion"
+    testImplementation "org.powermock:powermock-module-junit4-rule:$project.powerMockVersion"
+    testImplementation "org.powermock:powermock-module-junit4:$project.powerMockVersion"
 }

@@ -8,8 +8,12 @@ import com.test.xyz.demo.domain.model.weather.WeatherSummaryInfo;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.List;
 
@@ -17,11 +21,14 @@ import io.reactivex.Observable;
 import io.reactivex.android.plugins.RxAndroidPlugins;
 import io.reactivex.schedulers.Schedulers;
 
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({WeatherDataFormatter.class, WeatherDegreeConverter.class})
 public class WeatherPresenterTest {
     private static final String EMPTY_VALUE = "";
     private static final String INVALID_CITY = "INVALID";
@@ -29,12 +36,12 @@ public class WeatherPresenterTest {
     private static final String VALID_USER_NAME = "hazems";
     private static final String INTRO_MESSAGE_SAMPLE = "Hello Test";
     private static final int FAHRENHEIT_TEMPERATURE_SAMPLE = 77;
+
     private WeatherSummaryInfo weatherSummaryInfoSuccessResult;
+    private WeatherDataFormatter weatherDataFormatter;
 
     @Mock WeatherInteractor weatherInteractor;
     @Mock WeatherView weatherView;
-    @Mock WeatherDataFormatter weatherDataFormatter;
-    @Mock WeatherDegreeConverterProxy weatherDegreeConverterProxy;
 
     WeatherPresenter weatherPresenter;
 
@@ -43,8 +50,7 @@ public class WeatherPresenterTest {
         initializeTest();
         mockWeatherInteractorBehavior(weatherInteractor);
         weatherPresenter = new WeatherPresenterImpl(weatherView, weatherInteractor,
-                                                    weatherDataFormatter,
-                                                    weatherDegreeConverterProxy);
+                                                    weatherDataFormatter);
     }
 
     @Test
@@ -53,6 +59,7 @@ public class WeatherPresenterTest {
         String output = "NYC weather is 25°C";
         int fahrenheitTemp = weatherSummaryInfoSuccessResult.temperature();
 
+        PowerMockito.mockStatic(WeatherDegreeConverter.class);
         when(weatherView.getUserNameText()).thenReturn(VALID_USER_NAME);
         when(weatherView.getCityText()).thenReturn(VALID_CITY);
         when(weatherDataFormatter.format(weatherSummaryInfoSuccessResult)).thenReturn(output);
@@ -62,9 +69,13 @@ public class WeatherPresenterTest {
 
         //THEN
         verify(weatherInteractor).getWeatherInformation(eq(VALID_USER_NAME), eq(VALID_CITY));
-        verify(weatherDegreeConverterProxy).convertFahrenheitToCelsius(fahrenheitTemp);
+
         verify(weatherDataFormatter).format(weatherSummaryInfoSuccessResult);
         verify(weatherView).showResult(output);
+
+        //FIXME A problem here to mock static methods, you need to use PowerMock too.
+        PowerMockito.verifyStatic(times(1));
+        WeatherDegreeConverter.convertFahrenheitToCelsius(fahrenheitTemp);
     }
 
     @Test
@@ -111,6 +122,9 @@ public class WeatherPresenterTest {
 
     //region Helper mocks
     private void mockWeatherInteractorBehavior(WeatherInteractor weatherInteractor) {
+        //FIXME See here before Mockito 2.x, In order to mock final method, you need to mock instance using PowerMockito.mock() API.
+        weatherDataFormatter = PowerMockito.mock(WeatherDataFormatter.class);
+
         Observable<WeatherSummaryInfo> observable = Observable.just(weatherSummaryInfoSuccessResult);
 
         when(weatherInteractor.getWeatherInformation(eq(VALID_USER_NAME), eq(VALID_CITY))).thenReturn(observable);
