@@ -47,9 +47,10 @@ android {
 
     sourceSets {
         main {
-            java.srcDirs = ['src/main/java']
+            java.srcDirs = ['src/main/java', 'src/main/kotlin']
+        }
 
-            java.srcDirs += 'src/main/kotlin'
+        test {
             java.srcDirs += 'src/test/kotlin'
         }
     }
@@ -92,10 +93,14 @@ dependencies {
 
     // Test
     testAnnotationProcessor "com.google.dagger:dagger-compiler:$project.dagger"
+    kaptTest "com.google.dagger:dagger-compiler:$project.dagger"
+
     testImplementation "junit:junit:$project.junit"
     testImplementation "com.google.dagger:dagger:$project.dagger"
     testImplementation "com.google.dagger:dagger-compiler:$project.dagger"
     testImplementation "org.mockito:mockito-core:$project.mockito"
+
+    testImplementation 'com.nhaarman.mockitokotlin2:mockito-kotlin:2.0.0-RC1'
 }
 repositories {
     mavenCentral()
