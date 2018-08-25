@@ -29,8 +29,8 @@ class ProjectDetailsFragment : BaseFragment(), ProjectDetailsView {
 
     @Inject lateinit var presenter: ProjectDetailsPresenter
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater!!.inflate(R.layout.fragment_projectdetails, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val view = inflater.inflate(R.layout.fragment_projectdetails, container, false)
         unbinder = ButterKnife.bind(this, view)
         return view
     }
@@ -44,7 +44,7 @@ class ProjectDetailsFragment : BaseFragment(), ProjectDetailsView {
         super.onAttach(context)
         if (context is MainActivity) {
             DaggerApplication[this.context]
-                    .getAppComponent()!!
+                    .getAppComponent()
                     .plus(RepoDetailsFragmentModule(this))
                     .inject(this)
         }
@@ -52,27 +52,27 @@ class ProjectDetailsFragment : BaseFragment(), ProjectDetailsView {
 
     override fun onStop() {
         super.onStop()
-        presenter!!.onStop()
+        presenter.onStop()
     }
 
     override fun showProjectDetails(gitHubRepo: GitHubRepo) {
-        repoTitle!!.text = projectTitle
-        repoDetails!!.text = gitHubRepo.description
+        repoTitle.text = projectTitle
+        repoDetails.text = gitHubRepo.description
     }
 
     override fun showError(errorMessage: Int) {
         UIHelper.showToastMessage(activity, getString(errorMessage))
-        repoDetails!!.setText(R.string.project_details_ret_error)
+        repoDetails.setText(R.string.project_details_ret_error)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        unbinder!!.unbind()
+        unbinder.unbind()
     }
 
     private fun loadProjectDetails() {
         projectTitle = arguments.getString(UIHelper.Constants.PROJECT_TITLE)
-        presenter!!.requestProjectDetails(UIHelper.Constants.PROJECT_OWNER, projectTitle)
+        presenter.requestProjectDetails(UIHelper.Constants.PROJECT_OWNER, projectTitle)
     }
 
     companion object {

@@ -15,11 +15,7 @@ constructor(private val mainView: WeatherView, private val weatherInteractor: We
             private val weatherDataFormatter: WeatherDataFormatter,
             private val weatherDegreeConverterProxy: WeatherDegreeConverterProxy) : WeatherPresenter {
 
-    private val disposableManager: DisposableManager
-
-    init {
-        this.disposableManager = DisposableManager()
-    }
+    private val disposableManager: DisposableManager = DisposableManager()
 
     override fun requestWeatherInformation() {
         mainView.showBusyIndicator()
@@ -28,35 +24,43 @@ constructor(private val mainView: WeatherView, private val weatherInteractor: We
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(object : DisposableObserver<WeatherSummaryInfo>() {
                     override fun onNext(weatherSummaryInfo: WeatherSummaryInfo) {
-                        mainView.hideBusyIndicator()
-
-                        weatherSummaryInfo.setTemperature(
-                                weatherDegreeConverterProxy.convertFahrenheitToCelsius(weatherSummaryInfo.temperature().toFloat())
-                        )
-
-                        mainView.showResult(weatherDataFormatter.format(weatherSummaryInfo))
+                        onSuccess(weatherSummaryInfo)
                     }
 
                     override fun onError(e: Throwable) {
-                        mainView.hideBusyIndicator()
-
-                        if (e is UserNameValidationException) {
-                            mainView.showUserNameError(R.string.username_validation_error_message)
-                            return
-                        }
-
-                        if (e is CityValidationException) {
-                            mainView.showCityNameError(R.string.cityname_validation_error_message)
-                            return
-                        }
-
-                        mainView.showGenericError(R.string.weather_error)
+                        onWeatherError(e)
                     }
 
                     override fun onComplete() {}
                 })
 
         disposableManager.add(disposable)
+    }
+
+    fun onSuccess(weatherSummaryInfo: WeatherSummaryInfo) {
+        mainView.hideBusyIndicator()
+
+        weatherSummaryInfo.setTemperature(
+                weatherDegreeConverterProxy.convertFahrenheitToCelsius(weatherSummaryInfo.temperature().toFloat())
+        )
+
+        mainView.showResult(weatherDataFormatter.format(weatherSummaryInfo))
+    }
+
+    fun onWeatherError(e: Throwable) {
+        mainView.hideBusyIndicator()
+
+        if (e is UserNameValidationException) {
+            mainView.showUserNameError(R.string.username_validation_error_message)
+            return
+        }
+
+        if (e is CityValidationException) {
+            mainView.showCityNameError(R.string.cityname_validation_error_message)
+            return
+        }
+
+        mainView.showGenericError(R.string.weather_error)
     }
 
     override fun onStop() {

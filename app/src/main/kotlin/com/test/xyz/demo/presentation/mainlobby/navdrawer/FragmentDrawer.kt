@@ -15,16 +15,10 @@ import java.util.*
 class FragmentDrawer : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var mDrawerToggle: ActionBarDrawerToggle
-
-    var drawerLayout: DrawerLayout? = null; private set
-
-    private var adapter: NavigationDrawerAdapter? = null
-    private var containerView: View? = null
-    private var drawerListener: FragmentDrawerListener? = null
-
-    fun setDrawerListener(listener: FragmentDrawerListener) {
-        this.drawerListener = listener
-    }
+    private lateinit var drawerListener: FragmentDrawerListener
+    private lateinit var adapter: NavigationDrawerAdapter
+    private lateinit var containerView: View
+    private lateinit var drawerLayout: DrawerLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,20 +26,20 @@ class FragmentDrawer : Fragment() {
         titles = activity.resources.getStringArray(R.array.nav_drawer_labels)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val layout = inflater!!.inflate(R.layout.fragment_navigation_drawer, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val layout = inflater.inflate(R.layout.fragment_navigation_drawer, container, false)
 
         recyclerView = layout.findViewById<View>(R.id.drawerList) as RecyclerView
 
         adapter = NavigationDrawerAdapter(activity, data)
 
-        recyclerView!!.adapter = adapter
-        recyclerView!!.layoutManager = LinearLayoutManager(activity)
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = LinearLayoutManager(activity)
 
-        recyclerView!!.addOnItemTouchListener(RecyclerTouchListener(activity, recyclerView, object : ClickListener {
+        recyclerView.addOnItemTouchListener(RecyclerTouchListener(activity, recyclerView, object : ClickListener {
             override fun onClick(view: View, position: Int) {
-                drawerListener!!.onDrawerItemSelected(view, NavigationDrawerFragment.valueOf(position))
-                drawerLayout!!.closeDrawer(containerView)
+                drawerListener.onDrawerItemSelected(view, NavigationDrawerFragment.valueOf(position))
+                drawerLayout.closeDrawer(containerView)
             }
 
             override fun onLongClick(view: View?, position: Int) {
@@ -55,9 +49,15 @@ class FragmentDrawer : Fragment() {
         return layout
     }
 
+    fun setDrawerListener(listener: FragmentDrawerListener) {
+        this.drawerListener = listener
+    }
+
     fun setUp(fragmentId: Int, drawerLayout: DrawerLayout, toolbar: Toolbar) {
         containerView = activity.findViewById(fragmentId)
+
         this.drawerLayout = drawerLayout
+
         mDrawerToggle = object : ActionBarDrawerToggle(activity, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
             override fun onDrawerOpened(drawerView: View?) {
                 super.onDrawerOpened(drawerView)
@@ -75,8 +75,8 @@ class FragmentDrawer : Fragment() {
             }
         }
 
-        this.drawerLayout!!.setDrawerListener(mDrawerToggle)
-        this.drawerLayout!!.post { mDrawerToggle!!.syncState() }
+        this.drawerLayout.setDrawerListener(mDrawerToggle)
+        this.drawerLayout.post { mDrawerToggle.syncState() }
 
     }
 
@@ -141,16 +141,22 @@ class FragmentDrawer : Fragment() {
         }
     }
 
+    class NavDrawerItem {
+        var isShowNotify: Boolean = false
+        var title: String? = null
+    }
+
     companion object {
-        private val TAG = FragmentDrawer::class.java.simpleName
-        private var titles: Array<String>? = null
+        private lateinit var titles: Array<String>
 
         val data: MutableList<NavDrawerItem>
             get() {
                 val data = ArrayList<NavDrawerItem>()
-                for (i in titles!!.indices) {
+
+                for (i in titles.indices) {
                     val navItem = NavDrawerItem()
-                    navItem.title = titles!![i]
+
+                    navItem.title = titles[i]
                     data.add(navItem)
                 }
 

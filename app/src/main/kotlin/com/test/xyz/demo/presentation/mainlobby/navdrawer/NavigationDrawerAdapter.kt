@@ -8,18 +8,13 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.test.xyz.demo.R
 
-class NavigationDrawerAdapter(private val context: Context, data: MutableList<NavDrawerItem>) : RecyclerView.Adapter<NavigationDrawerAdapter.MyViewHolder>() {
-    internal var data: MutableList<NavDrawerItem> = mutableListOf<NavDrawerItem>()
+class NavigationDrawerAdapter(private val context: Context, data: MutableList<FragmentDrawer.NavDrawerItem>) : RecyclerView.Adapter<NavigationDrawerAdapter.MyViewHolder>() {
+    private var data: MutableList<FragmentDrawer.NavDrawerItem> = mutableListOf()
     private val inflater: LayoutInflater
 
     init {
         inflater = LayoutInflater.from(context)
         this.data = data
-    }
-
-    fun delete(position: Int) {
-        data.removeAt(position)
-        notifyItemRemoved(position)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {

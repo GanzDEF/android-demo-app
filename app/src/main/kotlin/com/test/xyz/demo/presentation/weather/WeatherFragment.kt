@@ -20,7 +20,7 @@ import com.test.xyz.demo.presentation.weather.presenter.WeatherView
 import javax.inject.Inject
 
 class WeatherFragment : BaseFragment(), WeatherView {
-    private var unbinder: Unbinder? = null
+    private lateinit var unbinder: Unbinder
 
     @BindView(R.id.userNameText) lateinit var userNameTxt: EditText
     @BindView(R.id.cityText) lateinit var cityTxt: EditText
@@ -31,21 +31,21 @@ class WeatherFragment : BaseFragment(), WeatherView {
 
     @Inject lateinit var presenter: WeatherPresenter
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater!!.inflate(R.layout.fragment_weather, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val view = inflater.inflate(R.layout.fragment_weather, container, false)
         unbinder = ButterKnife.bind(this, view)
         return view
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        weatherContainer!!.setOnTouchListener { view, motionEvent ->
+        weatherContainer.setOnTouchListener { view, motionEvent ->
             UIHelper.hideKeyboard(activity)
             false
         }
-        showInfoButton!!.setOnClickListener { view ->
+        showInfoButton.setOnClickListener { view ->
             UIHelper.hideKeyboard(this.activity)
-            presenter!!.requestWeatherInformation()
+            presenter.requestWeatherInformation()
         }
     }
 
@@ -53,7 +53,7 @@ class WeatherFragment : BaseFragment(), WeatherView {
         super.onAttach(context)
         if (context is MainActivity) {
             DaggerApplication[this.context]
-                    .getAppComponent()!!
+                    .getAppComponent()
                     .plus(WeatherFragmentModule(this))
                     .inject(this)
         }
@@ -61,48 +61,44 @@ class WeatherFragment : BaseFragment(), WeatherView {
 
     override fun onStop() {
         super.onStop()
-        presenter!!.onStop()
+        presenter.onStop()
     }
 
     override fun getUserNameText(): String {
-        return userNameTxt!!.text.toString()
+        return userNameTxt.text.toString()
     }
 
     override fun getCityText(): String {
-        return cityTxt!!.text.toString()
+        return cityTxt.text.toString()
     }
 
     override fun showUserNameError(messageId: Int) {
-        userNameTxt!!.error = getString(messageId)
+        userNameTxt.error = getString(messageId)
     }
 
     override fun showCityNameError(messageId: Int) {
-        cityTxt!!.error = getString(messageId)
+        cityTxt.error = getString(messageId)
     }
 
     override fun showBusyIndicator() {
-        progressBar!!.visibility = View.VISIBLE
+        progressBar.visibility = View.VISIBLE
     }
 
     override fun hideBusyIndicator() {
-        progressBar!!.visibility = View.GONE
+        progressBar.visibility = View.GONE
     }
 
     override fun showResult(result: String) {
-        resultView!!.text = result
+        resultView.text = result
     }
 
     override fun showGenericError(messageID: Int) {
-        UIHelper.showToastMessage(this@WeatherFragment.activity, getString(messageID))
-    }
-
-    override fun onSaveInstanceState(outState: Bundle?) {
-        super.onSaveInstanceState(outState)
+        UIHelper.showToastMessage(this.activity, getString(messageID))
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        unbinder!!.unbind()
+        unbinder.unbind()
     }
 
     companion object {

@@ -24,16 +24,16 @@ import java.util.*
 import javax.inject.Inject
 
 class ProjectListFragment : BaseFragment(), ProjectListView {
-    private lateinit var unbinder: Unbinder;
     private var projectList: List<GitHubRepo> = emptyList()
+    private lateinit var unbinder: Unbinder
 
     @BindView(R.id.projectList) lateinit var repoListView: ListView
     @BindView(R.id.noAvlProjects) lateinit var noAvlRepos: TextView
 
     @Inject lateinit var presenter: ProjectListPresenter
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater!!.inflate(R.layout.fragment_projectlist, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val view = inflater.inflate(R.layout.fragment_projectlist, container, false)
         unbinder = ButterKnife.bind(this, view)
         return view
     }
@@ -43,11 +43,11 @@ class ProjectListFragment : BaseFragment(), ProjectListView {
         loadProjectList()
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is MainActivity) {
             DaggerApplication[this.context]
-                    .getAppComponent()!!
+                    .getAppComponent()
                     .plus(ProjectListFragmentModule(this))
                     .inject(this)
         }
@@ -59,25 +59,23 @@ class ProjectListFragment : BaseFragment(), ProjectListView {
     }
 
     override fun showError(errorMessage: Int) {
-        UIHelper.showToastMessage(this@ProjectListFragment.activity, getString(errorMessage))
-        displayResults(object : ArrayList<GitHubRepo>() {
-
-        })
+        UIHelper.showToastMessage(this.activity, getString(errorMessage))
+        displayResults(object : ArrayList<GitHubRepo>() {})
     }
 
     override fun onStop() {
         super.onStop()
-        presenter!!.onStop()
+        presenter.onStop()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        unbinder!!.unbind()
+        unbinder.unbind()
     }
 
     private fun loadProjectList() {
         if (this.projectList.isEmpty()) {
-            presenter!!.requestProjectList(UIHelper.Constants.PROJECT_OWNER)
+            presenter.requestProjectList(UIHelper.Constants.PROJECT_OWNER)
             return
         }
 
@@ -87,13 +85,13 @@ class ProjectListFragment : BaseFragment(), ProjectListView {
     private fun displayResults(gitHubRepos: List<GitHubRepo>) {
         val values = mapRepoList(gitHubRepos)
 
-        val adapter = ArrayAdapter(this@ProjectListFragment.activity,
+        val adapter = ArrayAdapter(this.activity,
                 android.R.layout.simple_list_item_1, android.R.id.text1, values)
 
-        repoListView!!.adapter = adapter
-        repoListView!!.emptyView = noAvlRepos
+        repoListView.adapter = adapter
+        repoListView.emptyView = noAvlRepos
 
-        repoListView!!.setOnItemClickListener { parent, view, position, id ->
+        repoListView.setOnItemClickListener { parent, view, position, id ->
             (activity as MainActivity).loadProjectDetailsFragment(values[position])
         }
     }

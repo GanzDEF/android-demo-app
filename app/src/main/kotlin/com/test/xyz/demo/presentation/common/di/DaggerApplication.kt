@@ -14,7 +14,7 @@ class DaggerApplication : Application() {
         initAppComponents()
     }
 
-    fun getAppComponent(): AppComponent? {
+    fun getAppComponent(): AppComponent {
         return appComponent
     }
 
@@ -26,8 +26,8 @@ class DaggerApplication : Application() {
     }
 
     companion object {
-        private var appComponent: AppComponent? = null
-        private var instance: DaggerApplication? = null
+        private lateinit var appComponent: AppComponent
+        private lateinit var instance: DaggerApplication
 
         operator fun get(context: Context): DaggerApplication {
             return context.applicationContext as DaggerApplication

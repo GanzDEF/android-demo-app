@@ -2,7 +2,6 @@ package com.test.xyz.demo.presentation.mainlobby
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.View
@@ -22,7 +21,7 @@ class MainActivity : AppCompatActivity(), FragmentDrawer.FragmentDrawerListener 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        initialize(savedInstanceState)
+        initialize()
     }
 
     override fun onDrawerItemSelected(view: View, navigationDrawerFragment: FragmentDrawer.NavigationDrawerFragment) {
@@ -32,43 +31,48 @@ class MainActivity : AppCompatActivity(), FragmentDrawer.FragmentDrawerListener 
         when (navigationDrawerFragment) {
             FragmentDrawer.NavigationDrawerFragment.PROJECT_LIST_FRAG -> {
                 title = getString(R.string.projects)
-                activeFragment = fragmentList!![0]
+                activeFragment = fragmentList[0]
             }
             FragmentDrawer.NavigationDrawerFragment.WEATHER_FRAG -> {
                 title = getString(R.string.weather)
-                activeFragment = fragmentList!![1]
+                activeFragment = fragmentList[1]
             }
         }
 
         loadFragment(activeFragment)
-        supportActionBar!!.title = title
+        supportActionBar?.title = title
     }
 
     fun loadProjectDetailsFragment(title: String) {
         val projectDetailsFragment = ProjectDetailsFragment.newInstance(title)
+
         loadFragment(projectDetailsFragment)
     }
 
     override fun onBackPressed() {
         val currentFragment = supportFragmentManager.findFragmentById(R.id.container_body)
+
         if (currentFragment is ProjectListFragment) {
             finish()
             return
         }
+
         super.onBackPressed()
     }
 
-    private fun initialize(savedInstanceState: Bundle?) {
+    private fun initialize() {
         fragmentList = ArrayList()
-        fragmentList!!.add(ProjectListFragment.newInstance())
-        fragmentList!!.add(WeatherFragment.newInstance())
+
+        fragmentList.add(ProjectListFragment.newInstance())
+        fragmentList.add(WeatherFragment.newInstance())
+
         setupNavigationDrawer(this)
-        loadFragment(fragmentList!![0])
-        supportActionBar!!.setTitle(R.string.projects)
+        loadFragment(fragmentList[0])
+        supportActionBar?.setTitle(R.string.projects)
     }
 
     //region Activity Helpers
-    private fun loadFragment(fragment: Fragment?) {
+    private fun loadFragment(fragment: Fragment) {
         UIHelper.hideKeyboard(this)
 
         supportFragmentManager.beginTransaction()
@@ -78,10 +82,13 @@ class MainActivity : AppCompatActivity(), FragmentDrawer.FragmentDrawerListener 
 
     private fun setupNavigationDrawer(listener: FragmentDrawer.FragmentDrawerListener) {
         toolbar = findViewById<View>(R.id.toolbar) as Toolbar
+
         setSupportActionBar(toolbar)
+
         drawerFragment = supportFragmentManager.findFragmentById(R.id.fragment_navigation_drawer) as FragmentDrawer
-        drawerFragment!!.setUp(R.id.fragment_navigation_drawer, findViewById<DrawerLayout>(R.id.drawer_layout), toolbar)
-        drawerFragment!!.setDrawerListener(listener)
+
+        drawerFragment.setUp(R.id.fragment_navigation_drawer, findViewById(R.id.drawer_layout), toolbar)
+        drawerFragment.setDrawerListener(listener)
     }
     //endregion
 }

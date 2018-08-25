@@ -13,7 +13,7 @@ class ProjectListFragmentModule(private val view: ProjectListView) {
 
     @Provides
     @ActivityScope
-    internal fun provideRepoListView(): ProjectListView {
+    internal fun provideProjectListView(): ProjectListView {
         return this.view
     }
 
