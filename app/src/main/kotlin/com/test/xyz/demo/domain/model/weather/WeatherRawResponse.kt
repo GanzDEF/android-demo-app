@@ -9,6 +9,10 @@ class WeatherRawResponse {
     @Expose
     var query: Query? = null
 
+    fun temperature(): String? {
+        return query?.results?.channel?.item?.condition?.temp;
+    }
+
     companion object {
 
         fun createWeatherSuccessRawResponse(temp: String): WeatherRawResponse {

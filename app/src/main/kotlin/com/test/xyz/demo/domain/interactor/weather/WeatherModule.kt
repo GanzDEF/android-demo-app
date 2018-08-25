@@ -30,7 +30,7 @@ class WeatherModule {
 
     @Provides
     @Singleton
-    internal fun provideHelloService(): GreetRepository {
+    internal fun provideGreetRepositoryManager(): GreetRepository {
         return GreetRepositoryManager()
     }
 

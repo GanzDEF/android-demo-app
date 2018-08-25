@@ -78,7 +78,7 @@ class ProjectDetailsPresenterTest {
     private fun initializeTest() {
         MockitoAnnotations.initMocks(this)
         RxAndroidPlugins.setInitMainThreadSchedulerHandler { scheduler -> Schedulers.trampoline() }
-        gitHubRepo = GitHubRepo("Fake gitHubRepo")
+        gitHubRepo = GitHubRepo(1, "Fake gitHubRepo")
     }
 
     companion object {

@@ -23,14 +23,11 @@ class WeatherInteractorImpl(private val greetRepository: GreetRepository,
             Observable.error(CityValidationException("City must be provided!"))
         } else weatherRepository.getWeatherInfo(weatherQueryBuilder.createWeatherQuery(cityName))
                 .map { weatherRawResponse ->
-                    val temperature = Integer.parseInt(weatherRawResponse.query!!.results!!.channel!!.item!!.condition!!.temp)
+                    val temperature = Integer.parseInt(weatherRawResponse.temperature())
                     WeatherSummaryInfo(cityName, greeting, temperature)
                 }
                 .subscribeOn(Schedulers.io())
 
     }
 
-    companion object {
-        private val TAG = WeatherInteractorImpl::class.java.name
-    }
 }

@@ -158,11 +158,11 @@ class ProjectInteractorTest {
     }
 
     private fun initializeFakeGitHubRepos() {
-        gitHubRepo = GitHubRepo("RepoItem")
+        gitHubRepo = GitHubRepo(1, "RepoItem")
         gitHubRepoList = ArrayList()
 
         for (i in 0..9) {
-            gitHubRepoList.add(GitHubRepo("SampleRepoItem$i"))
+            gitHubRepoList.add(GitHubRepo(i.toLong(),"SampleRepoItem$i"))
         }
     }
 

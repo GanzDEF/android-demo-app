@@ -66,7 +66,7 @@ class ProjectListPresenterTest {
         gitHubRepoList = ArrayList()
 
         for (i in 0..9) {
-            gitHubRepoList.add(GitHubRepo("Fake gitHubRepo: $i"))
+            gitHubRepoList.add(GitHubRepo(i.toLong(), "Fake gitHubRepo: $i"))
         }
     }
 

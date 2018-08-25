@@ -25,7 +25,4 @@ internal class ProjectInteractorImpl(private val projectListRepository: ProjectL
 
     }
 
-    companion object {
-        private val TAG = ProjectInteractorImpl::class.java.name
-    }
 }
