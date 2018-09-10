@@ -52,7 +52,7 @@ class WeatherPresenterTest {
         //THEN
         verify(weatherInteractor).getWeatherInformation(eq(VALID_USER_NAME), eq(VALID_CITY))
         verify(weatherDegreeConverterProxy).convertFahrenheitToCelsius(fahrenheitTemp.toFloat())
-        verify(weatherDataFormatter).format(weatherSummaryInfoSuccessResult!!)
+        verify(weatherDataFormatter).format(weatherSummaryInfoSuccessResult)
         verify(weatherView).showResult(output)
     }
 
