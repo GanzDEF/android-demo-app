@@ -73,7 +73,6 @@ public class WeatherPresenterTest {
         verify(weatherDataFormatter).format(weatherSummaryInfoSuccessResult);
         verify(weatherView).showResult(output);
 
-        //FIXME A problem here to mock static methods, you need to use PowerMock too.
         PowerMockito.verifyStatic(times(1));
         WeatherDegreeConverter.convertFahrenheitToCelsius(fahrenheitTemp);
     }
@@ -122,7 +121,6 @@ public class WeatherPresenterTest {
 
     //region Helper mocks
     private void mockWeatherInteractorBehavior(WeatherInteractor weatherInteractor) {
-        //FIXME See here before Mockito 2.x, In order to mock final method, you need to mock instance using PowerMockito.mock() API.
         weatherDataFormatter = PowerMockito.mock(WeatherDataFormatter.class);
 
         Observable<WeatherSummaryInfo> observable = Observable.just(weatherSummaryInfoSuccessResult);
