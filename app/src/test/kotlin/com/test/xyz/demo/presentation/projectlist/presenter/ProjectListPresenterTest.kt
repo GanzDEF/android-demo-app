@@ -13,22 +13,31 @@ import org.mockito.ArgumentMatchers.anyList
 import org.mockito.MockitoAnnotations
 
 class ProjectListPresenterTest {
-    val projectListView = mock<ProjectListView>()
-    val projectInteractor = mock<ProjectInteractor>()
 
-    lateinit var gitHubRepoList: MutableList<GitHubRepo>
+    val gitHubRepoList = arrayListOf(GitHubRepo(0, "Fake GitHub Repo-0"),
+            GitHubRepo(1, "Fake GitHub Repo-1"),
+            GitHubRepo(2, "Fake GitHub Repo-2"))
+
+    val projectInteractor = mock<ProjectInteractor> {
+        val successObservable = Observable.just<List<GitHubRepo>>(gitHubRepoList)
+        val requiredUserNameErrorObservable = Observable.error<List<GitHubRepo>>(IllegalArgumentException("Username must be provided!"))
+
+        on {getProjectList(eq(USER_NAME))}   doReturn successObservable
+        on {getProjectList(eq(EMPTY_VALUE))} doReturn requiredUserNameErrorObservable
+    }
+
+    val projectListView = mock<ProjectListView>()
 
     lateinit var projectListPresenter: ProjectListPresenter
 
     @Before
     fun setup() {
-        initializeTest()
-        mockGetProjectListAPI(projectInteractor)
+        init()
         projectListPresenter = ProjectListPresenterImpl(projectListView, projectInteractor)
     }
 
     @Test
-    fun requestProjectList_shouldReturnRepoList() {
+    fun `requestProjectList() should return Repo List`() {
         //WHEN
         projectListPresenter.requestProjectList(USER_NAME)
 
@@ -39,7 +48,7 @@ class ProjectListPresenterTest {
     }
 
     @Test
-    fun requestProjectList_whenUserNameIsEmpty_shouldError() {
+    fun `requestProjectList(), when user name is empty, should return error`() {
         //WHEN
         projectListPresenter.requestProjectList("")
 
@@ -49,30 +58,13 @@ class ProjectListPresenterTest {
         verify(projectListView).showError(R.string.project_list_ret_error)
     }
 
-    //region Helper mocks
-    private fun mockGetProjectListAPI(projectInteractor: ProjectInteractor) {
-        val observable = Observable.just<List<GitHubRepo>>(gitHubRepoList)
-
-        whenever(projectInteractor.getProjectList(eq(EMPTY_VALUE)))
-                .thenReturn(Observable.error<List<GitHubRepo>>(IllegalArgumentException("Username must be provided!")))
-
-        whenever(projectInteractor.getProjectList(eq(USER_NAME))).thenReturn(observable)
-    }
-
-    private fun initializeTest() {
+    private fun init() {
         MockitoAnnotations.initMocks(this)
         RxAndroidPlugins.setInitMainThreadSchedulerHandler { scheduler -> Schedulers.trampoline() }
-
-        gitHubRepoList = ArrayList()
-
-        for (i in 0..9) {
-            gitHubRepoList.add(GitHubRepo(i.toLong(), "Fake gitHubRepo: $i"))
-        }
     }
 
     companion object {
         private val USER_NAME = "google"
         private val EMPTY_VALUE = ""
     }
-    //endregion
 }

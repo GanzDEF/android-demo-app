@@ -1,9 +1,6 @@
 package com.test.xyz.demo.presentation.weather.presenter
 
-import com.nhaarman.mockitokotlin2.eq
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
+import com.nhaarman.mockitokotlin2.*
 import com.test.xyz.demo.R
 import com.test.xyz.demo.domain.interactor.weather.CityValidationException
 import com.test.xyz.demo.domain.interactor.weather.UserNameValidationException
@@ -18,33 +15,45 @@ import org.mockito.ArgumentMatchers.anyString
 import org.mockito.MockitoAnnotations
 
 class WeatherPresenterTest {
-    val weatherInteractor = mock<WeatherInteractor>()
-    val weatherView = mock<WeatherView>()
-    val weatherDataFormatter = mock<WeatherDataFormatter>()
-    val weatherDegreeConverterProxy = mock<WeatherDegreeConverterProxy>()
+    val weatherSummaryInfoSuccessResult: WeatherSummaryInfo = WeatherSummaryInfo(VALID_CITY,
+            INTRO_MESSAGE_SAMPLE, FAHRENHEIT_TEMPERATURE_SAMPLE)
 
-    lateinit var weatherSummaryInfoSuccessResult: WeatherSummaryInfo
+    val weatherInteractor = mock<WeatherInteractor> {
+        val successObservable = Observable.just(weatherSummaryInfoSuccessResult)
+        val requiredCityErrorObservable = Observable.error<WeatherSummaryInfo>(CityValidationException("City must be provided!"))
+        val requiredUserErrorObservable = Observable.error<WeatherSummaryInfo>(UserNameValidationException("User must be provided!"))
+        val invalidCityErrorObservable = Observable.error<WeatherSummaryInfo>(Exception("City is invalid!"))
+
+        on {getWeatherInformation(eq(VALID_USER_NAME), eq(VALID_CITY))} doReturn successObservable
+        on {getWeatherInformation(anyString(), eq(EMPTY_VALUE))}        doReturn requiredCityErrorObservable
+        on {getWeatherInformation(eq(EMPTY_VALUE), eq(VALID_CITY))}     doReturn requiredUserErrorObservable
+        on {getWeatherInformation(anyString(), eq(INVALID_CITY))}       doReturn invalidCityErrorObservable
+    }
+
+    val weatherDataFormatter = mock<WeatherDataFormatter> {
+        val output = "NYC weather is 25°C"
+        on {format(weatherSummaryInfoSuccessResult)} doReturn output
+    }
+
+    val weatherDegreeConverterProxy = mock<WeatherDegreeConverterProxy>()
+    val weatherView = mock<WeatherView>()
 
     lateinit var weatherPresenter: WeatherPresenter
 
     @Before
     fun setup() {
-        initializeTest()
-        mockWeatherInteractorBehavior(weatherInteractor)
+        init()
         weatherPresenter = WeatherPresenterImpl(weatherView, weatherInteractor,
                 weatherDataFormatter,
                 weatherDegreeConverterProxy)
     }
 
     @Test
-    fun requestWeatherInformation_shouldReturnInfo() {
+    fun `requestWeatherInformation() should return weather information`() {
         //GIVEN
-        val output = "NYC weather is 25°C"
         val fahrenheitTemp = weatherSummaryInfoSuccessResult.temperature()
-
         whenever(weatherView.getUserNameText()).thenReturn(VALID_USER_NAME)
         whenever(weatherView.getCityText()).thenReturn(VALID_CITY)
-        whenever(weatherDataFormatter.format(weatherSummaryInfoSuccessResult)).thenReturn(output)
 
         //WHEN
         weatherPresenter.requestWeatherInformation()
@@ -53,11 +62,11 @@ class WeatherPresenterTest {
         verify(weatherInteractor).getWeatherInformation(eq(VALID_USER_NAME), eq(VALID_CITY))
         verify(weatherDegreeConverterProxy).convertFahrenheitToCelsius(fahrenheitTemp.toFloat())
         verify(weatherDataFormatter).format(weatherSummaryInfoSuccessResult)
-        verify(weatherView).showResult(output)
+        verify(weatherView).showResult(anyString())
     }
 
     @Test
-    fun requestWeatherInformation_whenUserNameIsEmpty_shouldReturnError() {
+    fun `requestWeatherInformation(), when UserName is empty, it should return an error`() {
         //GIVEN
         whenever(weatherView.getUserNameText()).thenReturn(EMPTY_VALUE)
         whenever(weatherView.getCityText()).thenReturn(VALID_CITY)
@@ -71,7 +80,7 @@ class WeatherPresenterTest {
     }
 
     @Test
-    fun requestWeatherInformation_whenCityIsEmpty_shouldReturnError() {
+    fun `requestWeatherInformation(), when city is empty, it should return an error`() {
         //GIVEN
         whenever(weatherView.getUserNameText()).thenReturn(VALID_USER_NAME)
         whenever(weatherView.getCityText()).thenReturn(EMPTY_VALUE)
@@ -85,7 +94,7 @@ class WeatherPresenterTest {
     }
 
     @Test
-    fun requestWeatherInformation_whenCityIsInvalid_shouldReturnError() {
+    fun `requestWeatherInformation(), when city is invalid, it should return an error`() {
         //GIVEN
         whenever(weatherView.getUserNameText()).thenReturn(VALID_USER_NAME)
         whenever(weatherView.getCityText()).thenReturn(INVALID_CITY)
@@ -98,27 +107,9 @@ class WeatherPresenterTest {
         verify(weatherView).showGenericError(R.string.weather_error)
     }
 
-    //region Helper mocks
-    private fun mockWeatherInteractorBehavior(weatherInteractor: WeatherInteractor) {
-        val observable = Observable.just(weatherSummaryInfoSuccessResult)
-
-        whenever(weatherInteractor.getWeatherInformation(eq(VALID_USER_NAME), eq(VALID_CITY))).thenReturn(observable)
-
-        whenever(weatherInteractor.getWeatherInformation(anyString(), eq(EMPTY_VALUE))).thenReturn(
-                Observable.error<WeatherSummaryInfo>(CityValidationException("City must be provided!")))
-
-        whenever(weatherInteractor.getWeatherInformation(eq(EMPTY_VALUE), eq(VALID_CITY))).thenReturn(
-                Observable.error<WeatherSummaryInfo>(UserNameValidationException("User must be provided!")))
-
-        whenever(weatherInteractor.getWeatherInformation(anyString(), eq(INVALID_CITY))).thenReturn(
-                Observable.error<WeatherSummaryInfo>(Exception("City is invalid!")))
-    }
-
-    private fun initializeTest() {
+    private fun init() {
         MockitoAnnotations.initMocks(this)
         RxAndroidPlugins.setInitMainThreadSchedulerHandler { scheduler -> Schedulers.trampoline() }
-
-        weatherSummaryInfoSuccessResult = WeatherSummaryInfo(VALID_CITY, INTRO_MESSAGE_SAMPLE, FAHRENHEIT_TEMPERATURE_SAMPLE)
     }
 
     companion object {
@@ -129,5 +120,4 @@ class WeatherPresenterTest {
         private val INTRO_MESSAGE_SAMPLE = "Hello Test"
         private val FAHRENHEIT_TEMPERATURE_SAMPLE = 77
     }
-    //endregion
 }

@@ -14,22 +14,30 @@ import org.mockito.Mockito.never
 import org.mockito.MockitoAnnotations
 
 class ProjectDetailsPresenterTest {
-    val projectInteractor = mock<ProjectInteractor>()
-    val projectDetailsView = mock<ProjectDetailsView>()
+    val gitHubRepo = GitHubRepo(1, "Fake gitHubRepo")
 
-    lateinit var gitHubRepo: GitHubRepo
+    val projectInteractor = mock<ProjectInteractor> {
+        val successObservable = Observable.just(gitHubRepo)
+        val requiredUserNameErrorObservable = Observable.error<GitHubRepo>(IllegalArgumentException("Username must be provided!"))
+        val requiredProjectIdErrorObservable = Observable.error<GitHubRepo>(IllegalArgumentException("Project ID must be provided!"))
+
+        on {getProjectDetails(eq(USER_NAME), eq(PROJECT_ID))} doReturn successObservable
+        on {getProjectDetails(eq(EMPTY_VALUE), anyString())}  doReturn requiredUserNameErrorObservable
+        on {getProjectDetails(anyString(), eq(EMPTY_VALUE))}  doReturn requiredProjectIdErrorObservable
+    }
+
+    val projectDetailsView = mock<ProjectDetailsView>()
 
     lateinit var projectDetailsPresenter: ProjectDetailsPresenter
 
     @Before
     fun setup() {
-        initializeTest()
-        mockGetProjectDetailsAPI(projectInteractor)
+        init()
         projectDetailsPresenter = ProjectDetailsPresenterImpl(projectDetailsView, projectInteractor)
     }
 
     @Test
-    fun requestProjectDetails_shouldReturnRepoDetails() {
+    fun `requestProjectDetails() should return repo details`() {
         //WHEN
         projectDetailsPresenter.requestProjectDetails(USER_NAME, PROJECT_ID)
 
@@ -40,7 +48,7 @@ class ProjectDetailsPresenterTest {
     }
 
     @Test
-    fun requestProjectDetails_whenUserNameIsEmpty_shouldReturnError() {
+    fun `requestProjectDetails(), when user name is empty, it should return an error`() {
         //WHEN
         projectDetailsPresenter.requestProjectDetails("", PROJECT_ID)
 
@@ -51,7 +59,7 @@ class ProjectDetailsPresenterTest {
     }
 
     @Test
-    fun requestProjectDetails_whenProjectIdIsEmpty_shouldReturnError() {
+    fun `requestProjectDetails(), when project id is empty, it should return an error`() {
         //WHEN
         projectDetailsPresenter.requestProjectDetails(USER_NAME, "")
 
@@ -61,24 +69,9 @@ class ProjectDetailsPresenterTest {
         verify(projectDetailsView).showError(R.string.project_details_ret_error)
     }
 
-    //region Helper Mocks
-    private fun mockGetProjectDetailsAPI(projectInteractor: ProjectInteractor) {
-        val observable = Observable.just(gitHubRepo)
-
-        whenever(projectInteractor.getProjectDetails(eq(EMPTY_VALUE), anyString()))
-                .thenReturn(Observable.error<GitHubRepo>(IllegalArgumentException("Username must be provided!")))
-
-        whenever(projectInteractor.getProjectDetails(anyString(), eq(EMPTY_VALUE)))
-                .thenReturn(Observable.error<GitHubRepo>(IllegalArgumentException("Project ID must be provided!")))
-
-        whenever(projectInteractor.getProjectDetails(eq(USER_NAME), eq(PROJECT_ID)))
-                .thenReturn(observable)
-    }
-
-    private fun initializeTest() {
+    private fun init() {
         MockitoAnnotations.initMocks(this)
         RxAndroidPlugins.setInitMainThreadSchedulerHandler { scheduler -> Schedulers.trampoline() }
-        gitHubRepo = GitHubRepo(1, "Fake gitHubRepo")
     }
 
     companion object {
@@ -86,5 +79,4 @@ class ProjectDetailsPresenterTest {
         private val USER_NAME = "google"
         private val PROJECT_ID = "test"
     }
-    //endregion
 }

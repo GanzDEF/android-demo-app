@@ -1,8 +1,8 @@
 package com.test.xyz.demo.domain.interactor.project
 
+import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.whenever
 import com.test.xyz.demo.domain.model.github.GitHubRepo
 import com.test.xyz.demo.domain.repository.api.ProjectListRepository
 import io.reactivex.Observable
@@ -13,26 +13,30 @@ import org.junit.Test
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.MockitoAnnotations
 import java.io.IOException
-import java.util.*
 
 class ProjectInteractorTest {
-    private val projectListRepository = mock<ProjectListRepository>()
-    private var gitHubRepo = mock<GitHubRepo>()
-    private var gitHubRepoList = mock<MutableList<GitHubRepo>>()
+    val gitHubRepo = GitHubRepo(1, "RepoItem")
+    val gitHubRepoList = arrayListOf(GitHubRepo(0, "Fake GitHub Repo-0"),
+            GitHubRepo(1, "Fake GitHub Repo-1"),
+            GitHubRepo(2, "Fake GitHub Repo-2"))
+
+    val projectListRepository = mock<ProjectListRepository> {
+        on {getProjectList(USER_NAME)}                           doReturn Observable.just<List<GitHubRepo>>(gitHubRepoList)
+        on {getProjectList(eq(INVALID_ACCOUNT))}                 doReturn Observable.error<List<GitHubRepo>>(IOException("Invalid account"))
+        on {getProjectDetails(eq(USER_NAME), anyString())}       doReturn Observable.just(gitHubRepo)
+        on {getProjectDetails(eq(INVALID_ACCOUNT), anyString())} doReturn Observable.error<GitHubRepo>(IOException("Invalid account"))
+    }
 
     private lateinit var testSubject: ProjectInteractorImpl
 
     @Before
     fun setup() {
-        initializeTest()
+        init()
         testSubject = ProjectInteractorImpl(projectListRepository)
     }
 
     @Test
-    fun getProjectList_whenUserNameIsCorrect_shouldReturnRepoListInfo() {
-        //GIVEN
-        mockGetProjectListAPI()
-
+    fun `getProjectList() should return repo list information`() {
         //WHEN
         val projectListObservable = testSubject.getProjectList(USER_NAME)
 
@@ -43,10 +47,7 @@ class ProjectInteractorTest {
     }
 
     @Test
-    fun getProjectList_whenUserNameIsEmpty_shouldReturnValidationError() {
-        //GIVEN
-        mockGetProjectListAPI()
-
+    fun `getProjectList(), when user name is empty, it should return a validation error`() {
         //WHEN
         val projectListObservable = testSubject.getProjectList("")
 
@@ -56,12 +57,9 @@ class ProjectInteractorTest {
     }
 
     @Test
-    fun getProjectList_whenNetworkErrorHappen_shouldReturnFailureError() {
-        //GIVEN
-        mockGetProjectListAPI()
-
+    fun `getProjectList(), when network error happens, it should return a failure error`() {
         //WHEN
-        val projectListObservable = testSubject.getProjectList(UNLUCKY_ACCOUNT)
+        val projectListObservable = testSubject.getProjectList(INVALID_ACCOUNT)
 
         //THEN
         projectListObservable.test()
@@ -69,10 +67,7 @@ class ProjectInteractorTest {
     }
 
     @Test
-    fun getProjectDetails_whenUserNameAndProjectIDAreCorrect_shouldReturnRepoItemInfo() {
-        //GIVEN
-        mockGetProjectDetailsAPI()
-
+    fun `getProjectDetails() should return a Repo item Info`() {
         //WHEN
         val projectDetailsObservable = testSubject.getProjectDetails(USER_NAME, PROJECT_ID)
 
@@ -83,10 +78,7 @@ class ProjectInteractorTest {
     }
 
     @Test
-    fun getProjectDetails_whenUserNameIsEmpty_shouldReturnValidationError() {
-        //GIVEN
-        mockGetProjectDetailsAPI()
-
+    fun `getProjectDetails(), when user name is empty, it should return a validation error`() {
         // WHEN
         val projectDetailsObservable = testSubject.getProjectDetails("", PROJECT_ID)
 
@@ -96,10 +88,7 @@ class ProjectInteractorTest {
     }
 
     @Test
-    fun getProjectDetails_whenProjectIDIsEmpty_shouldReturnValidationError() {
-        //GIVEN
-        mockGetProjectDetailsAPI()
-
+    fun `getProjectDetails(), when project is is empty, it should return a validation error`() {
         // WHEN
         val projectDetailsObservable = testSubject.getProjectDetails("", PROJECT_ID)
 
@@ -109,66 +98,23 @@ class ProjectInteractorTest {
     }
 
     @Test
-    fun getProjectDetails_whenNetworkErrorHappen_shouldReturnFailureError() {
-        //GIVEN
-        mockGetProjectDetailsAPI()
-
+    fun `getProjectDetails(), when a network error happens, it should return a failure error`() {
         // WHEN
-        val projectDetailsObservable = testSubject.getProjectDetails(UNLUCKY_ACCOUNT, PROJECT_ID)
+        val projectDetailsObservable = testSubject.getProjectDetails(INVALID_ACCOUNT, PROJECT_ID)
 
         //THEN
         projectDetailsObservable.test()
                 .assertError(IOException::class.java)
     }
 
-    private fun mockGetProjectListAPI() {
-        mockGetProjectListHappyPath()
-        mockGetProjectListErrorPath()
-    }
-
-    private fun mockGetProjectDetailsAPI() {
-        mockGetProjectDetailsHappyPath()
-        mockGetProjectDetailsErrorPath()
-    }
-
-    private fun mockGetProjectListHappyPath() {
-        val observable = Observable.just<List<GitHubRepo>>(gitHubRepoList)
-        whenever(projectListRepository.getProjectList(USER_NAME)).thenReturn(observable)
-    }
-
-    private fun mockGetProjectListErrorPath() {
-        whenever(projectListRepository.getProjectList(eq(UNLUCKY_ACCOUNT)))
-                .thenReturn(Observable.error<List<GitHubRepo>>(IOException("Invalid account")))
-    }
-
-    private fun mockGetProjectDetailsHappyPath() {
-        val observable = Observable.just(gitHubRepo)
-        whenever(projectListRepository.getProjectDetails(eq(USER_NAME), anyString())).thenReturn(observable)
-    }
-
-    private fun mockGetProjectDetailsErrorPath() {
-        whenever(projectListRepository.getProjectDetails(eq(UNLUCKY_ACCOUNT), anyString()))
-                .thenReturn(Observable.error<GitHubRepo>(IOException("Invalid account")))
-    }
-
-    private fun initializeTest() {
+    private fun init() {
         MockitoAnnotations.initMocks(this)
         RxJavaPlugins.setIoSchedulerHandler { scheduler -> Schedulers.trampoline() }
-        initializeFakeGitHubRepos()
-    }
-
-    private fun initializeFakeGitHubRepos() {
-        gitHubRepo = GitHubRepo(1, "RepoItem")
-        gitHubRepoList = ArrayList()
-
-        for (i in 0..9) {
-            gitHubRepoList.add(GitHubRepo(i.toLong(),"SampleRepoItem$i"))
-        }
     }
 
     companion object {
         private val USER_NAME = "hazems"
         private val PROJECT_ID = "Test"
-        private val UNLUCKY_ACCOUNT = "UNLUCKY_ACCOUNT"
+        private val INVALID_ACCOUNT = "INVALID_ACCOUNT"
     }
 }

@@ -1,5 +1,6 @@
 package com.test.xyz.demo.domain.interactor.weather
 
+import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
@@ -11,26 +12,34 @@ import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.schedulers.Schedulers
 import org.junit.Before
 import org.junit.Test
-import org.mockito.ArgumentMatchers.anyString
-import org.mockito.Mockito.doAnswer
+import org.mockito.ArgumentMatchers
+import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
 
 class WeatherInfoInteractorTest {
 
-    private val greetRepository = mock<GreetRepository>()
-    private val weatherRepository = mock<WeatherRepository>()
-    private val weatherQueryBuilder = mock<WeatherQueryBuilder>()
+    val greetRepository = mock<GreetRepository>()
 
-    private lateinit var testSubject: WeatherInteractor
+    val weatherRepository = mock<WeatherRepository> {
+        val successObservable = Observable.just(WeatherRawResponse.createWeatherSuccessRawResponse("10"))
+        val requiredCityErrorObservable = Observable.error<WeatherRawResponse>(Exception("Invalid city provided"))
+
+        on {getWeatherInfo(CITY)}             doReturn successObservable
+        on {getWeatherInfo(eq(INVALID_CITY))} doReturn requiredCityErrorObservable
+    }
+
+    val weatherQueryBuilder = mock<WeatherQueryBuilder>()
+
+    lateinit var testSubject: WeatherInteractor
 
     @Before
     fun setup() {
-        initializeTest()
+        init()
         testSubject = WeatherInteractorImpl(greetRepository, weatherRepository, weatherQueryBuilder)
     }
 
     @Test
-    fun getWeatherInformation_whenUserNameAndCityAreCorrect_shouldReturnWeatherInfo() {
+    fun `getWeatherInformation() should return weather information`() {
         //WHEN
         val weatherSummaryInfoObservable = testSubject.getWeatherInformation(USER_NAME, CITY)
 
@@ -41,7 +50,7 @@ class WeatherInfoInteractorTest {
     }
 
     @Test
-    fun getWeatherInformation_whenCityIsInvalid_shouldReturnFailure() {
+    fun `getWeatherInformation(), when city is invalid,it should return an error`() {
         //WHEN
         val weatherSummaryInfoObservable = testSubject.getWeatherInformation(USER_NAME, INVALID_CITY)
 
@@ -51,7 +60,7 @@ class WeatherInfoInteractorTest {
     }
 
     @Test
-    fun getWeatherInformation_whenUserNameIsEmpty_shouldReturnUserValidationError() {
+    fun `getWeatherInformation(), when user name is empty, it should return a user validation error`() {
         //WHEN
         val weatherSummaryInfoObservable = testSubject.getWeatherInformation("", CITY)
 
@@ -61,7 +70,7 @@ class WeatherInfoInteractorTest {
     }
 
     @Test
-    fun getWeatherInformation_whenCityIsEmpty_shouldReturnCityValidationError() {
+    fun `getWeatherInformation(), when city is empty, it should return a city validation error`() {
         //WHEN
         val weatherSummaryInfoObservable = testSubject.getWeatherInformation(USER_NAME, "")
 
@@ -70,22 +79,10 @@ class WeatherInfoInteractorTest {
                 .assertError(CityValidationException::class.java)
     }
 
-    private fun initializeTest() {
+    private fun init() {
         MockitoAnnotations.initMocks(this)
         RxJavaPlugins.setIoSchedulerHandler { scheduler -> Schedulers.trampoline() }
-        mockWeatherInfoAPI()
-    }
-
-    private fun mockWeatherInfoAPI() {
-        doAnswer { invocation -> invocation.arguments[0] }.whenever(weatherQueryBuilder).createWeatherQuery(anyString())
-
-        val weatherRawResponse = WeatherRawResponse.createWeatherSuccessRawResponse("10")
-        val observable = Observable.just(weatherRawResponse)
-
-        whenever(weatherRepository.getWeatherInfo(CITY)).thenReturn(observable)
-
-        whenever(weatherRepository.getWeatherInfo(eq(INVALID_CITY))).thenReturn(
-                Observable.error<WeatherRawResponse>(Exception("Invalid city provided")))
+        Mockito.doAnswer { invocation -> invocation.arguments[0] }.whenever(weatherQueryBuilder).createWeatherQuery(ArgumentMatchers.anyString())
     }
 
     companion object {
