@@ -30,15 +30,12 @@ import static org.mockito.Mockito.when;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({WeatherDataFormatter.class, WeatherDegreeConverter.class})
 public class WeatherPresenterTest {
-    private static final String EMPTY_VALUE = "";
-    private static final String INVALID_CITY = "INVALID";
-    private static final String VALID_CITY = "New York, USA";
-    private static final String VALID_USER_NAME = "hazems";
-    private static final String INTRO_MESSAGE_SAMPLE = "Hello Test";
-    private static final int FAHRENHEIT_TEMPERATURE_SAMPLE = 77;
+    WeatherSummaryInfo weatherSummaryInfoSuccessResult;
+    WeatherDataFormatter weatherDataFormatter;
 
-    private WeatherSummaryInfo weatherSummaryInfoSuccessResult;
-    private WeatherDataFormatter weatherDataFormatter;
+    // Sequence of calls
+    // WeatherPresenter -> WeatherInteractor returns WeatherSummaryInfo
+    // -> WeatherDegreeConverter -> WeatherDataFormatter -> WeatherView
 
     @Mock WeatherInteractor weatherInteractor;
     @Mock WeatherView weatherView;
@@ -141,5 +138,12 @@ public class WeatherPresenterTest {
 
         weatherSummaryInfoSuccessResult = new WeatherSummaryInfo(VALID_CITY, INTRO_MESSAGE_SAMPLE, FAHRENHEIT_TEMPERATURE_SAMPLE);
     }
+
+    static final String EMPTY_VALUE = "";
+    static final String INVALID_CITY = "INVALID";
+    static final String VALID_CITY = "New York, USA";
+    static final String VALID_USER_NAME = "hazems";
+    static final String INTRO_MESSAGE_SAMPLE = "Hello Test";
+    static final int FAHRENHEIT_TEMPERATURE_SAMPLE = 77;
     //endregion
 }
