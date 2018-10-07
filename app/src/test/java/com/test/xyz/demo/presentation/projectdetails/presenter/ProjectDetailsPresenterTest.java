@@ -78,10 +78,10 @@ public class ProjectDetailsPresenterTest {
         Observable<GitHubRepo> observable = Observable.just(gitHubRepo);
 
         when(projectInteractor.getProjectDetails(eq(EMPTY_VALUE), any(String.class)))
-                .thenReturn(Observable.error(new IllegalArgumentException("Username must be provided!")).cast((Class) List.class));
+                .thenReturn((Observable<GitHubRepo>) Observable.error(new IllegalArgumentException("Username must be provided!")).cast((Class) List.class));
 
         when(projectInteractor.getProjectDetails(any(String.class), eq(EMPTY_VALUE)))
-                .thenReturn(Observable.error(new IllegalArgumentException("Project ID must be provided!")).cast((Class) List.class));
+                .thenReturn((Observable<GitHubRepo>) Observable.error(new IllegalArgumentException("Project ID must be provided!")).cast((Class) List.class));
 
         when(projectInteractor.getProjectDetails(not(eq(EMPTY_VALUE)), not(eq(EMPTY_VALUE)))).thenReturn(observable);
     }

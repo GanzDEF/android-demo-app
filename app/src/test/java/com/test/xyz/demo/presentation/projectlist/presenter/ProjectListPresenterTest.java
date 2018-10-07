@@ -66,7 +66,7 @@ public class ProjectListPresenterTest {
         Observable<List<GitHubRepo>> observable = Observable.just(gitHubRepoList);
 
         when(projectInteractor.getProjectList(eq(EMPTY_VALUE)))
-                .thenReturn(Observable.error(new IllegalArgumentException("Username must be provided!")).cast((Class) List.class));
+                .thenReturn((Observable<List<GitHubRepo>>) Observable.error(new IllegalArgumentException("Username must be provided!")).cast((Class) List.class));
 
         when(projectInteractor.getProjectList(not(eq(EMPTY_VALUE)))).thenReturn(observable);
     }

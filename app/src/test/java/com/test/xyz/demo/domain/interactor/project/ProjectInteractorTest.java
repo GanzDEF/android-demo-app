@@ -150,7 +150,7 @@ public class ProjectInteractorTest {
 
     private void mockGetProjectListErrorPath() {
         when(projectListRepository.getProjectList(eq(UNLUCKY_ACCOUNT)))
-                .thenReturn(Observable.error(new IOException("Invalid account")).cast((Class) List.class));
+                .thenReturn((Observable<List<GitHubRepo>>) Observable.error(new IOException("Invalid account")).cast((Class) List.class));
     }
 
     private void mockGetProjectDetailsHappyPath() {
@@ -160,7 +160,7 @@ public class ProjectInteractorTest {
 
     private void mockGetProjectDetailsErrorPath() {
         when(projectListRepository.getProjectDetails(eq(UNLUCKY_ACCOUNT), anyString()))
-                .thenReturn(Observable.error(new IOException("Invalid account")).cast((Class) List.class));
+                .thenReturn((Observable<GitHubRepo>) Observable.error(new IOException("Invalid account")).cast((Class) List.class));
     }
 
     private void initializeFakeGitHubRepos() {
