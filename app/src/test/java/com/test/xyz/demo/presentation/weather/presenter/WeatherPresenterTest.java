@@ -17,24 +17,22 @@ import io.reactivex.Observable;
 import io.reactivex.android.plugins.RxAndroidPlugins;
 import io.reactivex.schedulers.Schedulers;
 
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class WeatherPresenterTest {
-    private static final String EMPTY_VALUE = "";
-    private static final String INVALID_CITY = "INVALID";
-    private static final String VALID_CITY = "New York, USA";
-    private static final String VALID_USER_NAME = "hazems";
-    private static final String INTRO_MESSAGE_SAMPLE = "Hello Test";
-    private static final int FAHRENHEIT_TEMPERATURE_SAMPLE = 77;
-    private WeatherSummaryInfo weatherSummaryInfoSuccessResult;
+    // Sequence of calls:
+    // WeatherPresenter -> WeatherInteractor returns WeatherSummaryInfo
+    // -> WeatherDegreeConverter -> WeatherDataFormatter -> WeatherView
 
     @Mock WeatherInteractor weatherInteractor;
     @Mock WeatherView weatherView;
     @Mock WeatherDataFormatter weatherDataFormatter;
     @Mock WeatherDegreeConverterProxy weatherDegreeConverterProxy;
+
+    WeatherSummaryInfo weatherSummaryInfoSuccessResult = new WeatherSummaryInfo(VALID_CITY, INTRO_MESSAGE_SAMPLE, FAHRENHEIT_TEMPERATURE_SAMPLE);
 
     WeatherPresenter weatherPresenter;
 
@@ -110,7 +108,7 @@ public class WeatherPresenterTest {
     }
 
     //region Helper mocks
-    private void mockWeatherInteractorBehavior(WeatherInteractor weatherInteractor) {
+    void mockWeatherInteractorBehavior(WeatherInteractor weatherInteractor) {
         Observable<WeatherSummaryInfo> observable = Observable.just(weatherSummaryInfoSuccessResult);
 
         when(weatherInteractor.getWeatherInformation(eq(VALID_USER_NAME), eq(VALID_CITY))).thenReturn(observable);
@@ -123,11 +121,16 @@ public class WeatherPresenterTest {
                 Observable.error(new Exception("City is invalid!")).cast((Class) List.class));
     }
 
-    private void initializeTest() {
+    void initializeTest() {
         MockitoAnnotations.initMocks(this);
         RxAndroidPlugins.setInitMainThreadSchedulerHandler(scheduler ->  Schedulers.trampoline());
-
-        weatherSummaryInfoSuccessResult = new WeatherSummaryInfo(VALID_CITY, INTRO_MESSAGE_SAMPLE, FAHRENHEIT_TEMPERATURE_SAMPLE);
     }
+
+    static final String EMPTY_VALUE = "";
+    static final String INVALID_CITY = "INVALID";
+    static final String VALID_CITY = "New York, USA";
+    static final String VALID_USER_NAME = "hazems";
+    static final String INTRO_MESSAGE_SAMPLE = "Hello Test";
+    static final int FAHRENHEIT_TEMPERATURE_SAMPLE = 77;
     //endregion
 }
