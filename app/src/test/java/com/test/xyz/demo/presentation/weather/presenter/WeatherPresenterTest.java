@@ -125,11 +125,11 @@ public class WeatherPresenterTest {
         when(weatherInteractor.getWeatherInformation(eq(VALID_USER_NAME), eq(VALID_CITY))).thenReturn(observable);
 
         when(weatherInteractor.getWeatherInformation(anyString(), eq(EMPTY_VALUE))).thenReturn(
-                Observable.error(new CityValidationException("City must be provided!")).cast((Class) List.class));
+                (Observable<WeatherSummaryInfo>) Observable.error(new CityValidationException("City must be provided!")).cast((Class) List.class));
         when(weatherInteractor.getWeatherInformation(eq(EMPTY_VALUE), eq(VALID_CITY))).thenReturn(
-                Observable.error(new UserNameValidationException("User must be provided!")).cast((Class) List.class));
+                (Observable<WeatherSummaryInfo>) Observable.error(new UserNameValidationException("User must be provided!")).cast((Class) List.class));
         when(weatherInteractor.getWeatherInformation(anyString(), eq(INVALID_CITY))).thenReturn(
-                Observable.error(new Exception("City is invalid!")).cast((Class) List.class));
+                (Observable<WeatherSummaryInfo>) Observable.error(new Exception("City is invalid!")).cast((Class) List.class));
     }
 
     private void initializeTest() {
