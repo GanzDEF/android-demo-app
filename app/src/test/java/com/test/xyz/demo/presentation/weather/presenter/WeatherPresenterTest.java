@@ -30,12 +30,12 @@ import static org.mockito.Mockito.when;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({WeatherDataFormatter.class, WeatherDegreeConverter.class})
 public class WeatherPresenterTest {
-    WeatherSummaryInfo weatherSummaryInfoSuccessResult;
-    WeatherDataFormatter weatherDataFormatter;
-
-    // Sequence of calls
+    // Sequence of calls:
     // WeatherPresenter -> WeatherInteractor returns WeatherSummaryInfo
     // -> WeatherDegreeConverter -> WeatherDataFormatter -> WeatherView
+
+    WeatherSummaryInfo weatherSummaryInfoSuccessResult;
+    WeatherDataFormatter weatherDataFormatter;
 
     @Mock WeatherInteractor weatherInteractor;
     @Mock WeatherView weatherView;
