@@ -45,6 +45,7 @@ public class WeatherPresenterTest {
     @Before
     public void setup() {
         initializeTest();
+        weatherDataFormatter = PowerMockito.mock(WeatherDataFormatter.class);
         mockWeatherInteractorBehavior(weatherInteractor);
         weatherPresenter = new WeatherPresenterImpl(weatherView, weatherInteractor,
                                                     weatherDataFormatter);
@@ -118,8 +119,6 @@ public class WeatherPresenterTest {
 
     //region Helper mocks
     private void mockWeatherInteractorBehavior(WeatherInteractor weatherInteractor) {
-        weatherDataFormatter = PowerMockito.mock(WeatherDataFormatter.class);
-
         Observable<WeatherSummaryInfo> observable = Observable.just(weatherSummaryInfoSuccessResult);
 
         when(weatherInteractor.getWeatherInformation(eq(VALID_USER_NAME), eq(VALID_CITY))).thenReturn(observable);
