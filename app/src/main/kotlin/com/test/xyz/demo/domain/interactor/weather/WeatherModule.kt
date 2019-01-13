@@ -37,6 +37,6 @@ class WeatherModule {
     @Provides
     @Singleton
     internal fun provideWeatherInteractor(greetRepository: GreetRepository, weatherRepository: WeatherRepository): WeatherInteractor {
-        return WeatherInteractorImpl(greetRepository, weatherRepository, WeatherQueryBuilder())
+        return WeatherInteractorImpl(greetRepository, weatherRepository)
     }
 }

@@ -19,7 +19,7 @@
     <string name="test_user">Test User</string>
     <string name="city_weather">This is the weather sample view. Fill the form below to get weather information and then touch the button below!</string>
     <string name="show_info">GO</string>
-    <string name="nyc_usa">NYC, USA</string>
+    <string name="nyc_usa">New York, USA</string>
     <string name="example_city_name">City Full Name like \'NYC, USA\'</string>
     <string name="your_name">Your Name</string>
 

@@ -3,13 +3,13 @@ package com.test.xyz.demo.domain.model.weather
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-class Astronomy {
-    @SerializedName("sunrise")
+class Coord {
 
+    @SerializedName("lon")
     @Expose
-    var sunrise: String? = null
+    var lon: Double? = null
+    @SerializedName("lat")
+    @Expose
+    var lat: Double? = null
 
-    @SerializedName("sunset")
-    @Expose
-    var sunset: String? = null
 }

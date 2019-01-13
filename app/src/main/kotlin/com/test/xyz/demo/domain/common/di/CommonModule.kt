@@ -4,27 +4,11 @@ import android.app.Application
 import dagger.Module
 import dagger.Provides
 import okhttp3.Cache
-import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import javax.inject.Singleton
 
 @Module
 class CommonModule {
-
-    private val interceptor = Interceptor { chain ->
-        val original = chain.request()
-        val originalHttpUrl = original.url()
-
-        val url = originalHttpUrl.newBuilder()
-                .addQueryParameter("format", "json")
-                .addQueryParameter("env", "store://datatables.org/alltableswithkeys")
-                .build()
-
-        val requestBuilder = original.newBuilder().url(url)
-
-        val request = requestBuilder.build()
-        chain.proceed(request)
-    }
 
     @Provides
     @Singleton
@@ -34,7 +18,6 @@ class CommonModule {
 
         return OkHttpClient.Builder()
                 .cache(cache)
-                .addInterceptor(interceptor)
                 .build()
     }
 }

@@ -3,10 +3,10 @@ package com.test.xyz.demo.domain.model.weather
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-class Results {
+class Clouds {
 
-    @SerializedName("channel")
+    @SerializedName("all")
     @Expose
-    var channel: Channel? = null
+    var all: Int? = null
 
 }
