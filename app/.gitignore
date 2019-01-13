@@ -1,2 +1,11 @@
+*.iml
+.gradle
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+/.idea/caches/
+.DS_Store
 /build
-/.idea
+/captures
+!gradle/wrapper/*
+gradle/
