@@ -29,7 +29,7 @@ android {
         versionName "1.0"
 
         // If you will run this sample, please use your own open weather key here ...
-        buildConfigField 'String', 'OPEN_WEATHER_APP_KEY', "\"YOUR-KEY-HERE\""
+        buildConfigField 'String', 'OPEN_WEATHER_APP_KEY', "\"" + System.getenv('OPEN_WEATHER_KEY') + "\""
     }
 
     buildTypes {
