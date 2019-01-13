@@ -38,7 +38,7 @@ public class WeatherModule {
 
     @Provides
     @Singleton
-    WeatherInteractor provideWeatherInteractor(GreetRepository greetRepository, WeatherRepository weatherRepository) {
-        return new WeatherInteractorImpl(greetRepository, weatherRepository, new WeatherQueryBuilder());
+    WeatherInteractor provideWeatherInteractor(GreetRepository greetRepository, WeatherRepository weatherRepository2) {
+        return new WeatherInteractorImpl(greetRepository, weatherRepository2);
     }
 }
