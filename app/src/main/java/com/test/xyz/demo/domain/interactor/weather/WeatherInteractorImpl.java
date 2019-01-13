@@ -1,6 +1,9 @@
 package com.test.xyz.demo.domain.interactor.weather;
 
+import android.util.Log;
+
 import com.google.common.base.Strings;
+import com.test.xyz.demo.BuildConfig;
 import com.test.xyz.demo.domain.model.weather.WeatherSummaryInfo;
 import com.test.xyz.demo.domain.repository.api.GreetRepository;
 import com.test.xyz.demo.domain.repository.api.WeatherRepository;
@@ -13,15 +16,12 @@ public class WeatherInteractorImpl implements WeatherInteractor {
 
     private final GreetRepository greetRepository;
     private final WeatherRepository weatherRepository;
-    private final WeatherQueryBuilder weatherQueryBuilder;
 
     public WeatherInteractorImpl(GreetRepository greetRepository,
-                                 WeatherRepository weatherRepository,
-                                 WeatherQueryBuilder weatherQueryBuilder) {
+                                 WeatherRepository weatherRepository) {
 
         this.greetRepository = greetRepository;
         this.weatherRepository = weatherRepository;
-        this.weatherQueryBuilder = weatherQueryBuilder;
     }
 
     @Override
@@ -36,10 +36,14 @@ public class WeatherInteractorImpl implements WeatherInteractor {
             return Observable.error(new CityValidationException("City must be provided!"));
         }
 
-        return weatherRepository.getWeatherInfo(weatherQueryBuilder.createWeatherQuery(cityName))
-                .map((weatherRawResponse) -> {
-                    int temperature = Integer.parseInt(weatherRawResponse.query.results.channel.item.condition.temp);
+        return weatherRepository.getWeatherInfo(cityName, BuildConfig.OPEN_WEATHER_APP_KEY, "imperial")
+                .map((result) -> {
+                    int temperature = result.getMain().getTemp().intValue();
                     return new WeatherSummaryInfo(cityName, greeting, temperature);
+                })
+                .doOnError((error) -> {
+                    error.printStackTrace();
+                    Log.e(TAG, "error = " + error.getMessage());
                 })
                 .subscribeOn(Schedulers.io());
     }

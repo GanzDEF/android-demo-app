@@ -26,6 +26,9 @@ android {
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
+
+        // If you will run this sample, please use your own open weather key here ...
+        buildConfigField 'String', 'OPEN_WEATHER_APP_KEY', "\"YOUR-KEY-HERE\""
     }
 
     buildTypes {
@@ -62,6 +65,7 @@ dependencies {
     implementation "com.android.support:design:$project.appcompat"
 
     // Retrofit
+    implementation "com.squareup.okhttp3:logging-interceptor:3.9.1"
     implementation "com.squareup.retrofit2:retrofit:$project.retrofit"
     implementation "com.squareup.retrofit2:converter-gson:$project.retrofit"
     implementation "com.squareup.retrofit2:adapter-rxjava2:$project.retrofit"

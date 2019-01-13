@@ -1,6 +1,6 @@
 package com.test.xyz.demo.domain.interactor.weather;
 
-import com.test.xyz.demo.domain.model.weather.WeatherRawResponse;
+import com.test.xyz.demo.domain.model.weather.Result;
 import com.test.xyz.demo.domain.model.weather.WeatherSummaryInfo;
 import com.test.xyz.demo.domain.repository.api.GreetRepository;
 import com.test.xyz.demo.domain.repository.api.WeatherRepository;
@@ -17,7 +17,6 @@ import io.reactivex.schedulers.Schedulers;
 import static org.mockito.AdditionalMatchers.not;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
 
 public class WeatherInfoInteractorTest {
@@ -27,7 +26,6 @@ public class WeatherInfoInteractorTest {
 
     @Mock GreetRepository greetRepository;
     @Mock WeatherRepository weatherRepository;
-    @Mock WeatherQueryBuilder weatherQueryBuilder;
 
     WeatherInteractor testSubject;
 
@@ -35,7 +33,7 @@ public class WeatherInfoInteractorTest {
     public void setup() {
         initializeTest();
         mockWeatherInfoAPI();
-        testSubject = new WeatherInteractorImpl(greetRepository, weatherRepository, weatherQueryBuilder);
+        testSubject = new WeatherInteractorImpl(greetRepository, weatherRepository);
     }
 
     @Test
@@ -80,15 +78,13 @@ public class WeatherInfoInteractorTest {
     }
 
     private void mockWeatherInfoAPI() {
-        doAnswer((invocation) -> invocation.getArguments()[0]).when(weatherQueryBuilder).createWeatherQuery(anyString());
+        Result weatherResult = Result.createWeatherResultSuccessResponse(10.0d);
+        Observable<Result> observable = Observable.just(weatherResult);
 
-        WeatherRawResponse weatherRawResponse = WeatherRawResponse.createWeatherSuccessRawResponse("10");
-        Observable<WeatherRawResponse> observable = Observable.just(weatherRawResponse);
+        when(weatherRepository.getWeatherInfo(not(eq(INVALID_CITY)), anyString(), anyString())).thenReturn(observable);
 
-        when(weatherRepository.getWeatherInfo(not(eq(INVALID_CITY)))).thenReturn(observable);
-
-        when(weatherRepository.getWeatherInfo(eq(INVALID_CITY))).thenReturn(
-                Observable.error(new Exception("Invalid city provided")).cast(WeatherRawResponse.class));
+        when(weatherRepository.getWeatherInfo(eq(INVALID_CITY), anyString(), anyString())).thenReturn(
+                Observable.error(new Exception("Invalid city provided")).cast(Result.class));
     }
 
     private void initializeTest() {
